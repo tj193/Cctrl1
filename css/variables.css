@@ -1,0 +1,81 @@
+:root {
+  /* ---- Brand blue ramp (DarbGo primary) ---- */
+  --blue-50: #eef4ff;
+  --blue-100: #dbe8ff;
+  --blue-400: #3d8bff;
+  --blue-500: #1677ff;
+  --blue-600: #0f5fe0;
+  --blue-700: #0b3a91;
+  --navy-900: #0a1930;
+  --navy-800: #0f2447;
+
+  /* ---- Supporting palette ---- */
+  --teal-400: #2dd4c8;
+  --teal-500: #14b8a6;
+  --purple-300: #b9aaf9;
+  --purple-500: #8b6ff2;
+  --green-400: #34d399;
+  --green-500: #16a87d;
+  --amber-400: #ffb648;
+  --date-600: #86613c;
+  --date-100: #f2e7d7;
+  --river-500: #0797b0;
+  --brick-500: #c96f42;
+
+  /* ---- Neutrals ---- */
+  --ink: #0d1526;
+  --slate-600: #55617a;
+  --slate-400: #8891a5;
+  --line: #e3e8f2;
+  --line-soft: #edf1f8;
+  --paper: #ffffff;
+  --cloud: #f5f8fd;
+
+  /* ---- Semantic tokens used across the app ---- */
+  --bg: var(--paper);
+  --surface: var(--cloud);
+  --fg: var(--ink);
+  --muted: var(--slate-400);
+  --border: var(--line);
+  --accent: var(--blue-500);
+  --accent-strong: var(--blue-600);
+
+  --font:
+    "Inter", system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial,
+    sans-serif;
+  --font-display:
+    "Sora", "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-lg: 22px;
+
+  --primary: var(--accent);
+  --background: var(--bg);
+  --text: var(--fg);
+  --space-unit: 8px;
+  --shadow: 0 8px 24px color-mix(in oklch, var(--navy-900) 8%, transparent);
+  --shadow-lg: 0 24px 64px color-mix(in oklch, var(--navy-900) 14%, transparent);
+
+  /* Section background treatments */
+  --tint-blue: linear-gradient(180deg, #eef5ff 0%, #f6faff 100%);
+  --tint-purple: linear-gradient(160deg, #f3f0ff 0%, #eef6ff 100%);
+  --tint-teal: linear-gradient(160deg, #eafbf7 0%, #eef7ff 100%);
+  --hero-gradient:
+    radial-gradient(
+      1100px 620px at 8% -10%,
+      color-mix(in oklch, var(--blue-500) 16%, transparent) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 560px at 96% 8%,
+      color-mix(in oklch, var(--purple-500) 14%, transparent) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      760px 520px at 60% 118%,
+      color-mix(in oklch, var(--teal-400) 16%, transparent) 0%,
+      transparent 55%
+    ),
+    linear-gradient(180deg, #fbfdff 0%, #f4f8ff 100%);
+}

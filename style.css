@@ -1,0 +1,479 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+}
+
+
+.register-container {
+    width: 100%;
+    max-width: 900px;
+
+    background: white;
+
+    padding: 45px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+
+/* Header */
+
+.register-header {
+    text-align: center;
+
+    margin-bottom: 40px;
+}
+
+.register-header h1 {
+    font-size: 36px;
+
+    color: #1f2937;
+
+    margin-bottom: 10px;
+}
+
+.register-header p {
+    color: #6b7280;
+
+    font-size: 17px;
+}
+
+
+/* Roles */
+
+.role-container {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 25px;
+}
+
+
+.role-card {
+    border: 2px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.role-card:hover {
+    transform: translateY(-5px);
+
+    border-color: #2563eb;
+
+    box-shadow: 0 10px 25px rgba(37,99,235,0.12);
+}
+
+
+.role-icon {
+    font-size: 55px;
+
+    margin-bottom: 15px;
+}
+
+
+.role-card h2 {
+    color: #1f2937;
+
+    margin-bottom: 12px;
+}
+
+
+.role-card p {
+    color: #6b7280;
+
+    line-height: 1.6;
+
+    min-height: 75px;
+}
+
+
+.role-card button {
+    width: 100%;
+
+    border: none;
+
+    background: #2563eb;
+
+    color: white;
+
+    padding: 13px;
+
+    border-radius: 10px;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    margin-top: 20px;
+}
+
+.role-card button:hover {
+    background: #1d4ed8;
+}
+
+
+/* Login link */
+
+.login-link {
+    text-align: center;
+
+    margin-top: 30px;
+
+    color: #6b7280;
+}
+
+.login-link a {
+    color: #2563eb;
+
+    text-decoration: none;
+
+    font-weight: bold;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .role-container {
+        grid-template-columns: 1fr;
+    }
+
+    .register-container {
+        padding: 25px;
+    }
+
+}
+.form-container {
+
+    width: 100%;
+
+    max-width: 600px;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.08);
+}
+
+
+.form-container h1 {
+
+    text-align: center;
+
+    color: #1f2937;
+
+    margin-bottom: 10px;
+}
+
+
+.form-description {
+
+    text-align: center;
+
+    color: #6b7280;
+
+    margin-bottom: 30px;
+}
+
+
+.form-container label {
+
+    display: block;
+
+    margin-top: 18px;
+
+    margin-bottom: 7px;
+
+    font-weight: bold;
+
+    color: #374151;
+}
+
+
+.form-container input {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 9px;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+
+.form-container input:focus {
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,0.1);
+}
+
+
+.form-container button {
+
+    width: 100%;
+
+    margin-top: 30px;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.form-container button:hover {
+
+    background: #1d4ed8;
+}
+
+
+.bottom-link {
+
+    text-align: center;
+
+    margin-top: 20px;
+
+    color: #6b7280;
+}
+
+
+.bottom-link a {
+
+    color: #2563eb;
+
+    text-decoration: none;
+
+    font-weight: bold;
+}
+/* ========================= */
+/* Driver Registration */
+/* ========================= */
+
+.driver-form {
+    max-width: 700px;
+}
+
+
+/* Form Sections */
+
+.form-section {
+
+    margin-top: 30px;
+
+    margin-bottom: 20px;
+
+    padding-bottom: 12px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.form-section h2 {
+
+    color: #1f2937;
+
+    font-size: 21px;
+
+    margin-bottom: 6px;
+}
+
+
+.form-section p {
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+/* Select */
+
+.form-container select {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 9px;
+
+    background: white;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+
+.form-container select:focus {
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,0.1);
+}
+
+
+/* File input */
+
+.form-container input[type="file"] {
+
+    background: #f9fafb;
+
+    cursor: pointer;
+}
+/*login*/
+.remember-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-top: 20px;
+}
+
+
+.remember-label {
+
+    display: flex !important;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 0 !important;
+
+    font-weight: normal !important;
+}
+
+
+.remember-label input {
+
+    width: auto;
+}
+
+
+.remember-row a {
+
+    color: #2563eb;
+
+    text-decoration: none;
+
+    font-size: 14px;
+}
+/* ========================= */
+/* Dashboard */
+/* ========================= */
+
+.dashboard {
+
+    width: 90%;
+
+    max-width: 1100px;
+
+    margin: 50px auto;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.08);
+}
+
+
+.dashboard h1 {
+
+    color: #1f2937;
+
+    margin-bottom: 10px;
+}
+
+
+.dashboard p {
+
+    color: #6b7280;
+
+    margin-bottom: 25px;
+}
+
+
+.dashboard button {
+
+    padding: 12px 25px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #2563eb;
+
+    color: white;
+
+    cursor: pointer;
+}
+
+
+.admin-section {
+
+    margin: 30px 0;
+
+    padding: 25px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+}

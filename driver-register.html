@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Driver Registration</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+
+<body>
+
+<div class="form-container driver-form">
+
+    <h1>Driver Registration</h1>
+
+    <p class="form-description">
+        Create your DarbGo driver account
+    </p>
+
+
+    <form id="driverForm">
+
+        <!-- ========================= -->
+        <!-- Personal Information -->
+        <!-- ========================= -->
+
+        <div class="form-section">
+
+            <h2>Personal Information</h2>
+
+            <p>Enter your personal information</p>
+
+        </div>
+
+
+        <label>Full Name</label>
+
+        <input
+            type="text"
+            id="driverName"
+            placeholder="Enter your full name"
+            required
+        >
+
+
+        <label>Email</label>
+
+        <input
+            type="email"
+            id="driverEmail"
+            placeholder="Enter your email"
+            required
+        >
+
+
+        <label>Phone Number</label>
+
+        <input
+            type="tel"
+            id="driverPhone"
+            placeholder="Enter your phone number"
+            required
+        >
+
+
+        <label>Password</label>
+
+        <input
+            type="password"
+            id="driverPassword"
+            placeholder="Enter your password"
+            required
+        >
+
+
+        <label>Confirm Password</label>
+
+        <input
+            type="password"
+            id="driverConfirmPassword"
+            placeholder="Confirm your password"
+            required
+        >
+
+
+
+        <!-- ========================= -->
+        <!-- Vehicle Information -->
+        <!-- ========================= -->
+
+        <div class="form-section">
+
+            <h2>Vehicle Information</h2>
+
+            <p>Enter your vehicle information</p>
+
+        </div>
+
+
+        <label>Vehicle Type</label>
+
+        <select id="vehicleType" required>
+
+            <option value="">
+                Select vehicle type
+            </option>
+
+            <option value="Car">
+                Car
+            </option>
+
+            <option value="Van">
+                Van
+            </option>
+
+            <option value="Bus">
+                Bus
+            </option>
+
+            <option value="Other">
+                Other
+            </option>
+
+        </select>
+
+
+        <label>Vehicle Model</label>
+
+        <input
+            type="text"
+            id="vehicleModel"
+            placeholder="Example: Toyota Corolla"
+            required
+        >
+
+
+        <label>Plate Number</label>
+
+        <input
+            type="text"
+            id="plateNumber"
+            placeholder="Enter plate number"
+            required
+        >
+
+
+        <label>Number of Seats</label>
+
+        <input
+            type="number"
+            id="numberOfSeats"
+            placeholder="Example: 4"
+            min="1"
+            required
+        >
+
+
+        <label>Vehicle Photo</label>
+
+        <input
+            type="file"
+            id="vehiclePhoto"
+            accept="image/*"
+            required
+        >
+
+
+
+        <!-- ========================= -->
+        <!-- Verification -->
+        <!-- ========================= -->
+
+        <div class="form-section">
+
+            <h2>Verification Information</h2>
+
+            <p>
+                Upload your documents for verification
+            </p>
+
+        </div>
+
+
+        <label>Driving License</label>
+
+        <input
+            type="file"
+            id="drivingLicense"
+            accept="image/*,.pdf"
+            required
+        >
+
+
+        <label>ID Document</label>
+
+        <input
+            type="file"
+            id="idDocument"
+            accept="image/*,.pdf"
+            required
+        >
+
+
+        <button type="submit">
+            Submit Registration
+        </button>
+
+    </form>
+
+
+    <p class="bottom-link">
+
+        Already have an account?
+
+        <a href="login.html">
+            Login
+        </a>
+
+    </p>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+
+</html>

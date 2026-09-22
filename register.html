@@ -3,56 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Join DarbGo</title>
-
-    <link rel="stylesheet" href="registeration-style.css">
+    <link rel="stylesheet" href="css/registeration-style.css">
 </head>
 
 <body>
 
     <div class="register-container">
 
+        <div class="top-nav">
+            <div class="brand-logo">
+                <img src="assets/logo/darbgo-logo.png" alt="DarbGo Logo">
+            </div>
+
+            <a href="index.html" class="back-link">← Back to home</a>
+        </div>
+
         <div class="register-header">
             <h1>Join DarbGo</h1>
-
             <p>Choose how you'll use DarbGo</p>
         </div>
 
-
         <div class="role-container">
 
-            <!-- Student -->
-
-            <div class="role-card"
+            <div class="role-card student-card"
                  onclick="window.location.href='student-register.html'">
 
-                <div class="role-icon">
-                    🎓
+                <div class="card-top">
+                    <span class="role-badge badge-student">
+                        For students
+                    </span>
                 </div>
+
+                <div class="role-icon">🎓</div>
 
                 <h2>I'm a Student</h2>
 
                 <p>
-                    Find university transportation that matches
-                    your location and schedule.
+                    Find university transportation that matches your
+                    location and schedule.
                 </p>
 
-                <button>
+                <button class="card-btn">
                     Continue as Student
                 </button>
 
             </div>
 
 
-            <!-- Driver -->
-
-            <div class="role-card"
+            <div class="role-card driver-card"
                  onclick="window.location.href='driver-register.html'">
 
-                <div class="role-icon">
-                    🚗
+                <div class="card-top">
+                    <span class="role-badge badge-driver">
+                        For drivers
+                    </span>
                 </div>
+
+                <div class="role-icon">🚗</div>
 
                 <h2>I'm a Driver</h2>
 
@@ -61,7 +69,7 @@
                     transportation opportunities.
                 </p>
 
-                <button>
+                <button class="card-btn">
                     Continue as Driver
                 </button>
 
@@ -69,14 +77,11 @@
 
         </div>
 
-
         <div class="login-link">
-
             <p>
                 Already have an account?
                 <a href="login.html">Login</a>
             </p>
-
         </div>
 
     </div>

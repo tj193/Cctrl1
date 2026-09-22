@@ -5,169 +5,305 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #f5f7fb;
-
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Arial, sans-serif;
+    background-color: #e5e9f0;
     min-height: 100vh;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
-    padding: 30px;
+    padding: 40px 20px;
+    color: #1e293b;
 }
-
 
 .register-container {
     width: 100%;
     max-width: 900px;
-
-    background: white;
-
-    padding: 45px;
-
-    border-radius: 20px;
-
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    background-color: #ffffff;
+    padding: 40px 45px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
+.top-nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
 
-/* Header */
+.brand-logo {
+    width: 140px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.brand-logo img {
+    width: 140px !important;
+    height: 50px !important;
+    max-width: 140px !important;
+    object-fit: contain;
+    display: block;
+}
+
+.back-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: #1d4ed8;
+}
 
 .register-header {
     text-align: center;
-
-    margin-bottom: 40px;
+    margin-bottom: 35px;
 }
 
 .register-header h1 {
     font-size: 36px;
-
-    color: #1f2937;
-
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
     margin-bottom: 10px;
 }
 
 .register-header p {
-    color: #6b7280;
-
-    font-size: 17px;
+    color: #64748b;
+    font-size: 16px;
+    line-height: 1.5;
 }
-
-
-/* Roles */
 
 .role-container {
+    width: 100%;
     display: grid;
-
     grid-template-columns: repeat(2, 1fr);
-
-    gap: 25px;
+    gap: 20px;
 }
 
-
 .role-card {
-    border: 2px solid #e5e7eb;
-
-    border-radius: 18px;
-
-    padding: 30px;
-
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 28px;
     text-align: center;
-
     cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e2e8f0;
+}
 
-    transition: 0.3s;
+.student-card {
+    border-top: 4px solid #2563eb;
+}
+
+.driver-card {
+    border-top: 4px solid #10b981;
 }
 
 .role-card:hover {
-    transform: translateY(-5px);
-
-    border-color: #2563eb;
-
-    box-shadow: 0 10px 25px rgba(37,99,235,0.12);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.06);
 }
 
-
-.role-icon {
-    font-size: 55px;
-
+.card-top {
+    width: 100%;
+    text-align: left;
     margin-bottom: 15px;
 }
 
+.role-badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.badge-student {
+    background-color: #e0f2fe;
+    color: #0284c7;
+}
+
+.badge-driver {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.role-icon {
+    font-size: 45px;
+    margin-bottom: 12px;
+    line-height: 1;
+}
 
 .role-card h2 {
-    color: #1f2937;
-
-    margin-bottom: 12px;
+    color: #0f172a;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
-
 
 .role-card p {
-    color: #6b7280;
-
-    line-height: 1.6;
-
-    min-height: 75px;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    min-height: 45px;
 }
 
-
-.role-card button {
+.card-btn {
     width: 100%;
-
+    background-color: #2563eb;
+    color: #ffffff;
     border: none;
-
-    background: #2563eb;
-
-    color: white;
-
-    padding: 13px;
-
+    padding: 12px 20px;
     border-radius: 10px;
-
     font-size: 15px;
-
+    font-weight: 600;
     cursor: pointer;
-
-    margin-top: 20px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.role-card button:hover {
-    background: #1d4ed8;
+.card-btn:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
 }
 
-
-/* Login link */
+.card-btn:active {
+    transform: translateY(0);
+}
 
 .login-link {
     text-align: center;
-
-    margin-top: 30px;
-
-    color: #6b7280;
+    margin-top: 35px;
+    color: #64748b;
+    font-size: 15px;
 }
 
 .login-link a {
     color: #2563eb;
-
     text-decoration: none;
-
-    font-weight: bold;
+    font-weight: 700;
 }
 
+.login-link a:hover {
+    text-decoration: underline;
+}
 
-/* Mobile */
+@media (max-width: 900px) {
+    .register-container {
+        max-width: 700px;
+        padding: 35px;
+    }
+
+    .register-header h1 {
+        font-size: 32px;
+    }
+}
 
 @media (max-width: 700px) {
-
-    .role-container {
-        grid-template-columns: 1fr;
+    body {
+        padding: 20px 15px;
+        align-items: flex-start;
     }
 
     .register-container {
-        padding: 25px;
+        width: 100%;
+        padding: 25px 20px;
+        border-radius: 18px;
     }
 
+    .top-nav {
+        margin-bottom: 20px;
+    }
+
+    .brand-logo {
+        width: 110px;
+        height: 40px;
+    }
+
+    .brand-logo img {
+        width: 110px !important;
+        height: 40px !important;
+        max-width: 110px !important;
+    }
+
+    .back-link {
+        font-size: 12px;
+    }
+
+    .register-header {
+        margin-bottom: 25px;
+    }
+
+    .register-header h1 {
+        font-size: 28px;
+    }
+
+    .register-header p {
+        font-size: 14px;
+    }
+
+    .role-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .role-card {
+        padding: 22px;
+    }
+
+    .role-icon {
+        font-size: 40px;
+    }
+
+    .role-card h2 {
+        font-size: 20px;
+    }
+
+    .role-card p {
+        font-size: 13px;
+        min-height: auto;
+    }
+
+    .login-link {
+        margin-top: 25px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 400px) {
+    .register-container {
+        padding: 20px 15px;
+    }
+
+    .register-header h1 {
+        font-size: 25px;
+    }
+
+    .brand-logo {
+        width: 90px;
+        height: 35px;
+    }
+
+    .brand-logo img {
+        width: 90px !important;
+        height: 35px !important;
+        max-width: 90px !important;
+    }
+
+    .role-card {
+        padding: 18px;
+    }
 }
 /* student-register-style */
 .form-container {

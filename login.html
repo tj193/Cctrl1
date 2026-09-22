@@ -1,99 +1,41 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Login - DarbGo</title>
-
-    <link rel="stylesheet"
-          href="css/registeration-style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome back — DarbGo</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/auth/forms.css">
 </head>
-
-
-<body>
-
-<div class="form-container">
-
-    <h1>Welcome Back to DarbGo</h1>
-
-    <p class="form-description">
-        Login to continue
-    </p>
-
-
-    <form id="loginForm">
-
-
-        <label>Email / Phone</label>
-
-        <input
-            type="text"
-            id="loginIdentifier"
-            placeholder="Enter email or phone"
-            required
-        >
-
-
-        <label>Password</label>
-
-        <input
-            type="password"
-            id="loginPassword"
-            placeholder="Enter password"
-            required
-        >
-
-
-        <div class="remember-row">
-
-            <label class="remember-label">
-
-                <input
-                    type="checkbox"
-                    id="rememberMe"
-                >
-
-                Remember Me
-
-            </label>
-
-
-            <a href="#">
-                Forgot Password?
-            </a>
-
-        </div>
-
-
-        <button type="submit">
-            Login
-        </button>
-
-
-    </form>
-
-
-    <p class="bottom-link">
-
-        Don't have an account?
-
-        <a href="register.html">
-            Create Account
-        </a>
-
-    </p>
-
-</div>
-
-
-<script src="js/registeration.js"></script>
-
+<body class="login-page">
+  <header class="login-nav">
+    <a class="login-brand" href="index.html" aria-label="DarbGo home"><img src="assets/logo/darbgo-logo.png" alt=""><span>Darb<span>Go</span></span></a>
+    <p>New to DarbGo? <a href="register.html">Create an account</a></p>
+  </header>
+  <main class="login-shell">
+    <section class="login-story" aria-labelledby="story-title">
+      <div><p class="login-eyebrow"><span></span> YOUR ROUTE IS WAITING</p><h1 id="story-title">Pick up where<br>your journey<br><em>left off.</em></h1><p class="story-copy">Your neighborhood, university and arrival time stay together in one simple journey.</p></div>
+      <div class="route-preview" aria-label="Example student journey">
+        <p>YOUR MORNING, AT A GLANCE</p>
+        <div class="preview-stop"><span class="preview-marker"></span><div><small>FROM</small><strong>Your neighborhood</strong></div></div><div class="preview-line"></div>
+        <div class="preview-stop"><span class="preview-marker destination"></span><div><small>TO</small><strong>Your university</strong></div></div>
+        <div class="preview-time"><span>ARRIVE BY</span><strong>Your time</strong></div>
+      </div>
+      <div class="login-illustration"><img src="assets/illustrations/bus-stop.svg" alt="People waiting together at a bus stop"></div>
+      <a class="illustration-credit" href="https://storyset.com/transport" target="_blank" rel="noopener">Illustration by Storyset</a>
+    </section>
+    <section class="login-panel" aria-labelledby="login-title">
+      <a class="auth-back" href="register.html">← Choose account type</a>
+      <p class="login-eyebrow">GOOD TO SEE YOU AGAIN</p><h2 id="login-title">Welcome back.</h2><p class="form-description">Sign in to continue your DarbGo journey.</p>
+      <form id="loginForm" novalidate>
+        <div class="login-field"><label for="loginIdentifier">Email or Iraqi mobile number</label><input type="text" id="loginIdentifier" autocomplete="username" placeholder="you@example.com or 07XX XXX XXXX" required></div>
+        <div class="login-field"><div class="label-row"><label for="loginPassword">Password</label><button type="button" id="toggleLoginPassword" aria-pressed="false">Show</button></div><input type="password" id="loginPassword" autocomplete="current-password" placeholder="Enter your password" required></div>
+        <button class="login-submit" type="submit">Continue to DarbGo <span aria-hidden="true">→</span></button>
+      </form>
+      <div class="demo-note"><strong>Local preview</strong><p>This demo signs you in only on this browser. Nothing is sent to a server.</p></div>
+      <p class="bottom-link">Don’t have an account? <a href="register.html">Choose how to join</a></p>
+    </section>
+  </main>
+  <script src="js/auth/account-store.js"></script><script src="js/auth/login.js"></script>
 </body>
-
 </html>

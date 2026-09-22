@@ -175,7 +175,7 @@ function renderMatch(area, university, arrival) {
         <div><dt>Arrives</dt><dd>before ${arrival}</dd></div>
         <div><dt>Price</dt><dd>75,000 IQD / mo</dd></div>
         <div><dt>Seats</dt><dd>3 available</dd></div>
-        <div><dt>Driver</dt><dd>Approved ✓</dd></div>
+        <div><dt>Driver</dt><dd>Approved </dd></div>
         <div><dt>Match</dt><dd>94%</dd></div>
       </dl>
       <button type="button" class="button primary" data-preview="join">Send join request ↗</button>

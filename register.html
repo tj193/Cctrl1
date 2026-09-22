@@ -1,90 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join DarbGo</title>
-    <link rel="stylesheet" href="css/registeration-style.css">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Choose your journey — DarbGo</title>
+  <link rel="stylesheet" href="css/variables.css"><link rel="stylesheet" href="css/auth/onboarding.css">
 </head>
-
-<body>
-
-    <div class="register-container">
-
-        <div class="top-nav">
-            <div class="brand-logo">
-                <img src="assets/logo/darbgo-logo.png" alt="DarbGo Logo">
-            </div>
-
-            <a href="index.html" class="back-link">← Back to home</a>
-        </div>
-
-        <div class="register-header">
-            <h1>Join DarbGo</h1>
-            <p>Choose how you'll use DarbGo</p>
-        </div>
-
-        <div class="role-container">
-
-            <div class="role-card student-card"
-                 onclick="window.location.href='student-register.html'">
-
-                <div class="card-top">
-                    <span class="role-badge badge-student">
-                        For students
-                    </span>
-                </div>
-
-                <div class="role-icon">🎓</div>
-
-                <h2>I'm a Student</h2>
-
-                <p>
-                    Find university transportation that matches your
-                    location and schedule.
-                </p>
-
-                <button class="card-btn">
-                    Continue as Student
-                </button>
-
-            </div>
-
-
-            <div class="role-card driver-card"
-                 onclick="window.location.href='driver-register.html'">
-
-                <div class="card-top">
-                    <span class="role-badge badge-driver">
-                        For drivers
-                    </span>
-                </div>
-
-                <div class="role-icon">🚗</div>
-
-                <h2>I'm a Driver</h2>
-
-                <p>
-                    Create routes, manage students and discover
-                    transportation opportunities.
-                </p>
-
-                <button class="card-btn">
-                    Continue as Driver
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="login-link">
-            <p>
-                Already have an account?
-                <a href="login.html">Login</a>
-            </p>
-        </div>
-
-    </div>
-
+<body class="onboarding role-page">
+  <header class="auth-nav"><a class="brand" href="index.html" aria-label="DarbGo home"><img src="assets/logo/darbgo-logo.png" alt=""><span>Darb<span>Go</span></span></a><a class="back-home" href="index.html">Back to home ↗</a></header>
+  <main class="join-layout">
+    <section class="join-story">
+      <p class="eyebrow"><span class="status-dot"></span> YOUR EVERYDAY, BETTER CONNECTED</p>
+      <h1>Good mornings<br>start with a<br><em>better journey.</em></h1>
+      <p class="story-description">Your neighborhood. Your campus. Your people.<br>A simpler way to move through university life.</p>
+      <div class="illustration-wrap"><img src="assets/illustrations/bus-stop.svg" alt="People waiting together at a bus stop" width="500" height="500"></div>
+      <div class="story-footer"><span>Made for university life in Iraq</span><a href="https://storyset.com/transport" target="_blank" rel="noopener">Illustration by Storyset</a></div>
+    </section>
+    <section class="join-choices" aria-labelledby="join-title">
+      <p class="eyebrow">LET’S GET YOU ON YOUR WAY</p><h2 id="join-title">One community.<br>Two ways to join.</h2><p class="muted">Choose your side of the journey. We’ll take it from here.</p>
+      <a href="student/register.html" class="role-option student-option"><div class="role-heading"><span class="role-number">01</span><span class="role-tag">FOR STUDENTS</span><span class="role-arrow" aria-hidden="true">↗</span></div><h3>I’m finding my ride.</h3><p>Connect your home to your university, around your own schedule.</p><span class="role-action">Join as a student <span aria-hidden="true">→</span></span></a>
+      <a href="driver/register.html" class="role-option driver-option"><div class="role-heading"><span class="role-number">02</span><span class="role-tag">FOR DRIVERS</span><span class="role-arrow" aria-hidden="true">↗</span></div><h3>I’m driving the way.</h3><p>Share your route and help students get where they need to be.</p><span class="role-action">Join as a driver <span aria-hidden="true">→</span></span></a>
+      <p class="login-prompt">Already part of DarbGo? <a href="login.html">Log in</a></p>
+    </section>
+  </main>
 </body>
 </html>

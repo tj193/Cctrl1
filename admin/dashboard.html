@@ -11,12 +11,11 @@
     <title>Admin Dashboard</title>
 
     <link rel="stylesheet"
-          href="css/registeration-style.css">
+          href="../css/auth/forms.css">
 
 </head>
 
-
-<body>
+<body data-role="admin">
 
 <div class="dashboard">
 
@@ -25,7 +24,6 @@
     <p>
         Welcome to DarbGo Administration
     </p>
-
 
     <div class="admin-section">
 
@@ -37,15 +35,14 @@
 
     </div>
 
-
     <button onclick="logout()">
         Logout
     </button>
 
 </div>
 
-
-<script src="js/registeration.js"></script>
+<script src="../js/auth/account-store.js"></script>
+<script src="../js/auth/dashboard.js"></script>
 
 </body>
 

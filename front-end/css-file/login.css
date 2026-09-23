@@ -1,0 +1,173 @@
+/* ==========================================================================
+   DarbGo - Dedicated Login Page Stylesheet (login.css)
+   ========================================================================== */
+
+/* 1. System Variables & Color System */
+:root {
+    --navy-900: #0f172a;
+    --navy-800: #1e293b;
+    --blue-600: #2563eb;
+    --blue-100: #dbeafe;
+    --blue-50: #eff6ff;
+    
+    --teal-400: #2dd4bf;
+    --slate-600: #475569;
+    --slate-400: #94a3b8;
+    --slate-100: #f1f5f9;
+    
+    --brick-500: #ef4444;
+    --accent: #2563eb;
+    --accent-strong: #1d4ed8;
+    
+    --paper: #ffffff;
+    --cloud: #f8fafc;
+    --ink: #0f172a;
+    --text: #334155;
+    --border: #e2e8f0;
+
+    --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    --radius: 12px;
+    --radius-sm: 8px;
+
+    --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* 2. Global Resets & Layout */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font);
+}
+
+body {
+    background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* 3. Login Box Container */
+.login-container,
+body > div:first-child {
+    background: var(--paper);
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 35px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+/* Header Area */
+.login-header,
+.login-container > div:first-child {
+    margin-bottom: 28px;
+}
+
+.login-header h1,
+.login-container h1 {
+    font-size: 26px;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.login-header h1 span,
+.login-container h1 span {
+    color: var(--teal-400);
+}
+
+.login-header p,
+.login-container > div:first-child p {
+    color: var(--slate-600);
+    font-size: 14px;
+}
+
+/* 4. Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    text-align: left;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background-color: var(--cloud);
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+input:focus {
+    border-color: var(--accent);
+    background-color: var(--paper);
+    box-shadow: 0 0 0 3px var(--blue-50);
+}
+
+/* 5. Submit Button */
+button[type="submit"],
+.btn-login {
+    width: 100%;
+    background-color: var(--accent);
+    color: var(--paper);
+    border: none;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+}
+
+button[type="submit"]:hover,
+.btn-login:hover {
+    background-color: var(--accent-strong);
+}
+
+/* 6. Error & Alert Messages */
+.error-message,
+#errorMessage {
+    background-color: #fdf2f2;
+    color: var(--brick-500);
+    border: 1px solid #f87171;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Hide error message if empty or hidden attribute exists */
+.error-message[hidden],
+#errorMessage[hidden],
+#errorMessage:empty {
+    display: none !important;
+}

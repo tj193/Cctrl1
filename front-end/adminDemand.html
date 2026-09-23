@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Demand Analytics - DarbGo Admin</title>
+
+        <link rel="stylesheet" href="css-file/stayle.css">
+</head>
+<body>
+
+    <div>
+        <h2>DarbGo Admin</h2>
+        <ul>
+            <li><a href="adminApproval.html">Driver Approvals</a></li>
+            <li><a href="adminStudent.html">Students</a></li>
+            <li><a href="adminDriver.html">Drivers</a></li>
+            <li><a href="adminRoute.html">Routes</a></li>
+            <li><a href="adminDemand.html">Route Demand</a></li>
+            <li><a href="adminUniversities.html">Universities & Areas</a></li>
+            <li><a href="adminReports.html">Reports</a></li>
+            <li><a href="setting.html">Settings</a></li>
+            <li><a href="index.html">Dashboard Overview</a></li>
+            <li><button type="button" id="logoutBtn">Logout</button></li>
+        </ul>
+    </div>
+
+    <div>
+
+        <div>
+            <h1>Route Demand Analytics</h1>
+            <p>Analyze student transport demands, top requested destinations, and peak travel hours</p>
+        </div>
+
+        <div>
+            <form id="demandFilterForm">
+                <div>
+                    <label for="timeRangeFilter">Time Range:</label>
+                    <select id="timeRangeFilter">
+                        <option value="this_week">This Week</option>
+                        <option value="this_month">This Month</option>
+                        <option value="all_time">All Time</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="universityDemandFilter">Filter by University:</label>
+                    <select id="universityDemandFilter">
+                        <option value="all">All Universities</option>
+                    </select>
+                </div>
+
+                <button type="reset" id="resetDemandFiltersBtn">Reset Filters</button>
+            </form>
+        </div>
+
+        <div>
+            <h2>Top Requested Routes</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Origin Area</th>
+                        <th>Destination University</th>
+                        <th>Student Requests</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="topRoutesTableBody">
+
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <div>
+                <h2>Most Requested Universities</h2>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>University Name</th>
+                            <th>Total Student Requests</th>
+                            <th>Active Routes Serving</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topUniversitiesTableBody">
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h2>Most Requested Areas</h2>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Area Name</th>
+                            <th>Student Requests Count</th>
+                            <th>Unmet Demand Count</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topAreasTableBody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <h2>Peak Transportation Times</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Time Slot</th>
+                        <th>Transportation Type</th>
+                        <th>Request Volume</th>
+                    </tr>
+                </thead>
+                <tbody id="peakTimesTableBody">
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="JS-file/main.js"></script>
+</body>
+</html>

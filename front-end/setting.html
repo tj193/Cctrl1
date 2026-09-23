@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings - DarbGo Admin</title>
+
+        <link rel="stylesheet" href="css-file/stayle.css">
+</head>
+<body>
+
+    <div>
+        <h2>DarbGo Admin</h2>
+        <ul>
+            <li><a href="adminApproval.html">Driver Approvals</a></li>
+            <li><a href="adminStudent.html">Students</a></li>
+            <li><a href="adminDriver.html">Drivers</a></li>
+            <li><a href="adminRoute.html">Routes</a></li>
+            <li><a href="adminDemand.html">Route Demand</a></li>
+            <li><a href="adminUniversities.html">Universities & Areas</a></li>
+            <li><a href="adminReports.html">Reports</a></li>
+            <li><a href="setting.html">Settings</a></li>
+            <li><a href="index.html">Dashboard Overview</a></li>
+            <li><button type="button" id="logoutBtn">Logout</button></li>
+        </ul>
+    </div>
+
+    <div>
+
+        <div>
+            <h1>System Settings & Account Management</h1>
+            <p>Configure operational toggles, administrative credentials, and system parameters</p>
+        </div>
+
+        <section>
+            <h2>Admin Profile Settings</h2>
+            <form id="adminProfileForm">
+                <div>
+                    <label for="adminNameInput">Admin Name:</label><br>
+                    <input type="text" id="adminNameInput" required>
+                </div>
+                <br>
+                <div>
+                    <label for="adminEmailInput">Email Address:</label><br>
+                    <input type="email" id="adminEmailInput" required>
+                </div>
+                <br>
+                <div>
+                    <label for="adminPhoneInput">Phone Number:</label><br>
+                    <input type="tel" id="adminPhoneInput" required>
+                </div>
+                <br>
+                <button type="submit" id="saveProfileBtn">Update Profile</button>
+            </form>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Security & Authentication</h2>
+            <form id="changePasswordForm">
+                <div>
+                    <label for="currentPasswordInput">Current Password:</label><br>
+                    <input type="password" id="currentPasswordInput" required>
+                </div>
+                <br>
+                <div>
+                    <label for="newPasswordInput">New Password:</label><br>
+                    <input type="password" id="newPasswordInput" required>
+                </div>
+                <br>
+                <div>
+                    <label for="confirmPasswordInput">Confirm New Password:</label><br>
+                    <input type="password" id="confirmPasswordInput" required>
+                </div>
+                <br>
+                <button type="submit" id="changePasswordBtn">Change Password</button>
+            </form>
+        </section>
+
+        <hr>
+        <section>
+            <h2>System Operations & Toggles</h2>
+            <form id="systemConfigForm">
+                <div>
+                    <input type="checkbox" id="allowStudentRegistration" name="allowStudentRegistration">
+                    <label for="allowStudentRegistration">Allow New Student Registrations</label>
+                </div>
+                <br>
+                <div>
+                    <input type="checkbox" id="allowDriverApplications" name="allowDriverApplications">
+                    <label for="allowDriverApplications">Allow New Driver Registration Applications</label>
+                </div>
+                <br>
+                <div>
+                    <input type="checkbox" id="enableAutoDemandMatching" name="enableAutoDemandMatching">
+                    <label for="enableAutoDemandMatching">Enable Automatic Route Demand Grouping</label>
+                </div>
+                <br>
+                <button type="submit" id="saveSystemConfigBtn">Save Operational Settings</button>
+            </form>
+        </section>
+
+    </div>
+
+    <script src="JS-file/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Complaints - DarbGo Admin</title>
+
+        <link rel="stylesheet" href="css-file/stayle.css">
+</head>
+<body>
+
+    <div>
+        <h2>DarbGo Admin</h2>
+        <ul>
+            <li><a href="adminApproval.html">Driver Approvals</a></li>
+            <li><a href="adminStudent.html">Students</a></li>
+            <li><a href="adminDriver.html">Drivers</a></li>
+            <li><a href="adminRoute.html">Routes</a></li>
+            <li><a href="adminDemand.html">Route Demand</a></li>
+            <li><a href="adminUniversities.html">Universities & Areas</a></li>
+            <li><a href="adminReports.html">Reports</a></li>
+            <li><a href="setting.html">Settings</a></li>
+            <li><a href="index.html">Dashboard Overview</a></li>
+            <li><button type="button" id="logoutBtn">Logout</button></li>
+        </ul>
+    </div>
+
+    <div>
+
+        <div>
+            <h1>Reports & Complaints Management</h1>
+            <p>Review and handle user reports, driver feedback, and system issues</p>
+        </div>
+
+        <div>
+            <form id="reportFilterForm">
+                <div>
+                    <label for="reportTypeFilter">Report Type:</label>
+                    <select id="reportTypeFilter">
+                        <option value="all">All Types</option>
+                        <option value="user_report">User Reports</option>
+                        <option value="driver_report">Driver Reports</option>
+                        <option value="route_report">Route Reports</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="reportStatusFilter">Status:</label>
+                    <select id="reportStatusFilter">
+                        <option value="all">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="dismissed">Dismissed</option>
+                    </select>
+                </div>
+
+                <button type="reset" id="resetReportFiltersBtn">Reset Filters</button>
+            </form>
+        </div>
+
+        <div>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Report ID</th>
+                        <th>Type</th>
+                        <th>Submitted By</th>
+                        <th>Target / Subject</th>
+                        <th>Submission Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="reportsTableBody">
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div id="reportModal" hidden>
+        <div>
+            <button type="button" id="closeReportModalBtn">&times; Close</button>
+            <h2>Report Details</h2>
+            
+            <section id="reportDetailsSection">
+
+            </section>
+
+            <section>
+                <h3>Administrative Resolution</h3>
+                <form id="reportResolutionForm">
+                    <input type="hidden" id="modalReportId">
+                    <label for="resolutionNotes">Resolution Summary / Admin Action Notes:</label><br>
+                    <textarea id="resolutionNotes" rows="3" placeholder="Enter resolution details..."></textarea>
+                    <br>
+                    <button type="button" id="resolveReportBtn">Mark as Resolved</button>
+                    <button type="button" id="dismissReportBtn">Dismiss Report</button>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <script src="JS-file/main.js"></script>
+</body>
+</html>

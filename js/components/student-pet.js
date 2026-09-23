@@ -28,7 +28,8 @@
   const message = document.createElement('span');
   message.className = 'darbgo-pet__message';
   message.setAttribute('aria-hidden', 'true');
-  message.textContent = firstName ? `Welcome, ${firstName}!` : 'Welcome to DarbGo!';
+  const greeting = firstName ? `Welcome, ${firstName}!` : 'Welcome to DarbGo!';
+  message.textContent = greeting;
   const spriteElement = document.createElement('span');
   spriteElement.className = 'darbgo-pet__sprite';
   spriteElement.setAttribute('aria-hidden', 'true');
@@ -117,13 +118,12 @@
 
   pet.addEventListener('click', () => {
     if (suppressClick) { suppressClick = false; return; }
-    if (currentAnimation !== 'wave') playPetAnimation('wave');
+    window.DarbGoPet.say(greeting);
   });
 
   pet.addEventListener('pointerdown', event => {
     if (event.button !== undefined && event.button !== 0) return;
     dragState = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, originX: offsetX, originY: offsetY, moved: false };
-    window.clearTimeout(visibilityTimer);
     pet.setPointerCapture(event.pointerId);
     pet.classList.add('is-dragging');
   });
@@ -170,7 +170,10 @@
     }
     movePet(offsetX, offsetY, true);
   });
-  window.addEventListener('pagehide', () => window.clearTimeout(frameTimer), { once: true });
+  window.addEventListener('pagehide', () => {
+    window.clearTimeout(frameTimer);
+    window.clearTimeout(visibilityTimer);
+  }, { once: true });
   window.DarbGoPet = {
     play: playPetAnimation,
     say(text) {

@@ -19,7 +19,8 @@
   transition: opacity .2s ease;
 }
 
-.darbgo-pet.is-ready.is-context-visible {
+.darbgo-pet.is-ready.is-context-visible,
+body[data-role="student"] .darbgo-pet.is-ready {
   opacity: 1;
   pointer-events: auto;
 }
@@ -73,7 +74,7 @@
   transition: opacity .18s ease, transform .18s ease;
 }
 
-.darbgo-pet[data-animation="wave"] .darbgo-pet__message {
+.darbgo-pet.is-context-visible .darbgo-pet__message {
   opacity: 1;
   transform: translateY(0) scale(1);
 }

@@ -1,0 +1,129 @@
+.darbgo-pet {
+  --pet-scale: .78;
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 40;
+  width: calc(160px * var(--pet-scale));
+  height: calc(205px * var(--pet-scale));
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-tap-highlight-color: transparent;
+  transform: translate3d(var(--pet-x, 0), var(--pet-y, 0), 0);
+  transition: opacity .2s ease;
+}
+
+.darbgo-pet.is-ready.is-context-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.darbgo-pet:hover .darbgo-pet__sprite {
+  scale: 1.025;
+}
+
+.darbgo-pet:active .darbgo-pet__sprite,
+.darbgo-pet.is-dragging .darbgo-pet__sprite {
+  scale: .99;
+}
+
+.darbgo-pet:focus-visible {
+  outline: 3px solid #1677ff;
+  outline-offset: 4px;
+  border-radius: 24px;
+}
+
+.darbgo-pet__sprite {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 160px;
+  height: 205px;
+  background-repeat: no-repeat;
+  background-position: var(--pet-frame-x, -300px) var(--pet-frame-y, -125px);
+  transform: scale(var(--pet-scale));
+  transform-origin: right bottom;
+  pointer-events: none;
+}
+
+.darbgo-pet__message {
+  position: absolute;
+  right: 4px;
+  bottom: calc(100% + 10px);
+  width: max-content;
+  max-width: 180px;
+  padding: 10px 14px;
+  border: 1px solid #dce7f7;
+  border-radius: 16px 16px 5px 16px;
+  background: rgba(255, 255, 255, .97);
+  color: #11213e;
+  box-shadow: 0 12px 32px rgba(17, 33, 62, .16);
+  font: 700 12px/1.35 var(--font, system-ui, sans-serif);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(6px) scale(.96);
+  transform-origin: right bottom;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.darbgo-pet[data-animation="wave"] .darbgo-pet__message {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.darbgo-pet.is-message-below .darbgo-pet__message {
+  top: calc(100% + 8px);
+  bottom: auto;
+  border-radius: 16px 5px 16px 16px;
+  transform-origin: right top;
+}
+
+.darbgo-pet.is-message-left .darbgo-pet__message {
+  right: auto;
+  left: 4px;
+  border-radius: 16px 16px 16px 5px;
+  transform-origin: left bottom;
+}
+
+.darbgo-pet.is-message-left.is-message-below .darbgo-pet__message {
+  border-radius: 5px 16px 16px 16px;
+  transform-origin: left top;
+}
+
+.darbgo-pet.is-dragging {
+  cursor: grabbing;
+  transition: none;
+}
+
+@media (max-width: 680px) {
+  .darbgo-pet {
+    --pet-scale: .58;
+    right: 8px;
+    bottom: 12px;
+  }
+
+  body[data-role="student"] .darbgo-pet {
+    bottom: 76px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .darbgo-pet {
+    transition: none;
+  }
+
+  .darbgo-pet:hover .darbgo-pet__sprite,
+  .darbgo-pet:active .darbgo-pet__sprite,
+  .darbgo-pet.is-dragging .darbgo-pet__sprite {
+    scale: 1;
+  }
+
+  .darbgo-pet__message { transition: none; }
+}

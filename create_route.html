@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Route - Driver Dashboard</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/driver_dashboard.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <h2>Naseeb / Driver</h2>
+            <ul>
+                <li><a href="driver_dashboard.html">Dashboard</a></li>
+                <li><a href="#">My Routes</a></li>
+                <li><a href="#" class="active">Create Route</a></li>
+                <li><a href="#">Opportunities 🔥</a></li>
+                <li><a href="#">Student Requests</a></li>
+                <li><a href="#">My Students</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#" class="logout">Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1>Create New Route</h1>
+                <p>Fill in the details below to publish a new route for students.</p>
+            </header>
+
+            <section class="form-section">
+                <form class="route-form">
+                    <div class="form-group">
+                        <label>Starting Area</label>
+                        <input type="text" placeholder="e.g., Shaab" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Areas / Stops</label>
+                        <input type="text" placeholder="e.g., Talbiya, Palestine Street" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>University</label>
+                        <input type="text" placeholder="e.g., Mustansiriyah University" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Departure Time</label>
+                            <input type="time" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Return Time</label>
+                            <input type="time" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Capacity / Seats</label>
+                            <input type="number" placeholder="e.g., 14" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (IQD)</label>
+                            <input type="text" placeholder="e.g., 50,000" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Publish Route</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/driver_dashboard.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <h2>Naseeb / Driver</h2>
+            <ul>
+                <li><a href="driver_dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="my_routes.html">My Routes</a></li>
+                <li><a href="create_route.html">Create Route</a></li>
+                <li><a href="opportunities.html">Opportunities 🔥</a></li>
+                <li><a href="student_requests.html">Student Requests</a></li>
+                <li><a href="my_students.html">My Students</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="login.html" class="logout">Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1>Welcome, Ahmed 👋</h1>
+                <p>Here is the quick summary of your daily activity and route management.</p>
+            </header>
+
+            <section class="overview-cards">
+                <div class="card">
+                    <h3>Active Routes</h3>
+                    <p class="number">2</p>
+                </div>
+                <div class="card">
+                    <h3>Total Students</h3>
+                    <p class="number">18</p>
+                </div>
+                <div class="card">
+                    <h3>Available Seats</h3>
+                    <p class="number">5</p>
+                </div>
+                <div class="card">
+                    <h3>Pending Requests</h3>
+                    <p class="number">4</p>
+                </div>
+            </section>
+
+            <section class="opportunities-section">
+                <h2>🔥 Route Opportunities (High Demand)</h2>
+                <div class="opportunity-card">
+                    <div class="opp-info">
+                        <h3>Talbiya → Mustansiriyah</h3>
+                        <p><strong>27 Students Waiting</strong></p>
+                        <p>Preferred Time: 7:00 – 7:30 AM</p>
+                    </div>
+                    <a href="create_route.html" class="btn-primary">Create Route From Demand</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>

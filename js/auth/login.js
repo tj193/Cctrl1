@@ -20,7 +20,7 @@
     message.textContent = '';
     try {
       const user = await window.DarbAccounts.login(document.getElementById('loginIdentifier').value, password.value);
-      const destinations = { student: 'student/dashboard.html', driver: 'driver/dashboard.html', admin: 'admin/dashboard.html' };
+      const destinations = { student: 'student/dashboard.html', driver: 'driver_dashboard.html', admin: 'admin/dashboard.html' };
       if (!destinations[user.role]) throw new Error('This demo account has an unsupported role.');
       window.location.href = destinations[user.role];
     } catch (error) {

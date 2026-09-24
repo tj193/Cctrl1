@@ -11,22 +11,22 @@
     <title>Driver Registration</title>
 
     <link rel="stylesheet"
-          href="css/registeration-style.css">
+          href="../css/auth/forms.css">
 
 </head>
-
 
 <body>
 
 <div class="form-container driver-form">
 
+    <a class="auth-back" href="../register.html">← Choose account type</a>
     <h1>Driver Registration</h1>
 
     <p class="form-description">
         Create your DarbGo driver account
     </p>
 
-
+    <p class="demo-note">Local demo only. Use sample details. Photos and documents are optional; nothing is sent to a server. <a href="../driver_dashboard.html">Preview the driver dashboard</a>.</p>
     <form id="driverForm">
 
         <!-- ========================= -->
@@ -41,9 +41,7 @@
 
         </div>
 
-
-        <label>Full Name</label>
-
+        <label for="driverName">Full Name</label>
         <input
             type="text"
             id="driverName"
@@ -51,9 +49,7 @@
             required
         >
 
-
-        <label>Email</label>
-
+        <label for="driverEmail">Email</label>
         <input
             type="email"
             id="driverEmail"
@@ -61,9 +57,7 @@
             required
         >
 
-
-        <label>Phone Number</label>
-
+        <label for="driverPhone">Phone Number</label>
         <input
             type="tel"
             id="driverPhone"
@@ -71,9 +65,7 @@
             required
         >
 
-
-        <label>Password</label>
-
+        <label for="driverPassword">Password</label>
         <input
             type="password"
             id="driverPassword"
@@ -81,17 +73,13 @@
             required
         >
 
-
-        <label>Confirm Password</label>
-
+        <label for="driverConfirmPassword">Confirm Password</label>
         <input
             type="password"
             id="driverConfirmPassword"
             placeholder="Confirm your password"
             required
         >
-
-
 
         <!-- ========================= -->
         <!-- Vehicle Information -->
@@ -105,9 +93,7 @@
 
         </div>
 
-
-        <label>Vehicle Type</label>
-
+        <label for="vehicleType">Vehicle Type</label>
         <select id="vehicleType" required>
 
             <option value="">
@@ -132,9 +118,7 @@
 
         </select>
 
-
-        <label>Vehicle Model</label>
-
+        <label for="vehicleModel">Vehicle Model</label>
         <input
             type="text"
             id="vehicleModel"
@@ -142,9 +126,7 @@
             required
         >
 
-
-        <label>Plate Number</label>
-
+        <label for="plateNumber">Plate Number</label>
         <input
             type="text"
             id="plateNumber"
@@ -152,9 +134,7 @@
             required
         >
 
-
-        <label>Number of Seats</label>
-
+        <label for="numberOfSeats">Number of Seats</label>
         <input
             type="number"
             id="numberOfSeats"
@@ -163,17 +143,12 @@
             required
         >
 
-
-        <label>Vehicle Photo</label>
-
+        <label for="vehiclePhoto">Vehicle Photo (optional)</label>
         <input
             type="file"
             id="vehiclePhoto"
             accept="image/*"
-            required
         >
-
-
 
         <!-- ========================= -->
         <!-- Verification -->
@@ -184,31 +159,24 @@
             <h2>Verification Information</h2>
 
             <p>
-                Upload your documents for verification
+                Documents are optional in this local demo
             </p>
 
         </div>
 
-
-        <label>Driving License</label>
-
+        <label for="drivingLicense">Driving License (optional)</label>
         <input
             type="file"
             id="drivingLicense"
             accept="image/*,.pdf"
-            required
         >
 
-
-        <label>ID Document</label>
-
+        <label for="idDocument">ID Document (optional)</label>
         <input
             type="file"
             id="idDocument"
             accept="image/*,.pdf"
-            required
         >
-
 
         <button type="submit">
             Submit Registration
@@ -216,12 +184,11 @@
 
     </form>
 
-
     <p class="bottom-link">
 
         Already have an account?
 
-        <a href="login.html">
+        <a href="../login.html">
             Login
         </a>
 
@@ -229,8 +196,8 @@
 
 </div>
 
-
-<script src="js/registeration.js"></script>
+<script src="../js/auth/account-store.js"></script>
+<script src="registration.js"></script>
 
 </body>
 

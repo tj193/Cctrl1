@@ -1,4 +1,5 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+    ? `http://${window.location.hostname}:8000` : window.location.origin;
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
@@ -35,8 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (response.ok) {
 
-                    localStorage.setItem("adminToken", data.access_token);
-                    localStorage.setItem("adminEmail", email);
+                    sessionStorage.removeItem("adminPreview");
+                    sessionStorage.setItem("adminToken", data.access_token);
+                    sessionStorage.setItem("adminEmail", email);
 
                     window.location.href = "index.html";
                 } 

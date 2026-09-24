@@ -45,11 +45,6 @@
                     <input type="email" id="adminEmailInput" required>
                 </div>
                 <br>
-                <div>
-                    <label for="adminPhoneInput">Phone Number:</label><br>
-                    <input type="tel" id="adminPhoneInput" required>
-                </div>
-                <br>
                 <button type="submit" id="saveProfileBtn">Update Profile</button>
             </form>
         </section>
@@ -81,23 +76,24 @@
         <hr>
         <section>
             <h2>System Operations & Toggles</h2>
+            <p>Operational switches are not available until the server has a persisted configuration model.</p>
             <form id="systemConfigForm">
                 <div>
-                    <input type="checkbox" id="allowStudentRegistration" name="allowStudentRegistration">
+                    <input type="checkbox" id="allowStudentRegistration" name="allowStudentRegistration" disabled>
                     <label for="allowStudentRegistration">Allow New Student Registrations</label>
                 </div>
                 <br>
                 <div>
-                    <input type="checkbox" id="allowDriverApplications" name="allowDriverApplications">
+                    <input type="checkbox" id="allowDriverApplications" name="allowDriverApplications" disabled>
                     <label for="allowDriverApplications">Allow New Driver Registration Applications</label>
                 </div>
                 <br>
                 <div>
-                    <input type="checkbox" id="enableAutoDemandMatching" name="enableAutoDemandMatching">
+                    <input type="checkbox" id="enableAutoDemandMatching" name="enableAutoDemandMatching" disabled>
                     <label for="enableAutoDemandMatching">Enable Automatic Route Demand Grouping</label>
                 </div>
                 <br>
-                <button type="submit" id="saveSystemConfigBtn">Save Operational Settings</button>
+                <button type="submit" id="saveSystemConfigBtn" disabled>Save Operational Settings</button>
             </form>
         </section>
 

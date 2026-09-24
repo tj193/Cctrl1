@@ -1,8 +1,33 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+    ? `http://${window.location.hostname}:8000` : window.location.origin;
+
+const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+})[character]);
+const safeRecord = value => Array.isArray(value) ? value.map(safeRecord)
+    : value && typeof value === "object"
+        ? Object.fromEntries(Object.entries(value).map(([key, item]) => [key, safeRecord(item)]))
+        : typeof value === "string" ? escapeHtml(value) : value;
 
 document.addEventListener("DOMContentLoaded", () => {
+    const localHost = ["127.0.0.1", "localhost"].includes(window.location.hostname);
+    if (localHost && new URLSearchParams(window.location.search).get("preview") === "1") {
+        sessionStorage.setItem("adminPreview", "1");
+    }
+    const preview = localHost && sessionStorage.getItem("adminPreview") === "1";
+    if (preview) {
+        const notice = document.createElement("div");
+        notice.textContent = "Local preview only — live data and admin actions are unavailable.";
+        notice.style.cssText = "padding:12px 20px;background:#fff3cd;color:#664d03;font-weight:600;text-align:center";
+        document.body.prepend(notice);
+        document.getElementById("logoutBtn")?.addEventListener("click", () => {
+            sessionStorage.removeItem("adminPreview");
+            window.location.href = "login.html";
+        });
+        return;
+    }
     // 1. Auth Guard: Verify Admin session token
-    const token = localStorage.getItem("adminToken");
+    const token = sessionStorage.getItem("adminToken");
     if (!token) {
         window.location.href = "login.html";
         return;
@@ -33,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem("adminToken");
+                sessionStorage.removeItem("adminToken");
                 window.location.href = "login.html";
                 return;
             }
@@ -59,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             if (response.ok) {
-                const applications = await response.json();
+                const applications = safeRecord(await response.json());
                 renderRecentApprovals(applications);
             } else {
                 recentApprovalsTableBody.innerHTML = `<tr><td colspan="6">Failed to load recent applications.</td></tr>`;
@@ -104,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             if (response.ok) {
-                const reports = await response.json();
+                const reports = safeRecord(await response.json());
                 renderRecentReports(reports);
             } else {
                 recentReportsTableBody.innerHTML = `<tr><td colspan="6">Failed to load urgent reports.</td></tr>`;
@@ -144,8 +169,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 6. Logout Functionality
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
-            localStorage.removeItem("adminToken");
-            localStorage.removeItem("adminEmail");
+            sessionStorage.removeItem("adminToken");
+            sessionStorage.removeItem("adminEmail");
             window.location.href = "login.html";
         });
     }

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your student journey — DarbGo</title>
+  <link rel="stylesheet" href="../css/variables.css"><link rel="stylesheet" href="../css/auth/onboarding.css">
+  <script src="../js/data/iraq-catalogue.js" defer></script><script src="../js/data/iraq-map.js" defer></script><script src="../js/auth/account-store.js" defer></script><script src="../js/components/governorate-map.js" defer></script><script src="registration.js" defer></script>
+</head>
+<body class="onboarding student-page">
+  <header class="auth-nav"><a class="brand" href="../index.html" aria-label="DarbGo home"><img src="../assets/logo/darbgo-logo.png" alt=""><span>Darb<span>Go</span></span></a><span class="nav-login">Already have an account? <a href="../login.html">Log in</a></span></header>
+  <main class="registration-layout">
+    <aside class="journey-sidebar">
+      <a href="../register.html" class="back-home">← Change account type</a><p class="eyebrow">THE STUDENT JOURNEY</p><h1>A little about you.<br><em>A better way<br>to campus.</em></h1><p class="sidebar-description">Let’s make your morning commute feel a little more like you.</p>
+      <ol class="step-list" aria-label="Registration progress"><li aria-current="step"><span>01</span><div><strong>Your starting point</strong><small>Find yourself on the map</small></div></li><li><span>02</span><div><strong>Your daily journey</strong><small>Home, campus &amp; arrival time</small></div></li><li><span>03</span><div><strong>Make it yours</strong><small>Your account details</small></div></li></ol>
+      <div class="journey-ticket"><p class="eyebrow">YOUR JOURNEY, AT A GLANCE</p><div class="ticket-route"><span class="route-stop"></span><div><small>FROM</small><strong id="summaryFrom">Your neighborhood</strong></div></div><div class="ticket-route"><span class="route-stop destination"></span><div><small>TO</small><strong id="summaryTo">Your university</strong></div></div><div class="ticket-time"><span>ARRIVE BY</span><strong id="summaryTime">Your time</strong></div></div><p class="sidebar-foot">Built around your university day.</p>
+    </aside>
+    <section class="registration-panel">
+      <div class="progress-heading"><span id="stepCount">STEP 01 OF 03</span><span id="stepCaption">A good journey starts here</span></div><div class="progress-track" role="progressbar" aria-label="Registration progress" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1"><span id="progressFill"></span></div>
+      <form id="studentForm" novalidate>
+        <section class="form-step" data-step="0" aria-labelledby="locationTitle">
+          <p class="eyebrow panel-eyebrow">FIRST, YOUR CORNER OF IRAQ</p><h2 id="locationTitle" tabindex="-1">Where does your<br><span>journey begin?</span></h2><p class="muted">Pick your governorate on the map, or choose it below.</p>
+          <div class="location-layout">
+            <div class="map-panel"><div class="map-meta"><span>IRAQ</span><span>19 governorates</span></div><div id="governorateMap"></div><div class="map-selection" id="mapSelection" aria-live="polite">Your starting point is waiting.</div><a class="map-credit" href="https://commons.wikimedia.org/wiki/File:Iraqi_Governorates.svg" target="_blank" rel="noopener">Map: Rafy &amp; contributors · CC BY-SA 3.0 · adapted</a></div>
+            <div class="governorate-picker"><label for="governorateSearch">Find your governorate</label><input id="governorateSearch" type="search" placeholder="Search in English or Arabic" autocomplete="off"><div id="governorateList" class="governorate-list" role="group" aria-label="Governorates"></div><p id="noGovernorates" class="muted" hidden>No match. Try another spelling.</p><input id="studentGovernorate" type="hidden" name="governorate"><p class="field-hint">We’ll show areas and universities for your selection.</p></div>
+          </div>
+        </section>
+        <section class="form-step" data-step="1" aria-labelledby="journeyTitle" hidden>
+          <p class="eyebrow panel-eyebrow">A ROUTE THAT FITS YOUR DAY</p><h2 id="journeyTitle" tabindex="-1">Home to campus.<br><span>On your time.</span></h2><p class="muted">Tell us where you’re heading and when you need to be there.</p>
+          <div class="selected-location"><span id="selectedProvince"></span><button type="button" id="changeGovernorate">Change governorate</button></div>
+          <div class="field"><label for="studentHomeArea">Your home area <span lang="ar" dir="rtl">المنطقة</span></label><select id="studentHomeArea" name="homeArea" required></select><p class="field-hint">Popular areas and towns. Can’t find yours? Choose “Other area”.</p></div>
+          <div class="field" id="customAreaField" hidden><label for="customArea">Enter your area name</label><input id="customArea" name="customArea" maxlength="100" autocomplete="address-level3" disabled></div>
+          <div class="field"><label for="universitySearch">Find your university <span lang="ar" dir="rtl">الجامعة</span></label><input id="universitySearch" type="search" placeholder="Search university name" autocomplete="off" aria-controls="studentUniversity"><select id="studentUniversity" name="university" required aria-label="University"></select><p id="universityCount" class="field-hint" aria-live="polite"></p></div>
+          <div class="field" id="customUniversityField" hidden><label for="customUniversity">Your university / campus name</label><input id="customUniversity" name="customUniversity" maxlength="160" disabled><p class="field-hint">Use this for a new university or a campus in another governorate.</p></div>
+          <div class="field arrival-field"><label for="studentArrivalTime">Arrive at university by <span lang="ar" dir="rtl">وقت الوصول</span></label><div class="time-row"><input id="studentArrivalTime" name="arrivalTime" type="time" required><div><strong>Your first lecture, minus the rush.</strong><p class="field-hint">This is your arrival time, not your pickup time.</p></div></div><div class="time-presets" aria-label="Suggested arrival times"><button type="button" data-time="07:30">7:30 AM</button><button type="button" data-time="08:00">8:00 AM</button><button type="button" data-time="08:30">8:30 AM</button><button type="button" data-time="09:00">9:00 AM</button></div></div>
+        </section>
+        <section class="form-step" data-step="2" aria-labelledby="accountTitle" hidden>
+          <p class="eyebrow panel-eyebrow">THE LAST STOP BEFORE YOU START</p><h2 id="accountTitle" tabindex="-1">Your route is personal.<br><span>Your account, too.</span></h2><p class="muted">A few details, and you’re ready for the next step.</p>
+          <div class="field"><label for="studentName">Full name</label><input id="studentName" name="fullName" autocomplete="name" placeholder="How should we call you?" minlength="2" maxlength="100" required></div>
+          <div class="field-pair"><div class="field"><label for="studentEmail">Email address</label><input id="studentEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" maxlength="160" required></div><div class="field"><label for="studentPhone">Iraqi mobile number</label><input id="studentPhone" name="phone" type="tel" autocomplete="tel" placeholder="07XX XXX XXXX" required><p class="field-hint">07…, +9647… or 009647…</p></div></div>
+          <div class="field-pair"><div class="field"><label for="studentPassword">Password</label><div class="password-wrap"><input id="studentPassword" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required><button type="button" class="password-toggle" data-target="studentPassword" aria-label="Show password" aria-pressed="false">Show</button></div><p class="field-hint">At least 8 characters.</p></div><div class="field"><label for="studentConfirmPassword">Confirm password</label><div class="password-wrap"><input id="studentConfirmPassword" name="confirmPassword" type="password" autocomplete="new-password" required><button type="button" class="password-toggle" data-target="studentConfirmPassword" aria-label="Show confirm password" aria-pressed="false">Show</button></div></div></div>
+          <div class="demo-note"><strong>Local preview</strong><p>This site currently creates a demo account in this browser. No ride is booked and no information is sent to a server. Use sample details.</p></div>
+        </section>
+        <p id="formError" class="form-error" role="alert" hidden></p>
+        <footer class="form-actions"><button type="button" id="previousStep" class="secondary-button" hidden>← Back</button><span id="stepHint">Start with your governorate</span><button type="submit" id="nextStep" class="primary-button">Continue →</button></footer>
+      </form>
+      <section id="registrationSuccess" class="success-panel" hidden tabindex="-1"><p class="eyebrow">YOU’RE ON YOUR WAY</p><h2>A calmer morning<br><span>starts here.</span></h2><p>Your demo student account is ready. Log in to see your saved journey.</p><a class="primary-button" href="../login.html">Continue to login →</a></section>
+      <noscript><p>Enable JavaScript to choose your governorate and complete registration.</p></noscript>
+    </section>
+  </main>
+</body>
+</html>

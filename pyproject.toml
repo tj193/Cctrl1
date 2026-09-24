@@ -1,0 +1,18 @@
+[project]
+name = "darbgo-admin"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.30,<1",
+    "sqlmodel>=0.0.22,<1",
+    "psycopg[binary]>=3.2,<4",
+    "PyJWT>=2.9,<3",
+    "passlib[bcrypt]>=1.7.4,<2",
+    "bcrypt>=4.0.1,<4.1",
+    "python-multipart>=0.0.12,<1",
+    "python-dotenv>=1,<2",
+]
+
+[dependency-groups]
+dev = ["httpx>=0.27,<1", "pytest>=8,<10"]

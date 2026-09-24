@@ -1,0 +1,9 @@
+.vs/
+__pycache__/
+.artifacts/
+.venv/
+.env
+.env.*
+!.env.example
+*.pyc
+.pytest_cache/

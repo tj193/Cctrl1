@@ -26,7 +26,7 @@
         Create your DarbGo driver account
     </p>
 
-    <p class="demo-note">Local demo only. Use sample details. No data or documents are sent to a server.</p>
+    <p class="demo-note">Local demo only. Use sample details. Photos and documents are optional; nothing is sent to a server. <a href="../driver_dashboard.html">Preview the driver dashboard</a>.</p>
     <form id="driverForm">
 
         <!-- ========================= -->
@@ -143,12 +143,11 @@
             required
         >
 
-        <label for="vehiclePhoto">Vehicle Photo</label>
+        <label for="vehiclePhoto">Vehicle Photo (optional)</label>
         <input
             type="file"
             id="vehiclePhoto"
             accept="image/*"
-            required
         >
 
         <!-- ========================= -->
@@ -160,25 +159,23 @@
             <h2>Verification Information</h2>
 
             <p>
-                Upload your documents for verification
+                Documents are optional in this local demo
             </p>
 
         </div>
 
-        <label for="drivingLicense">Driving License</label>
+        <label for="drivingLicense">Driving License (optional)</label>
         <input
             type="file"
             id="drivingLicense"
             accept="image/*,.pdf"
-            required
         >
 
-        <label for="idDocument">ID Document</label>
+        <label for="idDocument">ID Document (optional)</label>
         <input
             type="file"
             id="idDocument"
             accept="image/*,.pdf"
-            required
         >
 
         <button type="submit">

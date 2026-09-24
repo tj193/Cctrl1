@@ -1,8 +1,38 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+    ? `http://${window.location.hostname}:8000` : window.location.origin;
+
+const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+})[character]);
+const safeRecord = value => Array.isArray(value) ? value.map(safeRecord)
+    : value && typeof value === "object"
+        ? Object.fromEntries(Object.entries(value).map(([key, item]) => [key, key.endsWith("_url") ? item : safeRecord(item)]))
+        : typeof value === "string" ? escapeHtml(value) : value;
+const documentLink = url => {
+    if (!url) return "Not uploaded";
+    try {
+        const parsed = new URL(url, window.location.origin);
+        if (!["http:", "https:"].includes(parsed.protocol)) return "Unavailable";
+        return `<a href="${escapeHtml(parsed.href)}" target="_blank" rel="noopener noreferrer">View Document</a>`;
+    } catch { return "Unavailable"; }
+};
 
 document.addEventListener("DOMContentLoaded", () => {
+    const localHost = ["127.0.0.1", "localhost"].includes(window.location.hostname);
+    const preview = localHost && sessionStorage.getItem("adminPreview") === "1";
+    if (preview) {
+        const notice = document.createElement("div");
+        notice.textContent = "Local preview only — live data and admin actions are unavailable.";
+        notice.style.cssText = "padding:12px 20px;background:#fff3cd;color:#664d03;font-weight:600;text-align:center";
+        document.body.prepend(notice);
+        document.getElementById("logoutBtn")?.addEventListener("click", () => {
+            sessionStorage.removeItem("adminPreview");
+            window.location.href = "login.html";
+        });
+        return;
+    }
     // 1. Global Auth Guard: Check Admin Session Token
-    const token = localStorage.getItem("adminToken");
+    const token = sessionStorage.getItem("adminToken");
     if (!token) {
         window.location.href = "login.html";
         return;
@@ -12,8 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
-            localStorage.removeItem("adminToken");
-            localStorage.removeItem("adminEmail");
+            sessionStorage.removeItem("adminToken");
+            sessionStorage.removeItem("adminEmail");
             window.location.href = "login.html";
         });
     }
@@ -49,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 if (response.ok) {
-                    allApplications = await response.json();
+                    allApplications = safeRecord(await response.json());
                     renderApplications(allApplications);
                 } else {
                     approvalTableBody.innerHTML = `<tr><td colspan="7">Failed to load applications.</td></tr>`;
@@ -93,13 +123,13 @@ document.addEventListener("DOMContentLoaded", () => {
             applicantDetailsSection.innerHTML = `
                 <p><strong>Name:</strong> ${app.full_name}</p>
                 <p><strong>Phone:</strong> ${app.phone}</p>
-                <p><strong>Vehicle:</strong> ${app.vehicle_type} - ${app.vehicle_model} (${app.vehicle_year})</p>
+                <p><strong>Vehicle:</strong> ${app.vehicle_type} - ${app.vehicle_model}</p>
                 <p><strong>Plate Number:</strong> ${app.plate_number}</p>
-                <p><strong>Capacity:</strong> ${app.capacity} passengers</p>
+                <p><strong>Capacity:</strong> ${app.capacity ?? 'Not recorded'}</p>
             `;
             documentsSection.innerHTML = `
-                <p><strong>License:</strong> <a href="${app.license_url}" target="_blank">View Document</a></p>
-                <p><strong>Identity Card:</strong> <a href="${app.id_card_url}" target="_blank">View Document</a></p>
+                <p><strong>License:</strong> ${documentLink(app.license_url)}</p>
+                <p><strong>Identity Card:</strong> ${documentLink(app.id_card_url)}</p>
             `;
             approvalModal.removeAttribute("hidden");
         }
@@ -171,7 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 demandTableBody.innerHTML = `<tr><td colspan="7">No route demand records found.</td></tr>`;
                 return;
             }
-            demands.forEach(d => {
+            demands.forEach(raw => {
+                const d = safeRecord(raw);
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td>#${d.id}</td>
@@ -210,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const drivers = await res.json();
                 driverSelect.innerHTML = `<option value="">-- Select Driver --</option>`;
                 drivers.forEach(drv => {
-                    driverSelect.innerHTML += `<option value="${drv.id}">${drv.name} (Cap: ${drv.capacity})</option>`;
+                    driverSelect.innerHTML += `<option value="${drv.id}">${escapeHtml(drv.name)} (Cap: ${drv.capacity ?? 'N/A'})</option>`;
                 });
             }
             createRouteModal.removeAttribute("hidden");
@@ -264,7 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 if (res.ok) {
-                    allDrivers = await res.json();
+                    allDrivers = safeRecord(await res.json());
                     renderDrivers(allDrivers);
                 }
             } catch (err) {
@@ -354,7 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 if (res.ok) {
-                    allReports = await res.json();
+                    allReports = safeRecord(await res.json());
                     renderReports(allReports);
                 }
             } catch (err) {
@@ -442,7 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 if (res.ok) {
-                    allRoutes = await res.json();
+                    allRoutes = safeRecord(await res.json());
                     renderRoutes(allRoutes);
                 }
             } catch (err) {
@@ -531,7 +562,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 if (res.ok) {
-                    allStudents = await res.json();
+                    allStudents = safeRecord(await res.json());
                     renderStudents(allStudents);
                 }
             } catch (err) {
@@ -610,7 +641,7 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const uRes = await fetch(`${API_BASE_URL}/admin/universities`, { headers: { "Authorization": `Bearer ${token}` } });
                 if (uRes.ok) {
-                    const univs = await uRes.json();
+                    const univs = safeRecord(await uRes.json());
                     universitiesTableBody.innerHTML = "";
                     univs.forEach(u => {
                         universitiesTableBody.innerHTML += `
@@ -625,7 +656,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const aRes = await fetch(`${API_BASE_URL}/admin/areas`, { headers: { "Authorization": `Bearer ${token}` } });
                 if (aRes.ok) {
-                    const areas = await aRes.json();
+                    const areas = safeRecord(await aRes.json());
                     areasTableBody.innerHTML = "";
                     areas.forEach(a => {
                         areasTableBody.innerHTML += `
@@ -652,14 +683,54 @@ document.addEventListener("DOMContentLoaded", () => {
         const adminProfileForm = document.getElementById("adminProfileForm");
         const changePasswordForm = document.getElementById("changePasswordForm");
 
-        adminProfileForm.addEventListener("submit", (e) => {
+        fetch(`${API_BASE_URL}/admin/me`, { headers: { "Authorization": `Bearer ${token}` } })
+            .then(response => response.ok ? response.json() : Promise.reject(new Error("Could not load profile.")))
+            .then(profile => {
+                document.getElementById("adminNameInput").value = profile.name;
+                document.getElementById("adminEmailInput").value = profile.email;
+            })
+            .catch(error => alert(error.message));
+
+        adminProfileForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            alert("Profile updated.");
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/me`, {
+                    method: "PUT",
+                    headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        name: document.getElementById("adminNameInput").value.trim(),
+                        email: document.getElementById("adminEmailInput").value.trim()
+                    })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.detail || "Could not update profile.");
+                sessionStorage.setItem("adminEmail", result.email);
+                alert("Profile updated.");
+            } catch (error) { alert(error.message); }
         });
 
-        changePasswordForm.addEventListener("submit", (e) => {
+        changePasswordForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            alert("Password changed successfully.");
+            const newPassword = document.getElementById("newPasswordInput").value;
+            if (newPassword !== document.getElementById("confirmPasswordInput").value) {
+                alert("New passwords do not match.");
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/me/password`, {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        current_password: document.getElementById("currentPasswordInput").value,
+                        new_password: newPassword
+                    })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.detail || "Could not change password.");
+                sessionStorage.removeItem("adminToken");
+                sessionStorage.removeItem("adminEmail");
+                window.location.href = "login.html";
+            } catch (error) { alert(error.message); }
         });
     }
 });

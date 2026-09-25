@@ -7,8 +7,8 @@
 مسار الطلب في هذا المشروع:
 
 ```text
-front-end/login.html -> FastAPI /auth/login -> SQLModel -> PostgreSQL on Neon
-front-end/index.html -> FastAPI /admin/... -> SQLModel -> PostgreSQL on Neon
+admin/front-end/login.html -> FastAPI /auth/login -> SQLModel -> PostgreSQL on Neon
+admin/front-end/index.html -> FastAPI /admin/... -> SQLModel -> PostgreSQL on Neon
 ```
 
 المتصفح لا يحتفظ بكلمة مرور قاعدة البيانات. خادم `FastAPI` وحده يقرأ `DATABASE_URL` من بيئته. بعد تسجيل الدخول، يعيد الخادم رمز `JWT`؛ وتستخدمه صفحات الإدارة لطلب البيانات. الخادم يفحص الرمز وحالة حساب المدير عند كل طلب.
@@ -34,7 +34,7 @@ uv run uvicorn src.admin.main:app --env-file .env --host 127.0.0.1 --port 8000
 uv run python -m http.server 5500 --bind 127.0.0.1
 ```
 
-افتح `http://127.0.0.1:5500/front-end/login.html`. للتحقق من تشغيل الخادم افتح `http://127.0.0.1:8000/health`. لا يستدعي بدء الخادم إنشاء جداول أو تعديل بنية القاعدة.
+افتح `http://127.0.0.1:5500/admin/front-end/login.html`. للتحقق من تشغيل الخادم افتح `http://127.0.0.1:8000/health`. لا يستدعي بدء الخادم إنشاء جداول أو تعديل بنية القاعدة.
 
 إذا اختلف منفذ أو عنوان الموقع الثابت، أضفه إلى `ADMIN_CORS_ORIGINS` في `.env`، مع فصل العناوين بفاصلة. في النشر الحقيقي، وجّه طلبات `/auth` و`/admin` إلى خادم `FastAPI` على نفس نطاق الموقع عبر وكيل عكسي؛ ستستخدم الواجهة نفس الأصل تلقائيًا.
 

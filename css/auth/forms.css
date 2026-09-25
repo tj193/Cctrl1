@@ -18,6 +18,22 @@ a { color: #1764ce; }
 .auth-message { color: #954038; font-size: 13px; line-height: 1.7; }
 .demo-note { background: #edf4fc; border-radius: 8px; padding: 12px; color: #586e88; font-size: 12px; line-height: 1.6; }
 .auth-back { display: inline-block; font-size: 12px; margin-bottom: 20px; }
+.auth-navigation { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; }
+form[hidden], .bottom-link[hidden] { display: none; }
+.registration-success { margin-top: 18px; padding: 28px; border: 1px solid #b9e4dc; border-radius: 18px; background: #f1fbf8; color: #19314f; }
+.registration-success[hidden] { display: none; }
+.success-mark { display: inline-grid; width: 46px; height: 46px; place-items: center; border-radius: 50%; background: #d8f5eb; color: #087964; font-size: 27px; font-weight: 700; }
+.success-eyebrow { margin: 18px 0 8px; color: #087964; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.registration-success h2 { margin: 0 0 12px; font-size: 25px; line-height: 1.25; }
+.registration-success > p { max-width: 52ch; line-height: 1.7; }
+.application-reference { font-size: 13px; font-weight: 700; }
+.application-contact { font-size: 13px; }
+.success-next-steps { margin-top: 22px; padding-top: 18px; border-top: 1px solid #cde9e1; }
+.success-next-steps ol { margin: 10px 0 0; padding-left: 21px; line-height: 1.7; }
+.success-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.success-actions a { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; padding: 11px 17px; border-radius: 9px; font-size: 13px; font-weight: 700; text-decoration: none; }
+.success-primary { background: #176cec; color: #fff; }
+.success-secondary { border: 1px solid #b8cbe3; background: #fff; color: #1764ce; }
 .dashboard dt { font-size: 12px; color: #728296; margin-top: 16px; }
 .dashboard dd { margin: 5px 0 0; overflow-wrap: anywhere; }
 @media (max-width: 480px) { body { padding: 18px 12px; } .form-container, .dashboard { padding: 24px; } h1 { font-size: 24px; } }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Your journey — DarbGo</title>
-  <link rel="stylesheet" href="../css/variables.css"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><link rel="stylesheet" href="../css/student/dashboard.css">
+  <link rel="stylesheet" href="../css/variables.css"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><link rel="stylesheet" href="dashboard.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script><script src="../js/auth/account-store.js" defer></script><script src="dashboard-data.js" defer></script><script src="../js/components/journey-map.js" defer></script><script src="dashboard-views.js" defer></script><script src="dashboard.js" defer></script>
 </head>
 <body data-role="student" data-page="upcoming">
@@ -23,7 +23,7 @@
 
   <div class="drawer-backdrop" id="drawerBackdrop" hidden></div><aside class="notification-drawer" id="notificationDrawer" aria-labelledby="notificationTitle" aria-hidden="true"><header><div><p class="eyebrow-label">STAY UPDATED</p><h2 id="notificationTitle">Notifications</h2></div><button class="icon-button" id="closeNotifications" type="button" aria-label="Close notifications">Close</button></header><button class="mark-read-button" id="markAllRead" type="button">Mark all as read</button><div class="notification-list" id="notificationList"></div></aside>
   <dialog class="route-dialog" id="routeDialog" aria-labelledby="dialogTitle"><button class="dialog-close" id="closeRouteDialog" type="button" aria-label="Close route details">Close</button><div id="routeDialogContent"></div></dialog><div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
-  <div class="demo-dock"><label for="demoScenario">Preview state</label><select id="demoScenario"><option value="" disabled selected>Choose preview state</option><option value="routes">Multiple matching routes</option><option value="no-match">No matching routes</option><option value="waitlist">Joined waitlist</option><option value="waitlist-match">New waitlist match</option><option value="pending">Request pending</option><option value="accepted">Request accepted</option><option value="confirmed">Request confirmed</option><option value="declined">Request declined</option><option value="action">Action required</option><option value="multiple">Multiple requests</option><option value="notifications">Unread notifications</option><option value="message">Driver message</option><option value="upcoming">Confirmed upcoming ride</option></select></div>
+  <div class="demo-dock"><label for="demoScenario">Preview state</label><select id="demoScenario"><option value="" disabled selected>Choose preview state</option><option value="routes">Multiple matching routes</option><option value="no-match">No matching routes</option><option value="waitlist">Joined waitlist</option><option value="waitlist-match">New waitlist match</option><option value="pending">Request pending</option><option value="accepted">Request accepted</option><option value="rejected">Request rejected</option><option value="multiple">Multiple requests</option><option value="notifications">Unread notifications</option><option value="message">Driver message</option><option value="upcoming">Accepted upcoming ride</option></select></div>
 
   <script src="../js/components/student-pet.js"></script>
 </body>

@@ -19,14 +19,17 @@
 
 <div class="form-container driver-form">
 
-    <a class="auth-back" href="../register.html">← Choose account type</a>
+    <nav class="auth-navigation" aria-label="Registration navigation">
+        <a class="auth-back" href="../register.html">← Choose account type</a>
+        <a class="auth-back" href="../index.html">Back to DarbGo home</a>
+    </nav>
     <h1>Driver Registration</h1>
 
     <p class="form-description">
         Create your DarbGo driver account
     </p>
 
-    <p class="demo-note">Local demo only. Use sample details. Photos and documents are optional; nothing is sent to a server. <a href="../driver_dashboard.html">Preview the driver dashboard</a>.</p>
+    <p class="demo-note">Your application is sent for admin review. You can sign in after approval.</p>
     <form id="driverForm">
 
         <!-- ========================= -->
@@ -134,21 +137,7 @@
             required
         >
 
-        <label for="numberOfSeats">Number of Seats</label>
-        <input
-            type="number"
-            id="numberOfSeats"
-            placeholder="Example: 4"
-            min="1"
-            required
-        >
-
-        <label for="vehiclePhoto">Vehicle Photo (optional)</label>
-        <input
-            type="file"
-            id="vehiclePhoto"
-            accept="image/*"
-        >
+        <p class="demo-note">Document uploads are not available yet. The admin reviews the application details below.</p>
 
         <!-- ========================= -->
         <!-- Verification -->
@@ -159,24 +148,16 @@
             <h2>Verification Information</h2>
 
             <p>
-                Documents are optional in this local demo
+                Enter your license and national ID numbers for admin review.
             </p>
 
         </div>
 
-        <label for="drivingLicense">Driving License (optional)</label>
-        <input
-            type="file"
-            id="drivingLicense"
-            accept="image/*,.pdf"
-        >
+        <label for="licenseNumber">Driving License Number</label>
+        <input type="text" id="licenseNumber" required>
 
-        <label for="idDocument">ID Document (optional)</label>
-        <input
-            type="file"
-            id="idDocument"
-            accept="image/*,.pdf"
-        >
+        <label for="nationalId">National ID Number</label>
+        <input type="text" id="nationalId" required>
 
         <button type="submit">
             Submit Registration
@@ -184,11 +165,28 @@
 
     </form>
 
+    <section class="registration-success" id="registrationSuccess" aria-labelledby="registrationSuccessTitle" tabindex="-1" hidden>
+        <span class="success-mark" aria-hidden="true">✓</span>
+        <p class="success-eyebrow">APPLICATION RECEIVED</p>
+        <h2 id="registrationSuccessTitle">Your driver application is on its way.</h2>
+        <p>We received your application. An admin will review it. You can check the decision by trying to sign in with your driver account.</p>
+        <p class="application-reference" id="applicationReference"></p>
+        <p class="application-contact">Mobile number on your application: <strong id="applicationPhone"></strong>.</p>
+        <div class="success-next-steps">
+            <strong>What happens next?</strong>
+            <ol><li>An admin reviews your application.</li><li>Sign in to check the result. If the request was rejected, you will see the reason.</li><li>If approved, you can open your driver dashboard.</li></ol>
+        </div>
+        <div class="success-actions">
+            <a class="success-primary" href="../index.html">Return to DarbGo home</a>
+            <a class="success-secondary" href="../login.html?role=driver">Driver sign in</a>
+        </div>
+    </section>
+
     <p class="bottom-link">
 
         Already have an account?
 
-        <a href="../login.html">
+        <a href="../login.html?role=driver">
             Login
         </a>
 
@@ -196,7 +194,7 @@
 
 </div>
 
-<script src="../js/auth/account-store.js"></script>
+<script src="../js/auth/driver-api.js"></script>
 <script src="registration.js"></script>
 
 </body>

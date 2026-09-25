@@ -28,14 +28,15 @@
       <a class="auth-back" href="register.html">← Choose account type</a>
       <p class="login-eyebrow">GOOD TO SEE YOU AGAIN</p><h2 id="login-title">Welcome back.</h2><p class="form-description">Sign in to continue your DarbGo journey.</p>
       <form id="loginForm" novalidate>
+        <div class="login-field"><label for="loginRole">Account type</label><select id="loginRole"><option value="student">Student demo</option><option value="driver">Driver</option></select></div>
         <div class="login-field"><label for="loginIdentifier">Email or Iraqi mobile number</label><input type="text" id="loginIdentifier" autocomplete="username" placeholder="you@example.com or 07XX XXX XXXX" required></div>
         <div class="login-field"><div class="label-row"><label for="loginPassword">Password</label><button type="button" id="toggleLoginPassword" aria-pressed="false">Show</button></div><input type="password" id="loginPassword" autocomplete="current-password" placeholder="Enter your password" required></div>
         <button class="login-submit" type="submit">Continue to DarbGo <span aria-hidden="true">→</span></button>
       </form>
-      <div class="demo-note"><strong>Local preview</strong><p>This demo signs you in only on this browser. Nothing is sent to a server.</p></div>
+      <div class="demo-note" id="loginModeNote"><strong>Student preview</strong><p>Student demo accounts are saved in this browser. Driver accounts use the server and require admin approval.</p></div>
       <p class="bottom-link">Don’t have an account? <a href="register.html">Choose how to join</a></p>
     </section>
   </main>
-  <script src="js/auth/account-store.js"></script><script src="js/auth/login.js"></script>
+  <script src="js/auth/account-store.js"></script><script src="js/auth/driver-api.js"></script><script src="js/auth/login.js"></script>
 </body>
 </html>

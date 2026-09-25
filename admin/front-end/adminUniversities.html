@@ -18,7 +18,6 @@
             <li><a href="adminRoute.html">Routes</a></li>
             <li><a href="adminDemand.html">Route Demand</a></li>
             <li><a href="adminUniversities.html">Universities & Areas</a></li>
-            <li><a href="adminReports.html">Reports</a></li>
             <li><a href="createAdmin.html">Create Admin</a></li>
             <li><a href="setting.html">Settings</a></li>
             <li><a href="index.html">Dashboard Overview</a></li>
@@ -30,13 +29,20 @@
 
         <div>
             <h1>Universities & Areas Management</h1>
-            <p>Standardize geographic data to prevent duplicate entries across student and driver applications</p>
+            <p>Browse the same governorates, universities, and areas offered in student registration.</p>
+        </div>
+
+        <div class="catalogue-filters">
+            <label for="catalogueGovernorate">Governorate</label>
+            <select id="catalogueGovernorate"><option value="all">All governorates</option></select>
+            <label for="catalogueSearch">Search</label>
+            <input id="catalogueSearch" type="search" placeholder="Search university or area">
         </div>
 
         <section>
             <div>
                 <h2>Universities</h2>
-                <button type="button" id="openAddUniversityModalBtn">+ Add New University</button>
+                <p id="universityCount"></p>
             </div>
 
             <table border="1">
@@ -44,14 +50,15 @@
                     <tr>
                         <th>ID</th>
                         <th>University Name</th>
+                        <th>Governorate</th>
                         <th>Status</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="universitiesTableBody">
 
                 </tbody>
             </table>
+            <div class="catalogue-pagination"><button type="button" id="universitiesPrevious">Previous</button><span id="universitiesPage"></span><button type="button" id="universitiesNext">Next</button></div>
         </section>
 
         <hr>
@@ -59,7 +66,7 @@
         <section>
             <div>
                 <h2>Residential Areas</h2>
-                <button type="button" id="openAddAreaModalBtn">+ Add New Area</button>
+                <p id="areaCount"></p>
             </div>
 
             <table border="1">
@@ -69,13 +76,13 @@
                         <th>Area Name</th>
                         <th>City / Governorate</th>
                         <th>Status</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="areasTableBody">
 
                 </tbody>
             </table>
+            <div class="catalogue-pagination"><button type="button" id="areasPrevious">Previous</button><span id="areasPage"></span><button type="button" id="areasNext">Next</button></div>
         </section>
 
     </div>

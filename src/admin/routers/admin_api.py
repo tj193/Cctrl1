@@ -1,9 +1,12 @@
 from collections import defaultdict
 from datetime import datetime, timezone
+import re
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
+from pydantic import field_validator
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
 from ..DataBase import get_session
@@ -15,6 +18,47 @@ from ..models import (
 from ..security import get_password_hash, require_admin, verify_password
 
 router = APIRouter(prefix="/admin", tags=["Admin dashboard"], dependencies=[Depends(require_admin)])
+
+
+class NewAdmin(BaseModel):
+    name: str = Field(min_length=2, max_length=120)
+    email: str = Field(min_length=3, max_length=255)
+    password: str = Field(min_length=12, max_length=72)
+
+    @field_validator("name")
+    @classmethod
+    def clean_name(cls, value: str) -> str:
+        value = value.strip()
+        if len(value) < 2:
+            raise ValueError("Name must contain at least two characters")
+        return value
+
+    @field_validator("email")
+    @classmethod
+    def clean_email(cls, value: str) -> str:
+        value = value.strip().lower()
+        if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", value):
+            raise ValueError("Enter a valid email address")
+        return value
+
+
+@router.post("/admins", status_code=201)
+def create_admin(account: NewAdmin, session: Session = Depends(get_session)):
+    if session.exec(select(User).where(User.email == account.email)).first():
+        raise HTTPException(409, "An account with this email already exists")
+    user = User(
+        name=account.name, email=account.email,
+        password_hash=get_password_hash(account.password),
+        role=UserRole.ADMIN, status=Status.ACTIVE,
+    )
+    try:
+        session.add(user)
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(409, "An account with this email already exists") from None
+    session.refresh(user)
+    return {"id": user.id, "name": user.name, "email": user.email}
 
 
 def records(session: Session):
@@ -49,11 +93,14 @@ def driver_application(profile, data):
         "vehicle_model": profile.vehicle_model,
         "vehicle_year": None,
         "plate_number": profile.vehicle_plate,
+        "license_number": profile.license_number,
+        "national_id": profile.national_id,
         "capacity": None,
         "license_url": profile.license_photo_url,
         "id_card_url": profile.id_photo_url,
         "submission_date": iso(label(user, "created_at", None)),
         "status": profile.verification_status.value,
+        "rejection_reason": profile.rejection_reason,
     }
 
 
@@ -134,6 +181,10 @@ def review_application(profile_id: int, update: ApplicationUpdate, session: Sess
     profile.rejection_reason = update.notes.strip() if update.status == "rejected" else None
     profile.reviewed_by = admin.id
     profile.reviewed_at = datetime.now(timezone.utc)
+    driver = session.get(User, profile.Driver_id)
+    if driver:
+        driver.status = Status.ACTIVE if update.status == "approved" else Status.SUSPENDED
+        session.add(driver)
     session.add(profile)
     session.commit()
     return {"status": profile.verification_status.value}
@@ -223,7 +274,9 @@ def route_status(route_id: int, update: RouteUpdate, session: Session = Depends(
 @router.get("/drivers")
 def drivers(session: Session = Depends(get_session)):
     data = records(session)
-    assigned = {route.driver_id: route.id for route in data["routes"] if route.status == RouteStatus.ACTIVE}
+    routes_by_driver = defaultdict(list)
+    for route in data["routes"]:
+        routes_by_driver[route.driver_id].append(route.id)
     return [
         {
             "id": user.id,
@@ -231,12 +284,34 @@ def drivers(session: Session = Depends(get_session)):
             "phone": profile.phone_number,
             "vehicle_type": profile.vehicle_name,
             "plate_number": profile.vehicle_plate,
-            "assigned_route": f"Route #{assigned[user.id]}" if user.id in assigned else None,
-            "rating": None,
+            "verification_status": profile.verification_status.value,
+            "route_count": len(routes_by_driver[user.id]),
+            "student_count": len({item.student_id for item in data["enrollments"]
+                                  if item.route_id in routes_by_driver[user.id] and item.status == RouteStudentStatus.ACTIVE}),
             "status": user.status.value,
         }
         for profile in data["profiles"]
-        if (user := data["users"].get(profile.Driver_id)) is not None and user.role == UserRole.DRIVER
+        if profile.verification_status == ApplicationStatus.APPROVED
+        and (user := data["users"].get(profile.Driver_id)) is not None and user.role == UserRole.DRIVER
+    ]
+
+
+@router.get("/route-demand/analytics")
+def route_demand_analytics(session: Session = Depends(get_session)):
+    data = records(session)
+    active_routes = {(route.from_area_id, route.to_university_id) for route in data["routes"] if route.status == RouteStatus.ACTIVE}
+    return [
+        {
+            "area_id": demand.from_area_id,
+            "area_name": label(data["areas"].get(demand.from_area_id), "Area_name"),
+            "governorate": label(data["areas"].get(demand.from_area_id), "city"),
+            "university_id": demand.to_university_id,
+            "university_name": label(data["universities"].get(demand.to_university_id), "University_name"),
+            "created_at": iso(demand.created_at),
+            "preferred_time": iso(demand.preferred_time),
+            "route_exists": (demand.from_area_id, demand.to_university_id) in active_routes,
+        }
+        for demand in data["demands"] if demand.status == RouteDemandStatus.ACTIVE
     ]
 
 
@@ -317,7 +392,7 @@ def student_status(user_id: int, update: UserStatusUpdate, session: Session = De
 
 @router.get("/universities")
 def universities(session: Session = Depends(get_session)):
-    return [{"id": item.id, "name": item.University_name, "status": item.status.value} for item in session.exec(select(University)).all()]
+    return [{"id": item.id, "name": item.University_name, "governorate": item.governorate, "status": item.status.value} for item in session.exec(select(University)).all()]
 
 
 @router.get("/areas")

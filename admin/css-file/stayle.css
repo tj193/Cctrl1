@@ -445,3 +445,50 @@ div[id*="Modal"] form, div[id*="modal"] form {
     border: none;
     margin-bottom: 0;
 }
+
+#approvalDecisionForm[hidden], #decisionMessagePanel[hidden] {
+    display: none;
+}
+
+.decision-message-panel textarea {
+    width: 100%;
+    margin: 12px 0;
+}
+
+.demo-whatsapp-button {
+    background: #e7f5ee;
+    color: #126245;
+    border: 1px solid #aad7c1;
+}
+
+.decision-demo-note {
+    margin-top: 8px;
+    color: var(--slate-600);
+    font-size: 13px;
+}
+
+.catalogue-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.catalogue-filters input,
+.catalogue-filters select {
+    min-width: 220px;
+}
+
+.catalogue-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.catalogue-pagination button:disabled {
+    opacity: .45;
+    cursor: default;
+}

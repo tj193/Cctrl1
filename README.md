@@ -1,6 +1,6 @@
 # DarbGo
 
-No installation or build step is needed. For registration/login, run a local server so browser cryptography is available:
+The static site needs no build step. Run a local server so student demo cryptography is available:
 
 ```bash
 python -m http.server 5174 --bind 127.0.0.1
@@ -20,7 +20,15 @@ stylised Iraq map, local university-route examples, IQD pricing, a working route
 finder preview, clearer mobile navigation, and stronger accessible labels.
 There are no React, JSX, Vite, npm, or runtime framework dependencies.
 
-This remains a frontend concept. Registration/login now support local demo accounts, while homepage dialogs and route matching remain previews. No backend, booking, document upload or actual driver approval service exists. Use sample details.
+Student accounts remain a browser-only demo. Driver applications now use the FastAPI service in `src/admin/`: the driver submits an application, an admin approves or rejects it, and approved drivers can sign in. The API and database must be configured and running for that flow. Document upload, booking, and route matching remain unavailable or previews.
+
+For local driver testing, install the Python dependencies from `pyproject.toml`, configure `DATABASE_URL` and `JWT_SECRET` from `.env.example`, and run the API on port 8000:
+
+```bash
+uvicorn src.admin.main:app --reload --port 8000
+```
+
+Run the static site on port 5174. `ADMIN_CORS_ORIGINS` must include the site's origin when they run on different origins. Do not use a production database for local tests.
 
 The role-specific pages are grouped by feature:
 

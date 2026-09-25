@@ -95,12 +95,22 @@
                 <h3>Approval Decision</h3>
                 <form id="approvalDecisionForm">
                     <input type="hidden" id="modalApplicationId">
-                    <label for="rejectionReason">Notes / Rejection Reason (Required if rejecting):</label><br>
+                    <label for="adminNotes">Notes / Rejection Reason (Required if rejecting):</label><br>
                     <textarea id="adminNotes" rows="3" placeholder="Enter reason if rejecting application..."></textarea>
                     <br>
                     <button type="button" id="approveBtn">Approve Application</button>
                     <button type="button" id="rejectBtn">Reject Application</button>
                 </form>
+                <div id="decisionMessagePanel" hidden>
+                    <h3 id="decisionMessageTitle"></h3>
+                    <p id="decisionMessagePhone"></p>
+                    <label for="decisionMessagePreview">Message to send manually</label>
+                    <textarea id="decisionMessagePreview" rows="4" readonly></textarea>
+                    <div class="decision-actions">
+                        <a id="whatsAppDecisionLink" class="btn btn-primary" target="_blank" rel="noopener noreferrer" hidden>Message driver on WhatsApp</a>
+                        <button type="button" id="copyDecisionMessageBtn">Copy message</button>
+                    </div>
+                </div>
             </section>
         </div>
     </div>

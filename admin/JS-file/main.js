@@ -71,7 +71,56 @@ document.addEventListener("DOMContentLoaded", () => {
         const adminNotes = document.getElementById("adminNotes");
         const approveBtn = document.getElementById("approveBtn");
         const rejectBtn = document.getElementById("rejectBtn");
+        const searchInput = document.getElementById("searchApplicantInput");
+        const statusFilter = document.getElementById("approvalStatusFilter");
+        const filterForm = document.getElementById("approvalsFilterForm");
+        const decisionForm = document.getElementById("approvalDecisionForm");
+        const decisionPanel = document.getElementById("decisionMessagePanel");
+        const decisionTitle = document.getElementById("decisionMessageTitle");
+        const decisionPhone = document.getElementById("decisionMessagePhone");
+        const decisionPreview = document.getElementById("decisionMessagePreview");
+        const whatsAppLink = document.getElementById("whatsAppDecisionLink");
         let allApplications = [];
+
+        function whatsAppNumber(value) {
+            const digits = String(value || "")
+                .replace(/[٠-٩]/g, digit => "٠١٢٣٤٥٦٧٨٩".indexOf(digit))
+                .replace(/[^\d+]/g, "")
+                .replace(/^\+|^00/, "")
+                .replace(/^0(?=7)/, "964");
+            return /^9647\d{9}$/.test(digits) ? digits : "";
+        }
+
+        function showDecisionMessage(app) {
+            const status = String(app.status || "").toLowerCase();
+            const decided = status === "approved" || status === "rejected";
+            decisionForm.hidden = decided;
+            decisionPanel.hidden = !decided;
+            if (!decided) return;
+            decisionTitle.textContent = status === "approved" ? "Approval saved" : "Rejection saved";
+            decisionPhone.textContent = `Driver number: ${app.phone || "Not provided"}`;
+            decisionPreview.value = status === "approved"
+                ? `Your DarbGo driver application #${app.id} has been approved. You can now sign in with your email or mobile number and password.`
+                : `Your DarbGo driver application #${app.id} was not approved. Reason: ${app.rejection_reason || "Please contact the admin for details."}`;
+            const phone = whatsAppNumber(app.phone);
+            whatsAppLink.hidden = !phone;
+            if (phone) whatsAppLink.href = `https://wa.me/${phone}?text=${encodeURIComponent(decisionPreview.value)}`;
+            else whatsAppLink.removeAttribute("href");
+        }
+        document.getElementById("copyDecisionMessageBtn").addEventListener("click", () =>
+            navigator.clipboard.writeText(decisionPreview.value));
+
+        function applyFilters() {
+            const query = searchInput.value.trim().toLowerCase();
+            const status = statusFilter.value;
+            renderApplications(allApplications.filter(app =>
+                (status === "all" || app.status.toLowerCase() === status) &&
+                [app.full_name, app.phone, app.vehicle_type, app.vehicle_model, app.plate_number]
+                    .some(value => String(value || "").toLowerCase().includes(query))));
+        }
+        searchInput.addEventListener("input", applyFilters);
+        statusFilter.addEventListener("change", applyFilters);
+        filterForm.addEventListener("reset", () => setTimeout(applyFilters, 0));
 
         async function fetchApplications() {
             try {
@@ -80,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 if (response.ok) {
                     allApplications = safeRecord(await response.json());
-                    renderApplications(allApplications);
+                    applyFilters();
                 } else {
                     approvalTableBody.innerHTML = `<tr><td colspan="7">Failed to load applications.</td></tr>`;
                 }
@@ -92,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
         function renderApplications(apps) {
             approvalTableBody.innerHTML = "";
             if (apps.length === 0) {
-                approvalTableBody.innerHTML = `<tr><td colspan="7">No pending applications.</td></tr>`;
+                approvalTableBody.innerHTML = `<tr><td colspan="7">No matching applications.</td></tr>`;
                 return;
             }
             apps.forEach(app => {
@@ -119,12 +168,15 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!app) return;
 
             modalApplicationId.value = app.id;
-            adminNotes.value = "";
+            adminNotes.value = app.rejection_reason || "";
+            showDecisionMessage(app);
             applicantDetailsSection.innerHTML = `
                 <p><strong>Name:</strong> ${app.full_name}</p>
                 <p><strong>Phone:</strong> ${app.phone}</p>
                 <p><strong>Vehicle:</strong> ${app.vehicle_type} - ${app.vehicle_model}</p>
                 <p><strong>Plate Number:</strong> ${app.plate_number}</p>
+                <p><strong>License Number:</strong> ${app.license_number || 'Not recorded'}</p>
+                <p><strong>National ID Number:</strong> ${app.national_id || 'Not recorded'}</p>
                 <p><strong>Capacity:</strong> ${app.capacity ?? 'Not recorded'}</p>
             `;
             documentsSection.innerHTML = `
@@ -153,9 +205,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     body: JSON.stringify({ status, notes })
                 });
                 if (response.ok) {
-                    alert(`Application #${id} ${status} successfully.`);
-                    approvalModal.setAttribute("hidden", "true");
+                    const app = allApplications.find(item => String(item.id) === String(id));
+                    if (app) {
+                        app.status = status;
+                        app.rejection_reason = status === "rejected" ? notes : null;
+                        showDecisionMessage(app);
+                    }
                     fetchApplications();
+                } else {
+                    const error = await response.json().catch(() => ({}));
+                    alert(error.detail || "The decision could not be saved.");
                 }
             } catch (err) {
                 alert("Server error.");
@@ -281,13 +340,30 @@ document.addEventListener("DOMContentLoaded", () => {
     function initDriversManagement() {
         const driversTableBody = document.getElementById("driversTableBody");
         const driverModal = document.getElementById("driverModal");
-        const closeModalBtn = document.getElementById("closeModalBtn");
+        const closeModalBtn = document.getElementById("closeDriverModalBtn");
         const driverDetailsSection = document.getElementById("driverDetailsSection");
         const modalDriverId = document.getElementById("modalDriverId");
-        const adminNotes = document.getElementById("adminNotes");
+        const adminNotes = document.getElementById("driverAdminNotes");
         const suspendDriverBtn = document.getElementById("suspendDriverBtn");
-        const activateDriverBtn = document.getElementById("activateDriverBtn");
+        const activateDriverBtn = document.getElementById("reactivateDriverBtn");
+        const searchInput = document.getElementById("searchDriverInput");
+        const statusFilter = document.getElementById("statusFilter");
+        const verificationFilter = document.getElementById("verificationFilter");
+        const filterForm = document.getElementById("driverFilterForm");
         let allDrivers = [];
+
+        function applyFilters() {
+            const query = searchInput.value.trim().toLowerCase();
+            renderDrivers(allDrivers.filter(driver =>
+                (statusFilter.value === "all" || driver.status.toLowerCase() === statusFilter.value) &&
+                (verificationFilter.value === "all" || (verificationFilter.value === "verified" ? driver.verification_status === "Approved" : driver.verification_status !== "Approved")) &&
+                [driver.full_name, driver.phone, driver.vehicle_type, driver.plate_number]
+                    .some(value => String(value || "").toLowerCase().includes(query))));
+        }
+        searchInput.addEventListener("input", applyFilters);
+        statusFilter.addEventListener("change", applyFilters);
+        verificationFilter.addEventListener("change", applyFilters);
+        filterForm.addEventListener("reset", () => setTimeout(applyFilters, 0));
 
         async function fetchDrivers() {
             try {
@@ -296,7 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 if (res.ok) {
                     allDrivers = safeRecord(await res.json());
-                    renderDrivers(allDrivers);
+                    applyFilters();
                 }
             } catch (err) {
                 driversTableBody.innerHTML = `<tr><td colspan="8">Server error.</td></tr>`;
@@ -305,14 +381,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function renderDrivers(drivers) {
             driversTableBody.innerHTML = "";
+            if (!drivers.length) {
+                driversTableBody.innerHTML = `<tr><td colspan="8">No matching approved drivers.</td></tr>`;
+                return;
+            }
             drivers.forEach(drv => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td>#${drv.id}</td>
                     <td>${drv.full_name}<br><small>${drv.phone}</small></td>
                     <td>${drv.vehicle_type} (${drv.plate_number})</td>
-                    <td>${drv.assigned_route || 'Unassigned'}</td>
-                    <td>${drv.rating ? drv.rating + ' ★' : 'No ratings'}</td>
+                    <td>${drv.verification_status}</td>
+                    <td>${drv.route_count}</td>
+                    <td>${drv.student_count}</td>
                     <td><strong>${(drv.status || 'active').toUpperCase()}</strong></td>
                     <td><button type="button" class="view-btn" data-id="${drv.id}">Manage Profile</button></td>
                 `;
@@ -333,10 +414,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p><strong>Name:</strong> ${drv.full_name}</p>
                 <p><strong>Phone:</strong> ${drv.phone}</p>
                 <p><strong>Vehicle:</strong> ${drv.vehicle_type} (${drv.plate_number})</p>
-                <p><strong>Rating:</strong> ${drv.rating || 'N/A'}</p>
+                <p><strong>Verification:</strong> ${drv.verification_status}</p>
+                <p><strong>Routes:</strong> ${drv.route_count}</p>
+                <p><strong>Students:</strong> ${drv.student_count}</p>
                 <p><strong>Status:</strong> ${drv.status || 'Active'}</p>
             `;
             driverModal.removeAttribute("hidden");
+            suspendDriverBtn.hidden = drv.status.toLowerCase() === "suspended";
+            activateDriverBtn.hidden = drv.status.toLowerCase() === "active";
         }
 
         closeModalBtn.addEventListener("click", () => driverModal.setAttribute("hidden", "true"));
@@ -636,41 +721,65 @@ document.addEventListener("DOMContentLoaded", () => {
     function initUniversitiesAndAreas() {
         const universitiesTableBody = document.getElementById("universitiesTableBody");
         const areasTableBody = document.getElementById("areasTableBody");
+        const governorateFilter = document.getElementById("catalogueGovernorate");
+        const search = document.getElementById("catalogueSearch");
+        const pageSize = 20;
+        const pages = { universities: 0, areas: 0 };
+        let universities = [], areas = [];
+
+        function renderTable(type, items, columns, body) {
+            const pageCount = Math.max(1, Math.ceil(items.length / pageSize));
+            pages[type] = Math.min(pages[type], pageCount - 1);
+            const visible = items.slice(pages[type] * pageSize, (pages[type] + 1) * pageSize);
+            body.innerHTML = visible.length
+                ? visible.map(item => `<tr>${columns(item).map(value => `<td>${escapeHtml(value)}</td>`).join("")}</tr>`).join("")
+                : '<tr><td colspan="4">No matching records.</td></tr>';
+            document.getElementById(`${type}Page`).textContent = `Page ${pages[type] + 1} of ${pageCount}`;
+            document.getElementById(`${type}Previous`).disabled = pages[type] === 0;
+            document.getElementById(`${type}Next`).disabled = pages[type] >= pageCount - 1;
+            document.getElementById(type === "universities" ? "universityCount" : "areaCount").textContent = `${items.length} matching ${type}`;
+        }
+
+        function render() {
+            const governorate = governorateFilter.value;
+            const query = search.value.trim().toLocaleLowerCase();
+            const filteredUniversities = universities.filter(item =>
+                (governorate === "all" || item.governorate === governorate)
+                && `${item.name} ${item.governorate || ""}`.toLocaleLowerCase().includes(query))
+                .sort((a, b) => a.name.localeCompare(b.name, "ar"));
+            const filteredAreas = areas.filter(item =>
+                (governorate === "all" || item.city === governorate)
+                && `${item.name} ${item.city}`.toLocaleLowerCase().includes(query))
+                .sort((a, b) => a.name.localeCompare(b.name, "ar"));
+            renderTable("universities", filteredUniversities,
+                item => [`#${item.id}`, item.name, item.governorate || "Unknown", item.status], universitiesTableBody);
+            renderTable("areas", filteredAreas,
+                item => [`#${item.id}`, item.name, item.city, item.status], areasTableBody);
+        }
+
+        governorateFilter.addEventListener("change", () => { pages.universities = 0; pages.areas = 0; render(); });
+        search.addEventListener("input", () => { pages.universities = 0; pages.areas = 0; render(); });
+        for (const type of ["universities", "areas"]) {
+            document.getElementById(`${type}Previous`).addEventListener("click", () => { pages[type]--; render(); });
+            document.getElementById(`${type}Next`).addEventListener("click", () => { pages[type]++; render(); });
+        }
 
         async function fetchAll() {
             try {
-                const uRes = await fetch(`${API_BASE_URL}/admin/universities`, { headers: { "Authorization": `Bearer ${token}` } });
-                if (uRes.ok) {
-                    const univs = safeRecord(await uRes.json());
-                    universitiesTableBody.innerHTML = "";
-                    univs.forEach(u => {
-                        universitiesTableBody.innerHTML += `
-                            <tr>
-                                <td>#${u.id}</td>
-                                <td>${u.name}</td>
-                                <td><strong>${(u.status || 'active').toUpperCase()}</strong></td>
-                                <td>--</td>
-                            </tr>`;
-                    });
-                }
-
-                const aRes = await fetch(`${API_BASE_URL}/admin/areas`, { headers: { "Authorization": `Bearer ${token}` } });
-                if (aRes.ok) {
-                    const areas = safeRecord(await aRes.json());
-                    areasTableBody.innerHTML = "";
-                    areas.forEach(a => {
-                        areasTableBody.innerHTML += `
-                            <tr>
-                                <td>#${a.id}</td>
-                                <td>${a.name}</td>
-                                <td>${a.city || 'N/A'}</td>
-                                <td><strong>${(a.status || 'active').toUpperCase()}</strong></td>
-                                <td>--</td>
-                            </tr>`;
-                    });
-                }
+                const headers = { "Authorization": `Bearer ${token}` };
+                const [uRes, aRes] = await Promise.all([
+                    fetch(`${API_BASE_URL}/admin/universities`, { headers }),
+                    fetch(`${API_BASE_URL}/admin/areas`, { headers }),
+                ]);
+                if (!uRes.ok || !aRes.ok) throw new Error("Catalogue request failed");
+                universities = await uRes.json();
+                areas = await aRes.json();
+                const governorates = new Set([...universities.map(item => item.governorate), ...areas.map(item => item.city)].filter(Boolean));
+                [...governorates].sort((a, b) => a.localeCompare(b)).forEach(name => governorateFilter.add(new Option(name, name)));
+                render();
             } catch (err) {
-                console.error(err);
+                universitiesTableBody.innerHTML = '<tr><td colspan="4">Could not load universities.</td></tr>';
+                areasTableBody.innerHTML = '<tr><td colspan="4">Could not load areas.</td></tr>';
             }
         }
         fetchAll();

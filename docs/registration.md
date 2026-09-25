@@ -29,15 +29,15 @@ Back navigation preserves entered values. Changing governorate resets dependent 
 
 ## Driver applications
 
-The driver form posts to `POST /auth/driver-register` on the FastAPI server. The server stores a pending user and driver profile in its configured database. Admins can review the application at `admin/front-end/adminApproval.html`; approval activates the driver account, and the shared login page then accepts it through `POST /auth/driver-login`. Duplicate email, phone, plate, license number, and national ID submissions are rejected.
+The driver form posts to `POST /auth/driver-register` on the FastAPI server. The earlier `POST /auth/driver-applications` path also remains available. The server stores a pending user and driver profile in its configured database, then the page shows the application number and entered WhatsApp number in a confirmation card. Admins can review the application at `admin/front-end/adminApproval.html`; approval activates the driver account. After approving or rejecting an application, the admin page offers a prefilled WhatsApp link for the driver's number. The admin must send the message manually. The shared login page uses `POST /auth/driver-login`, stores the driver token for the session, and checks approval through `GET /auth/driver-me`. Duplicate email, phone, plate, license number, and national ID submissions are rejected.
 
 Run the API and static site at the same time. The API must be connected to the intended development database. This change does not create tables or migrate an existing database. Driver document upload is still unavailable; the form collects license and national ID numbers only.
 
 ## Local demo boundary
 
-Student accounts still use browser storage. There is no email verification, booking service, or document upload. Do not deploy the browser account store as production authentication.
+Student registration still uses browser storage. The shared login also accepts pre-provisioned student accounts from the configured database through `POST /auth/student-login`; these accounts have no saved area, university, or arrival preference until a separate profile flow is implemented. There is no email verification, booking service, or document upload. Do not deploy the browser account store as production authentication.
 
-New demo accounts use salted PBKDF2 password verifiers instead of storing plaintext passwords. Multiple demo accounts coexist, duplicate email/phone is rejected, and session profiles exclude password material. Original `darbgoUser` accounts remain readable and are migrated after successful login. Pending/rejected driver accounts retain their status restrictions. Browser storage and client-side role checks are only prototype behaviour, not a security boundary.
+New student demo accounts use salted PBKDF2 password verifiers instead of storing plaintext passwords. Multiple demo accounts coexist, duplicate email/phone is rejected, and session profiles exclude password material. Original `darbgoUser` accounts remain readable and are migrated after successful login. Browser storage and client-side role checks are only prototype behaviour, not a security boundary. Driver status is checked by the API.
 
 Existing browser demo accounts are not migrated into the database. Existing user data is not cleared.
 

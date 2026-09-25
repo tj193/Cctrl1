@@ -60,9 +60,16 @@ def test_admin_journey():
         assert client.get("/admin/dashboard/metrics").status_code == 401
         assert client.post("/auth/login", data={"username": "admin@example.test", "password": "wrong"}).status_code == 401
         assert client.post("/auth/login", data={"username": "student@example.test", "password": "safe-test-password"}).status_code == 403
+        assert client.post("/auth/student-login", data={"username": "student@example.test", "password": "wrong"}).status_code == 401
+        assert client.post("/auth/student-login", data={"username": "admin@example.test", "password": "safe-test-password"}).status_code == 401
+        student_login = client.post("/auth/student-login", data={"username": " STUDENT@example.test ", "password": "safe-test-password"})
+        assert student_login.status_code == 200
+        assert student_login.json() == {"name": "Student", "email": "student@example.test", "role": "student"}
         response = client.post("/auth/login", data={"username": "admin@example.test", "password": "safe-test-password"})
         assert response.status_code == 200
         headers = {"Authorization": f"Bearer {response.json()['access_token']}"}
+        assert client.post("/admin/admins", json={"name": "Second Admin", "email": "second@example.test", "password": "second-admin-password"}).status_code == 401
+        assert client.post("/admin/admins", headers=headers, json={"name": "Second Admin", "email": "second@example.test", "password": "second-admin-password"}).status_code == 201
         application = {
             "full_name": "New Driver", "email": "newdriver@example.test", "phone": "07701234567",
             "password": "new-driver-password", "vehicle_type": "Car", "vehicle_model": "Toyota",
@@ -72,10 +79,15 @@ def test_admin_journey():
         assert created.status_code == 201, created.text
         new_profile_id = created.json()["application_id"]
         assert client.post("/auth/driver-register", json=application).status_code == 409
+        assert client.post("/auth/driver-applications", json={**application, "email": "other@example.test"}).status_code == 409
         assert client.post("/auth/driver-login", data={"username": application["email"], "password": application["password"]}).status_code == 403
         assert any(item["id"] == new_profile_id for item in client.get("/admin/driver-applications", headers=headers).json())
         assert client.patch(f"/admin/driver-applications/{new_profile_id}/status", headers=headers, json={"status": "approved"}).status_code == 200
-        assert client.post("/auth/driver-login", data={"username": application["email"], "password": application["password"]}).json()["role"] == "driver"
+        signed_in = client.post("/auth/driver-login", data={"username": application["email"], "password": application["password"]})
+        assert signed_in.status_code == 200
+        driver_headers = {"Authorization": f"Bearer {signed_in.json()['access_token']}"}
+        assert client.get("/auth/driver-me", headers=driver_headers).json()["name"] == "New Driver"
+        assert client.get("/admin/driver-applications", headers=driver_headers).status_code == 401
         assert client.get("/routes/", headers=headers).status_code == 200
         assert client.get("/routes/").status_code == 401
 
@@ -84,6 +96,7 @@ def test_admin_journey():
         assert client.get("/admin/dashboard/recent-approvals", headers=headers).json()[0]["applicant_name"] == "Driver"
         assert client.get("/admin/dashboard/recent-reports", headers=headers).json()[0]["subject"] == "Test report"
         assert client.get("/admin/route-demand", headers=headers).json()[0]["student_count"] == 1
+        assert client.get("/admin/route-demand/analytics", headers=headers).json()[0]["area_name"] == "Baghdad"
         assert client.get("/admin/routes", headers=headers).json()[0]["enrolled_students"] == 1
         assert client.get("/admin/students", headers=headers).json()[0]["full_name"] == "Student"
         assert client.get("/admin/areas", headers=headers).json()[0]["name"] == "Baghdad"

@@ -1,7 +1,7 @@
 import hashlib
 import re
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from sqlalchemy.exc import IntegrityError
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -10,33 +10,59 @@ from sqlmodel import Session, select
 
 from ..DataBase import get_session
 from ..models import ApplicationStatus, Driver_Profile, Status, User, UserRole
-from ..security import create_access_token, get_password_hash, verify_password
+from ..security import create_access_token, get_password_hash, require_driver, verify_password
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+
+
+def normalize_iraqi_phone(value: str) -> str:
+    value = value.translate(str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789"))
+    value = re.sub(r"[\s()-]", "", value)
+    value = re.sub(r"^00964", "+964", value)
+    value = re.sub(r"^0(?=7)", "+964", value)
+    if not re.fullmatch(r"\+9647\d{9}", value):
+        raise ValueError("Enter a valid Iraqi mobile number")
+    return value
 
 
 class DriverRegistration(BaseModel):
     full_name: str = Field(min_length=2, max_length=120)
     email: str = Field(min_length=3, max_length=254)
     phone: str
-    password: str = Field(min_length=12)
+    password: str = Field(min_length=12, max_length=72)
     vehicle_type: str = Field(min_length=2, max_length=80)
     vehicle_model: str = Field(min_length=2, max_length=120)
     plate_number: str = Field(min_length=2, max_length=40)
     license_number: str = Field(min_length=2, max_length=80)
     national_id: str = Field(min_length=2, max_length=80)
 
+    @field_validator("full_name", "vehicle_type", "vehicle_model", "plate_number", "license_number", "national_id")
+    @classmethod
+    def clean_required(cls, value: str) -> str:
+        value = value.strip()
+        if len(value) < 2:
+            raise ValueError("This field must contain at least two characters")
+        return value
+
+    @field_validator("email")
+    @classmethod
+    def clean_email(cls, value: str) -> str:
+        value = value.strip().lower()
+        if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", value):
+            raise ValueError("Enter a valid email address")
+        return value
+
+    @field_validator("phone")
+    @classmethod
+    def clean_phone(cls, value: str) -> str:
+        return normalize_iraqi_phone(value)
+
 
 @router.post("/driver-register", status_code=201)
+@router.post("/driver-applications", status_code=201)
 def register_driver(data: DriverRegistration, session: Session = Depends(get_session)):
-    email = data.email.strip().lower()
-    if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email):
-        raise HTTPException(422, "Enter a valid email address")
-    phone = re.sub(r"[\s()-]", "", data.phone).replace("00964", "+964", 1)
-    if phone.startswith("07"):
-        phone = "+964" + phone[1:]
-    if not re.fullmatch(r"\+9647\d{9}", phone):
-        raise HTTPException(422, "Enter a valid Iraqi mobile number")
+    email = data.email
+    phone = data.phone
     if session.exec(select(User).where(User.email == email)).first():
         raise HTTPException(409, "An account with this email already exists")
     for field, value in ((Driver_Profile.phone_number, phone), (Driver_Profile.vehicle_plate, data.plate_number.strip()),
@@ -64,16 +90,48 @@ def register_driver(data: DriverRegistration, session: Session = Depends(get_ses
 
 @router.post("/driver-login")
 def driver_login(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session)):
-    user = session.exec(select(User).where(User.email == form_data.username.strip().lower())).first()
+    identifier = form_data.username.strip().lower()
+    user = session.exec(select(User).where(User.email == identifier)).first()
+    if not user:
+        try:
+            phone = normalize_iraqi_phone(identifier)
+        except ValueError:
+            phone = identifier
+        found = session.exec(select(Driver_Profile).where(Driver_Profile.phone_number == phone)).first()
+        user = session.get(User, found.Driver_id) if found else None
     if not user or user.role != UserRole.DRIVER or not verify_password(form_data.password, user.password_hash):
-        raise HTTPException(401, "Email or password is incorrect")
+        raise HTTPException(401, "Email, mobile number or password is incorrect")
     profile = session.exec(select(Driver_Profile).where(Driver_Profile.Driver_id == user.id)).first()
-    if not profile or profile.verification_status == ApplicationStatus.PENDING:
+    if not profile:
+        raise HTTPException(403, "Driver application not found")
+    if profile.verification_status == ApplicationStatus.PENDING:
         raise HTTPException(403, "Your driver application is still pending review")
+    if profile.verification_status == ApplicationStatus.REJECTED:
+        raise HTTPException(403, f"Your driver application was rejected. Reason: {profile.rejection_reason or 'No reason was provided'}")
     if profile.verification_status != ApplicationStatus.APPROVED or user.status != Status.ACTIVE:
         raise HTTPException(403, "Your driver application has not been approved")
-    return {"id": user.id, "fullName": user.name, "email": user.email,
-            "phone": profile.phone_number, "role": "driver", "status": "active"}
+    token = create_access_token({"sub": str(user.id), "role": user.role.value,
+                                 "pwd": hashlib.sha256(user.password_hash.encode()).hexdigest()})
+    return {"access_token": token, "token_type": "bearer", "name": user.name}
+
+
+@router.get("/driver-me")
+def driver_me(user: User = Depends(require_driver), session: Session = Depends(get_session)):
+    profile = session.exec(select(Driver_Profile).where(Driver_Profile.Driver_id == user.id)).first()
+    if not profile or profile.verification_status != ApplicationStatus.APPROVED:
+        raise HTTPException(403, "Driver approval is required")
+    return {"name": user.name, "email": user.email, "status": "approved"}
+
+
+@router.post("/student-login")
+def student_login(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session)):
+    email = form_data.username.strip().lower()
+    user = session.exec(select(User).where(User.email == email)).first()
+    if not user or user.role != UserRole.STUDENT or not verify_password(form_data.password, user.password_hash):
+        raise HTTPException(401, "Email or password is incorrect")
+    if user.status != Status.ACTIVE:
+        raise HTTPException(403, "Student account is not active")
+    return {"name": user.name, "email": user.email, "role": "student"}
 
 
 @router.post("/login")

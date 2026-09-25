@@ -57,7 +57,7 @@
 <label><span>Arrive before</span><select id="arrival-time" required><option value="">Choose a time</option><option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option></select></label>
 <button class="button primary" type="submit">Find matching routes ↗</button>
 </div>
-<p class="search-helper">No suitable route? You can join Route Demand so drivers can see where students need a new line.</p>
+<p class="search-helper">No suitable route? Preview Route Demand to see how students could signal interest in a new line. No request is sent here.</p>
 <div class="match-result" id="match-result" hidden role="status" aria-live="polite"></div>
 </form>
 </section>
@@ -355,6 +355,9 @@
 <template id="preview-join"><dialog aria-labelledby="preview-title"><button class="close-dialog" aria-label="Close preview">×</button>
 <h2 id="preview-title">Join request preview</h2>
 <p>This is a sample route. In the live product, your request would be sent to the driver for approval. No request has been sent and no seat has been reserved.</p></dialog></template>
+<template id="preview-demand"><dialog aria-labelledby="preview-title"><button class="close-dialog" aria-label="Close preview">×</button>
+<h2 id="preview-title">Route Demand preview</h2>
+<p>If no route fits, students could register interest in a new line so drivers can see demand for that area and university. This demo does not submit or save a Route Demand request.</p></dialog></template>
 <template id="preview-Instagram"><dialog aria-labelledby="preview-title"><button class="close-dialog" aria-label="Close preview">×</button>
 <h2 id="preview-title">Instagram</h2>
 <p>An official Instagram channel has not been provided for this concept.</p></dialog></template>

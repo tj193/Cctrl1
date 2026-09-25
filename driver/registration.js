@@ -1,6 +1,7 @@
 (() => {
   'use strict';
   const form = document.getElementById('driverForm');
+  const success = document.getElementById('driverRegistrationSuccess');
   const value = id => document.getElementById(id).value.trim();
   const apiBase = ['localhost', '127.0.0.1'].includes(window.location.hostname)
     ? `http://${window.location.hostname}:8000` : window.location.origin;
@@ -15,7 +16,8 @@
     const password = document.getElementById('driverPassword').value;
     if (password !== document.getElementById('driverConfirmPassword').value) { message.textContent = 'Passwords do not match.'; return; }
     if (password.length < 12) { message.textContent = 'Use at least 12 characters for your password.'; return; }
-    const phone = window.DarbAccounts.normalizePhone(value('driverPhone'));
+    const displayPhone = value('driverPhone');
+    const phone = window.DarbAccounts.normalizePhone(displayPhone);
     if (!/^\+9647\d{9}$/.test(phone)) { message.textContent = 'Enter a valid Iraqi mobile number.'; return; }
     button.disabled = true;
     try {
@@ -32,8 +34,15 @@
       const result = await response.json();
       if (!response.ok) throw new Error(typeof result.detail === 'string' ? result.detail : 'Please check the registration details.');
       form.reset();
-      message.textContent = `Application #${result.application_id} sent for admin review. You can sign in after approval.`;
-      message.classList.add('success');
+      document.getElementById('driverReviewNote').textContent = 'Your application is sent for admin review. You can sign in after approval.';
+      document.getElementById('driverApplicationNumber').textContent = `#${result.application_id}`;
+      document.getElementById('driverApplicationPhone').textContent = displayPhone;
+      form.hidden = true;
+      document.getElementById('driverLoginPrompt').hidden = true;
+      document.body.classList.add('driver-registration-complete');
+      document.querySelector('.driver-form').classList.add('is-complete');
+      success.hidden = false;
+      success.focus();
     } catch (error) {
       message.classList.remove('success');
       message.textContent = error instanceof TypeError

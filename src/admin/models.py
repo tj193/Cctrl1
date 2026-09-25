@@ -2,6 +2,7 @@ from enum import Enum
 from datetime import datetime, timezone
 from typing import Optional
 from sqlmodel import SQLModel, Field
+from sqlalchemy import UniqueConstraint
 
 class UserRole(str, Enum):
     
@@ -64,13 +65,16 @@ class University(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     University_name: str = Field(index=True, unique=True)
+    governorate: Optional[str] = Field(default=None, index=True)
     status: UniversityStatus = Field(default=UniversityStatus.ACTIVE)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class Area(SQLModel, table=True):
 
+    __table_args__ = (UniqueConstraint("Area_name", "city", name="uq_area_name_city"),)
+
     id: Optional[int] = Field(default=None, primary_key=True)
-    Area_name: str = Field(index=True, unique=True)
+    Area_name: str = Field(index=True)
     city: str = Field(index=True)
     status: UniversityStatus = Field(default=UniversityStatus.ACTIVE)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

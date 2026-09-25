@@ -64,3 +64,27 @@ def require_admin(
     if payload.get("pwd") != hashlib.sha256(user.password_hash.encode()).hexdigest():
         raise unauthorized
     return user
+
+
+def require_driver(
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer),
+    session: Session = Depends(get_session),
+) -> User:
+    unauthorized = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid or expired driver session",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    if credentials is None:
+        raise unauthorized
+    try:
+        payload = jwt.decode(credentials.credentials, secret_key(), algorithms=[ALGORITHM])
+        user_id = int(payload["sub"])
+    except (jwt.PyJWTError, ValueError, KeyError, TypeError):
+        raise unauthorized from None
+    user = session.get(User, user_id)
+    if not user or user.role != UserRole.DRIVER or user.status != Status.ACTIVE:
+        raise unauthorized
+    if payload.get("pwd") != hashlib.sha256(user.password_hash.encode()).hexdigest():
+        raise unauthorized
+    return user

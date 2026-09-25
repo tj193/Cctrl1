@@ -23,7 +23,7 @@ for (const file of htmlFiles) {
   for (const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
     const target = match[1];
     if (/^(https?:|mailto:|tel:|data:)/.test(target)) continue;
-    assert(fs.existsSync(path.resolve(path.dirname(file), target.split('#')[0])), `${file}: missing ${target}`);
+    assert(fs.existsSync(path.resolve(path.dirname(file), target.split(/[?#]/)[0])), `${file}: missing ${target}`);
   }
   assert(!/[\u{1F000}-\u{1FAFF}\u2600-\u27BF]/u.test(html), `${file}: emoji found`);
 }

@@ -27,13 +27,13 @@ The site remains a dependency-free HTML/CSS/JavaScript project. Public HTML rout
 
 Back navigation preserves entered values. Changing governorate resets dependent area and university selections. Arrival time and account details remain intact. University filtering resets a selection if it is no longer in the filtered list, so an invisible stale option is never submitted.
 
-## Local demo boundary
+## Account boundaries
 
-There is no backend, database, email verification, actual driver approval, booking service or document upload. UI messages explicitly describe this limitation. Do not deploy the browser account store as production authentication.
+Student registration and login are still browser-only demos. Driver registration sends application details to the FastAPI service and its configured database. Admin approval changes the driver's server-side status. Driver login requires an approved, active account and checks the server again when loading driver pages. The API and database must be running and reachable from the site. Email verification, booking, and document upload are not implemented.
 
 New demo accounts use salted PBKDF2 password verifiers instead of storing plaintext passwords. Multiple demo accounts coexist, duplicate email/phone is rejected, and session profiles exclude password material. Original `darbgoUser` accounts remain readable and are migrated after successful login. Pending/rejected driver accounts retain their status restrictions. Browser storage and client-side role checks are only prototype behaviour, not a security boundary.
 
-Driver file inputs preserve only file names as the old prototype did. They do not upload files. Existing user data is not cleared.
+Driver registration collects license and national ID numbers for admin review. It does not collect or upload document files. Existing browser-only driver demo accounts are not migrated to the server; those drivers must submit a new application. Existing browser data is not cleared.
 
 ## Data and visual sources
 
@@ -56,4 +56,4 @@ node tools/check-registration.cjs
 python tools/prepare-registration-data.py
 ```
 
-Use localhost for the account demo so Web Crypto is available. Map and catalogue rendering are local and work without external API requests.
+Use localhost for the student account demo so Web Crypto is available. The driver application and approval flow requires the FastAPI service on port 8000 and a configured database. Map and catalogue rendering remain local.

@@ -39,11 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalDriversMetric = document.getElementById("totalDriversMetric");
     const pendingDriversMetric = document.getElementById("pendingDriversMetric");
     const activeRoutesMetric = document.getElementById("activeRoutesMetric");
-    const openReportsMetric = document.getElementById("openReportsMetric");
 
     // Table Elements
     const recentApprovalsTableBody = document.getElementById("recentApprovalsTableBody");
-    const recentReportsTableBody = document.getElementById("recentReportsTableBody");
     const logoutBtn = document.getElementById("logoutBtn");
 
     // 3. Fetch Dashboard Summary KPIs
@@ -69,7 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 totalDriversMetric.textContent = data.total_drivers ?? 0;
                 pendingDriversMetric.textContent = data.pending_drivers ?? 0;
                 activeRoutesMetric.textContent = data.active_routes ?? 0;
-                openReportsMetric.textContent = data.open_reports ?? 0;
             }
         } catch (error) {
             console.error("Error loading dashboard metrics:", error);
@@ -121,51 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 5. Fetch Urgent Complaints & Reports
-    async function fetchRecentReports() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/admin/dashboard/recent-reports`, {
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-
-            if (response.ok) {
-                const reports = safeRecord(await response.json());
-                renderRecentReports(reports);
-            } else {
-                recentReportsTableBody.innerHTML = `<tr><td colspan="6">Failed to load urgent reports.</td></tr>`;
-            }
-        } catch (error) {
-            console.error("Error fetching recent reports:", error);
-            recentReportsTableBody.innerHTML = `<tr><td colspan="6">Server connection error.</td></tr>`;
-        }
-    }
-
-    function renderRecentReports(reports) {
-        recentReportsTableBody.innerHTML = "";
-
-        if (reports.length === 0) {
-            recentReportsTableBody.innerHTML = `<tr><td colspan="6">No urgent open complaints or reports.</td></tr>`;
-            return;
-        }
-
-        reports.forEach(report => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>#${report.id}</td>
-                <td>${report.reporter_name} (${report.reporter_role || 'User'})</td>
-                <td>${report.subject}</td>
-                <td>${report.created_at || 'N/A'}</td>
-                <td><strong>${(report.status || 'open').toUpperCase()}</strong></td>
-                <td>
-                    <a href="adminReports.html?id=${report.id}">
-                        <button type="button">Investigate</button>
-                    </a>
-                </td>
-            `;
-            recentReportsTableBody.appendChild(tr);
-        });
-    }
-
     // 6. Logout Functionality
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
@@ -178,5 +130,4 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize Page Data
     fetchDashboardMetrics();
     fetchRecentApprovals();
-    fetchRecentReports();
 });

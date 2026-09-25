@@ -161,28 +161,42 @@ const NO_MATCH_AREAS = new Set(["Al-Jadriya"]);
 
 function renderNoMatch(area, university) {
   matchResult.className = "match-result no-match";
-  matchResult.innerHTML = `<strong>No exact match yet</strong><span>No reviewed route currently covers ${area} → ${university}. Join Route Demand so drivers can see students need this line.</span><button type="button" class="text-button demand-button">Join Route Demand ↗</button>`;
+  matchResult.innerHTML = `<strong>No sample routes for this search</strong><span>The demo has no sample line for ${area} → ${university}. Preview Route Demand to see how students could express interest in a new line. No request is sent.</span><button type="button" class="text-button demand-button">Preview Route Demand ↗</button>`;
 }
 
 function renderMatch(area, university, arrival) {
+  const arrivalHour = Number(arrival.split(":")[0]);
+  const routes = [
+    { driver: "Omar K.", minutesBefore: 40, travelMinutes: 35, price: "75,000", seats: 3 },
+    { driver: "Ali H.", minutesBefore: 25, travelMinutes: 30, price: "80,000", seats: 2 },
+    { driver: "Hassan M.", minutesBefore: 10, travelMinutes: 40, price: "70,000", seats: 4 },
+  ];
+  const formatTime = (minutes) => {
+    const hour = Math.floor(minutes / 60);
+    return `${hour > 12 ? hour - 12 : hour}:${String(minutes % 60).padStart(2, "0")} ${hour >= 12 ? "PM" : "AM"}`;
+  };
+  const arrivalMinutes = arrivalHour * 60;
   matchResult.className = "match-result";
   matchResult.innerHTML = `
-    <div class="result-card">
-      <strong>Best match · 94%</strong>
-      <h3>${area} → ${university}</h3>
-      <dl class="result-facts">
-        <div><dt>Departs</dt><dd>7:30 AM</dd></div>
-        <div><dt>Arrives</dt><dd>before ${arrival}</dd></div>
-        <div><dt>Price</dt><dd>75,000 IQD / mo</dd></div>
-        <div><dt>Seats</dt><dd>3 available</dd></div>
-        <div><dt>Driver</dt><dd>Approved </dd></div>
-        <div><dt>Match</dt><dd>94%</dd></div>
-      </dl>
-      <button type="button" class="button primary" data-preview="join">Send join request ↗</button>
-    </div>`;
-  matchResult.querySelector("[data-preview]")?.addEventListener("click", (event) => {
+    <p class="sample-results-note">These 3 sample routes show how results would appear. With live data, you may find more or fewer routes for your area, university, and arrival time. No route shown here is a real offer.</p>
+    <div class="result-grid">${routes.map((route) => {
+      const arrivalAt = arrivalMinutes - route.minutesBefore;
+      return `<article class="result-card">
+        <strong>Sample route · Driver review: approved in demo</strong>
+        <h3>${route.driver}</h3>
+        <p class="result-route">${area} → ${university}</p>
+        <dl class="result-facts">
+          <div><dt>Departs</dt><dd>${formatTime(arrivalAt - route.travelMinutes)}</dd></div>
+          <div><dt>Arrives</dt><dd>${formatTime(arrivalAt)}</dd></div>
+          <div><dt>Monthly price</dt><dd>${route.price} IQD</dd></div>
+          <div><dt>Available seats</dt><dd>${route.seats}</dd></div>
+        </dl>
+        <button type="button" class="button primary" data-preview="join">Preview join request ↗</button>
+      </article>`;
+    }).join("")}</div>`;
+  matchResult.querySelectorAll("[data-preview]").forEach((button) => button.addEventListener("click", (event) => {
     openPreview(event.currentTarget.dataset.preview);
-  });
+  }));
 }
 
 routeSearch?.addEventListener("submit", (event) => {
@@ -222,5 +236,5 @@ routeSearch?.addEventListener("submit", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  if (event.target.closest(".demand-button")) openPreview("join");
+  if (event.target.closest(".demand-button")) openPreview("demand");
 });

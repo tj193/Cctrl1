@@ -6,6 +6,8 @@
   message.setAttribute('role', 'alert');
   form.append(message);
   const password = document.getElementById('loginPassword');
+  const role = document.getElementById('loginRole');
+  if (new URLSearchParams(window.location.search).get('role') === 'driver') role.value = 'driver';
   const toggle = document.getElementById('toggleLoginPassword');
   toggle.addEventListener('click', () => {
     const show = password.type === 'password';
@@ -19,10 +21,15 @@
     button.disabled = true;
     message.textContent = '';
     try {
+      if (role.value === 'driver') {
+        const result = await window.DarbDriverApi.login(document.getElementById('loginIdentifier').value, password.value);
+        sessionStorage.setItem('driverToken', result.access_token);
+        window.location.href = 'driver/driver_dashboard.html';
+        return;
+      }
       const user = await window.DarbAccounts.login(document.getElementById('loginIdentifier').value, password.value);
-      const destinations = { student: 'student/dashboard.html', driver: 'driver_dashboard.html', admin: 'admin/dashboard.html' };
-      if (!destinations[user.role]) throw new Error('This demo account has an unsupported role.');
-      window.location.href = destinations[user.role];
+      if (user.role !== 'student') throw new Error('Choose Driver for a driver account.');
+      window.location.href = 'student/dashboard.html';
     } catch (error) {
       message.textContent = error instanceof SyntaxError ? 'Saved demo data could not be read. Try a separate browser profile.' : error.message;
     } finally { button.disabled = false; }

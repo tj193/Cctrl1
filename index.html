@@ -57,7 +57,7 @@
 <label><span>Arrive before</span><select id="arrival-time" required><option value="">Choose a time</option><option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option></select></label>
 <button class="button primary" type="submit">Find matching routes ↗</button>
 </div>
-<p class="search-helper">No suitable route? You can join Route Demand so drivers can see where students need a new line.</p>
+<p class="search-helper">No suitable route? Preview Route Demand to see how students could signal interest in a new line. No request is sent here.</p>
 <div class="match-result" id="match-result" hidden role="status" aria-live="polite"></div>
 </form>
 </section>
@@ -66,7 +66,7 @@
 <div>
 <p class="eyebrow">01 / Simple by design</p>
 <h2>Your day has enough steps.<br/>Your ride needs just four.</h2></div>
-<p>A clear path from finding your route to finding your routine.</p></div>
+<p>Switch between student and driver steps below.</p></div>
 <div class="tabs" role="tablist" aria-label="How DarbGo works"><button class="tab" id="student-tab" role="tab" aria-selected="true" aria-controls="steps" tabindex="0">For students</button><button class="tab" id="driver-tab" role="tab" aria-selected="false" aria-controls="steps" tabindex="-1">For drivers</button></div>
 <div class="journey-track" aria-hidden="true"><span class="track-line"></span><span class="track-dot track-dot-0">1</span><span class="track-dot track-dot-1">2</span><span class="track-dot track-dot-2">3</span><span class="track-dot track-dot-3">4</span></div>
 <div class="steps tab-enter" id="steps" data-role="student" role="tabpanel" tabindex="0" aria-labelledby="student-tab">
@@ -118,16 +118,13 @@
 <div class="trust-intro reveal">
 <p class="eyebrow">02 / Confidence comes along</p>
 <h2>The right route starts with trust.</h2>
-<p>Knowing who you&#x27;re riding with matters. DarbGo brings driver review and clear route information into the same experience.</p>
+<p>Driver applications are reviewed by an administrator before routes appear to students.</p>
 <div class="driver-profile">
 <div class="profile-heading"><span class="avatar">OK</span>
 <div><strong>Omar K. · Route driver</strong><small>Sample profile · Morning route</small></div><span class="icon-chip round"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6l8-4Zm-4 10 3 3 5-6"></path></svg></span></div>
 <div class="verification-list"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg> Profile reviewed</span><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg> Admin approved</span><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg> Route published</span></div></div>
 <div class="trust-stamp"><span aria-hidden="true"></span> Approval before a driver goes live</div></div>
 <div class="trust-list reveal">
-<article class="trust-item"><span class="icon-chip"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6l8-4Zm-4 10 3 3 5-6"></path></svg></span>
-<h3>Verified drivers</h3>
-<p>Driver details go through review before routes are made available to students.</p></article>
 <article class="trust-item"><span class="icon-chip green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></span>
 <h3>Admin approval</h3>
 <p>An administrator reviews driver applications to support a trusted community.</p></article>
@@ -144,7 +141,7 @@
 <div>
 <p class="eyebrow">03 / Everyone moves forward</p>
 <h2>Better mornings.<br/>On both sides of the ride.</h2></div>
-<p>One platform. Two perspectives.<br/>A more connected university commute.</p></div>
+<p>A quick look at the student and driver experience.</p></div>
 <div class="benefit-grid">
 <article class="benefit-card student-card reveal">
 <p class="eyebrow">For students</p>
@@ -160,10 +157,7 @@
 <div><span class="icon-chip round purple"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v14H3V5Zm12 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6 8h1m10 8h1"></path></svg></span><strong>75,000 IQD</strong><span>Sample / month</span></div></div>
 <div class="preview-verified"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6l8-4Zm-4 10 3 3 5-6"></path></svg> Approved driver · View route details</div></div></div>
 <ul>
-<li><span class="icon-chip round"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h9a5 5 0 0 1 0 10H9m-4 0h1M5 3v4m-2-2h4M18 19h3m-1-2v4M9 12l-3 3 3 3"></path></svg></span>Find nearby transportation from your area</li>
 <li><span class="icon-chip round"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h9a5 5 0 0 1 0 10H9m-4 0h1M5 3v4m-2-2h4M18 19h3m-1-2v4M9 12l-3 3 3 3"></path></svg></span>Compare routes before you decide</li>
-<li><span class="icon-chip round teal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v9h10V8M5 15h14v3H5v-3Zm2 3v3m10-3v3M7 4h7v6"></path></svg></span>See available seats at a glance</li>
-<li><span class="icon-chip round"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg></span>View schedules and prices upfront</li>
 <li><span class="icon-chip round green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6l8-4Zm-4 10 3 3 5-6"></path></svg></span>Connect with trusted, approved drivers</li></ul></article>
 <article id="drivers" class="benefit-card driver-card reveal">
 <p class="eyebrow">For drivers</p>
@@ -177,39 +171,13 @@
 <div class="request-row"><span class="avatar">YM</span><span>Yara M.<small>On your student list</small></span><span class="request-state accepted">Accepted</span></div>
 <div class="preview-bottom"><span>Student list, all in one place</span><span>3 seats open</span></div></div>
 <ul>
-<li><span class="icon-chip round teal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10h18v9H3v-9Zm2 0 2-6h10l2 6M6 14h2m8 0h2M5 19v2m14-2v2"></path></svg></span>Manage your vehicle, route, and schedule</li>
-<li><span class="icon-chip round"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM2 21v-3a7 7 0 0 1 14 0v3M17 4a4 4 0 0 1 0 7m2 4a6 6 0 0 1 3 6"></path></svg></span>Keep your student list organized</li>
-<li><span class="icon-chip round purple"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 18 9-18 9 4-9-4-9Zm4 9h14"></path></svg></span>Review and respond to join requests</li>
-<li><span class="icon-chip round teal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v9h10V8M5 15h14v3H5v-3Zm2 3v3m10-3v3M7 4h7v6"></path></svg></span>Track available seats as your route fills</li></ul><button class="text-button source-detail-0" data-preview="driver">Explore driver registration ↗</button></article></div></div></section>
-<section class="wrap section stats-section">
-<p class="eyebrow">A connected campus community</p>
-<div class="stats">
-<div class="stat stat-blue"><span class="icon-chip blue"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM2 21v-3a7 7 0 0 1 14 0v3M17 4a4 4 0 0 1 0 7m2 4a6 6 0 0 1 3 6"></path></svg></span><strong aria-label="1,200"><span aria-hidden="true" class="counter-value">1,200</span></strong><span>Active students</span></div>
-<div class="stat stat-green"><span class="icon-chip green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6l8-4Zm-4 10 3 3 5-6"></path></svg></span><strong aria-label="80"><span aria-hidden="true" class="counter-value">80</span></strong><span>Verified drivers</span></div>
-<div class="stat stat-teal"><span class="icon-chip teal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h9a5 5 0 0 1 0 10H9m-4 0h1M5 3v4m-2-2h4M18 19h3m-1-2v4M9 12l-3 3 3 3"></path></svg></span><strong aria-label="150"><span aria-hidden="true" class="counter-value">150</span></strong><span>Active routes</span></div>
-<div class="stat stat-purple"><span class="icon-chip purple"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 8 10-5 10 5-10 5L2 8Zm4 4v5c4 3 8 3 12 0v-5M22 8v8"></path></svg></span><strong aria-label="12"><span aria-hidden="true" class="counter-value">12</span></strong><span>Universities</span></div></div>
-<p class="stats-note">Illustrative demo counters. These are not live platform statistics.</p></section>
-<section class="wrap section">
-<div class="section-head reveal">
-<div>
-<p class="eyebrow">04 / The everyday difference</p>
-<h2>A little less hassle.<br/>A lot more possibility.</h2></div>
-<p class="small">Sample testimonials written for this preview.<br/>They do not represent actual customer reviews.</p></div>
-<div class="quotes"><figure class="quote reveal quote-blue">
-<div class="quote-role"><span class="icon-chip round"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 8 10-5 10 5-10 5L2 8Zm4 4v5c4 3 8 3 12 0v-5M22 8v8"></path></svg></span>Student perspective</div><span aria-hidden="true" class="quote-mark">“</span><blockquote>Being able to compare pickup times in one place would make planning my morning so much easier.</blockquote>
-<footer><span aria-hidden="true" class="avatar">LA</span>
-<div><strong>Leen A.</strong>Student · sample persona</div></footer></figure><figure class="quote reveal quote-navy">
-<div class="quote-role"><span class="icon-chip round navy"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10h18v9H3v-9Zm2 0 2-6h10l2 6M6 14h2m8 0h2M5 19v2m14-2v2"></path></svg></span>Driver perspective</div><span aria-hidden="true" class="quote-mark">“</span><blockquote>One list for requests, students, and available seats. That&#x27;s exactly how I&#x27;d want to organize my route.</blockquote>
-<footer><span aria-hidden="true" class="avatar">OK</span>
-<div><strong>Omar K.</strong>Driver · sample persona</div></footer></figure><figure class="quote reveal quote-teal">
-<div class="quote-role"><span class="icon-chip round teal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 8 10-5 10 5-10 5L2 8Zm4 4v5c4 3 8 3 12 0v-5M22 8v8"></path></svg></span>Student perspective</div><span aria-hidden="true" class="quote-mark">“</span><blockquote>I want to know the price and schedule before I ask for a seat. Having those details upfront makes a difference.</blockquote>
-<footer><span aria-hidden="true" class="avatar">YM</span>
-<div><strong>Yara M.</strong>Student · sample persona</div></footer></figure></div></section>
+<li><span class="icon-chip round teal"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10h18v9H3v-9Zm2 0 2-6h10l2 6M6 14h2m8 0h2M5 19v2m14-2v2"></path></svg></span>Set your route, schedule, and price</li>
+<li><span class="icon-chip round purple"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 18 9-18 9 4-9-4-9Zm4 9h14"></path></svg></span>Review and respond to join requests</li></ul><a class="text-button source-detail-0" href="driver/register.html">Explore driver registration ↗</a></article></div></div></section>
 <section id="faq" class="tinted purple-tint section">
-<div aria-hidden="true" class="section-dots"></div>
-<div class="wrap faq-layout">
+    <div aria-hidden="true" class="section-dots"></div>
+    <div class="wrap faq-layout">
 <div>
-<p class="eyebrow">05 / Good questions</p>
+<p class="eyebrow">04 / Good questions</p>
 <h2>Before you<br/>get going.</h2>
 <p class="lead">A few things you might be wondering.</p>
 <div class="faq-visual"><span class="icon-chip purple"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 8a3 3 0 1 1 5 2c-2 1-2 2-2 3m0 3v1M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg></span><strong>A clear path, from the start.</strong><span>From your first search to your first request.</span><svg viewBox="0 0 280 52" aria-hidden="true" class="mini-journey"><path d="M12 36h72q16 0 16-16t16-16h64q16 0 16 16t16 16h56"></path><path d="M12 36h72q16 0 16-16t16-16h64q16 0 16 16t16 16h56" class="moving-dashes"></path><circle cx="12" cy="36" r="5"></circle><circle cx="268" cy="36" r="5"></circle></svg></div></div>
@@ -231,9 +199,9 @@
 <p>Driver applications are reviewed by administrators before drivers are approved to offer routes. Always review your route details and confirm arrangements before traveling.</p></details>
 <details>
 <summary><span class="icon-chip round amber"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 8a3 3 0 1 1 5 2c-2 1-2 2-2 3m0 3v1M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg></span>Can I book a real ride on this page?</summary>
-<p>This is an interactive product preview. Search results, counters, and testimonials are illustrative. No real booking, payment, or driver application is submitted here.</p></details></div></div></section>
+<p>Search results on this page are illustrative. No booking, payment, or join request is submitted by this demo. Registration links open separate forms.</p></details></div></div></section>
 <section class="wrap closing">
-<h2>Your next chapter.<br/>A smarter way to get there.</h2><a href="#search" class="button">Explore your route ↗</a></section></main>
+<h2>Your next chapter.<br/>A smarter way to get there.</h2><div class="row"><a href="student/register.html" class="button">Register as a student ↗</a><a href="driver/register.html" class="button">Register as a driver ↗</a></div></section></main>
 <footer class="site-footer">
 <div class="wrap">
 <div class="footer-grid">
@@ -242,7 +210,7 @@
 <div aria-label="Social channel previews" class="socials"><button type="button" aria-label="Instagram channel information" data-preview="Instagram"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4Zm9 9a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm1-6h.01"></path></svg></button><button type="button" aria-label="LinkedIn channel information" data-preview="LinkedIn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v12M4 4v1M10 21V9m0 5a5 5 0 0 1 10 0v7"></path></svg></button></div></div>
 <div><strong>Product</strong><a href="#how">How it works</a><a href="#safety">Trust &amp; safety</a><a href="#benefits">Why DarbGo</a></div>
 <div><strong>Students</strong><a href="#search">Find a route</a><a href="#faq">Student FAQs</a><button class="text-button" data-preview="contact">Contact</button></div>
-<div><strong>Drivers</strong><button class="text-button" data-preview="driver">Become a driver</button><a href="#drivers">Driver benefits</a><a href="#safety">Approval process</a></div></div>
+<div><strong>Drivers</strong><a href="driver/register.html">Become a driver</a><a href="#drivers">Driver benefits</a><a href="#safety">Approval process</a></div></div>
 <div class="footer-contact">
 <div><strong>Every good journey starts with a conversation.</strong><span>Questions about student routes or driving with DarbGo?</span></div><button class="button" data-preview="contact"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v14H3V5Zm0 1 9 7 9-7"></path></svg>Contact DarbGo</button></div>
 <div class="footer-bottom"><span>© 2026 DarbGo. All rights reserved.<br/>Interactive concept · no live transportation service</span>
@@ -339,10 +307,6 @@
 <div class="scene-ticket"><span>Student requests</span><strong>Review &amp; respond</strong><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></div><svg viewBox="0 0 280 52" aria-hidden="true" class="mini-journey"><path d="M12 36h72q16 0 16-16t16-16h64q16 0 16 16t16 16h56"></path><path d="M12 36h72q16 0 16-16t16-16h64q16 0 16 16t16 16h56" class="moving-dashes"></path><circle cx="12" cy="36" r="5"></circle><circle cx="268" cy="36" r="5"></circle></svg></div></div><span class="step-num">04 — GROW YOUR ROUTE</span>
 <h3>Receive student requests</h3>
 <p>Review join requests and manage your available seats.</p></article></div></template>
-<template id="preview-driver"><dialog aria-labelledby="preview-title"><button class="close-dialog" aria-label="Close preview">×</button>
-<p class="eyebrow">For drivers / Preview</p>
-<h2 id="preview-title">Bring your route to DarbGo.</h2>
-<p>Try the first registration step. This preview does not save or submit personal information.</p><form><label for="driver-name">Full name</label><input id="driver-name" autoComplete="name" required=""/><label for="driver-email">Email address</label><input id="driver-email" type="email" autoComplete="email" required=""/><button class="button" type="submit">Preview next steps →</button></form></dialog></template>
 <template id="preview-contact"><dialog aria-labelledby="preview-title"><button class="close-dialog" aria-label="Close preview">×</button>
 <h2 id="preview-title">Contact DarbGo</h2>
 <p>Contact details have not been provided for this concept. No message is sent from this preview.</p></dialog></template>
@@ -355,6 +319,9 @@
 <template id="preview-join"><dialog aria-labelledby="preview-title"><button class="close-dialog" aria-label="Close preview">×</button>
 <h2 id="preview-title">Join request preview</h2>
 <p>This is a sample route. In the live product, your request would be sent to the driver for approval. No request has been sent and no seat has been reserved.</p></dialog></template>
+<template id="preview-demand"><dialog aria-labelledby="preview-title"><button class="close-dialog" aria-label="Close preview">×</button>
+<h2 id="preview-title">Route Demand preview</h2>
+<p>If no route fits, students could register interest in a new line so drivers can see demand for that area and university. This demo does not submit or save a Route Demand request.</p></dialog></template>
 <template id="preview-Instagram"><dialog aria-labelledby="preview-title"><button class="close-dialog" aria-label="Close preview">×</button>
 <h2 id="preview-title">Instagram</h2>
 <p>An official Instagram channel has not been provided for this concept.</p></dialog></template>

@@ -26,7 +26,7 @@
         Create your DarbGo driver account
     </p>
 
-    <p class="demo-note">Local demo only. Use sample details. Photos and documents are optional; nothing is sent to a server. <a href="../driver_dashboard.html">Preview the driver dashboard</a>.</p>
+    <p class="demo-note">Your application will be sent to the admin team for review. Registration requires the DarbGo API to be running. <a href="driver_dashboard.html">Preview the driver dashboard</a>.</p>
     <form id="driverForm">
 
         <!-- ========================= -->
@@ -70,6 +70,7 @@
             type="password"
             id="driverPassword"
             placeholder="Enter your password"
+            minlength="12"
             required
         >
 
@@ -134,22 +135,6 @@
             required
         >
 
-        <label for="numberOfSeats">Number of Seats</label>
-        <input
-            type="number"
-            id="numberOfSeats"
-            placeholder="Example: 4"
-            min="1"
-            required
-        >
-
-        <label for="vehiclePhoto">Vehicle Photo (optional)</label>
-        <input
-            type="file"
-            id="vehiclePhoto"
-            accept="image/*"
-        >
-
         <!-- ========================= -->
         <!-- Verification -->
         <!-- ========================= -->
@@ -158,24 +143,22 @@
 
             <h2>Verification Information</h2>
 
-            <p>
-                Documents are optional in this local demo
-            </p>
+            <p>Enter the numbers needed for admin review. Document upload is not available yet.</p>
 
         </div>
 
-        <label for="drivingLicense">Driving License (optional)</label>
+        <label for="drivingLicense">Driving License Number</label>
         <input
-            type="file"
+            type="text"
             id="drivingLicense"
-            accept="image/*,.pdf"
+            required
         >
 
-        <label for="idDocument">ID Document (optional)</label>
+        <label for="idDocument">National ID Number</label>
         <input
-            type="file"
+            type="text"
             id="idDocument"
-            accept="image/*,.pdf"
+            required
         >
 
         <button type="submit">

@@ -67,7 +67,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="approvalsTableBody">
+                <tbody id="approvalTableBody">
 
                 </tbody>
             </table>
@@ -75,9 +75,9 @@
 
     </div>
 
-    <div id="docsModal" hidden>
+    <div id="approvalModal" hidden>
         <div>
-            <button type="button" id="closeDocsModalBtn">&times; Close</button>
+            <button type="button" id="closeModalBtn">&times; Close</button>
             <h2>Review Applicant Documents</h2>
             
             <section id="applicantDetailsSection">
@@ -86,7 +86,7 @@
 
             <section>
                 <h3>Uploaded Documents Preview</h3>
-                <div id="documentsContainer">
+                <div id="documentsSection">
 
                 </div>
             </section>
@@ -94,17 +94,17 @@
             <section>
                 <h3>Approval Decision</h3>
                 <form id="approvalDecisionForm">
-                    <input type="hidden" id="modalApplicantId">
+                    <input type="hidden" id="modalApplicationId">
                     <label for="rejectionReason">Notes / Rejection Reason (Required if rejecting):</label><br>
-                    <textarea id="rejectionReason" rows="3" placeholder="Enter reason if rejecting application..."></textarea>
+                    <textarea id="adminNotes" rows="3" placeholder="Enter reason if rejecting application..."></textarea>
                     <br>
-                    <button type="button" id="approveApplicantBtn">Approve Application</button>
-                    <button type="button" id="rejectApplicantBtn">Reject Application</button>
+                    <button type="button" id="approveBtn">Approve Application</button>
+                    <button type="button" id="rejectBtn">Reject Application</button>
                 </form>
             </section>
         </div>
     </div>
 
-    <script src="JS-file/main.js"></script>
+    <script src="../JS-file/main.js"></script>
 </body>
 </html>

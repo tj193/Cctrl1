@@ -27,13 +27,19 @@ The site remains a dependency-free HTML/CSS/JavaScript project. Public HTML rout
 
 Back navigation preserves entered values. Changing governorate resets dependent area and university selections. Arrival time and account details remain intact. University filtering resets a selection if it is no longer in the filtered list, so an invisible stale option is never submitted.
 
+## Driver applications
+
+The driver form posts to `POST /auth/driver-register` on the FastAPI server. The server stores a pending user and driver profile in its configured database. Admins can review the application at `admin/front-end/adminApproval.html`; approval activates the driver account, and the shared login page then accepts it through `POST /auth/driver-login`. Duplicate email, phone, plate, license number, and national ID submissions are rejected.
+
+Run the API and static site at the same time. The API must be connected to the intended development database. This change does not create tables or migrate an existing database. Driver document upload is still unavailable; the form collects license and national ID numbers only.
+
 ## Local demo boundary
 
-There is no backend, database, email verification, actual driver approval, booking service or document upload. UI messages explicitly describe this limitation. Do not deploy the browser account store as production authentication.
+Student accounts still use browser storage. There is no email verification, booking service, or document upload. Do not deploy the browser account store as production authentication.
 
 New demo accounts use salted PBKDF2 password verifiers instead of storing plaintext passwords. Multiple demo accounts coexist, duplicate email/phone is rejected, and session profiles exclude password material. Original `darbgoUser` accounts remain readable and are migrated after successful login. Pending/rejected driver accounts retain their status restrictions. Browser storage and client-side role checks are only prototype behaviour, not a security boundary.
 
-Driver file inputs preserve only file names as the old prototype did. They do not upload files. Existing user data is not cleared.
+Existing browser demo accounts are not migrated into the database. Existing user data is not cleared.
 
 ## Data and visual sources
 

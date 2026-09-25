@@ -63,11 +63,24 @@ def test_admin_journey():
         response = client.post("/auth/login", data={"username": "admin@example.test", "password": "safe-test-password"})
         assert response.status_code == 200
         headers = {"Authorization": f"Bearer {response.json()['access_token']}"}
+        application = {
+            "full_name": "New Driver", "email": "newdriver@example.test", "phone": "07701234567",
+            "password": "new-driver-password", "vehicle_type": "Car", "vehicle_model": "Toyota",
+            "plate_number": "NEW-1", "license_number": "LICENSE-NEW", "national_id": "ID-NEW",
+        }
+        created = client.post("/auth/driver-register", json=application)
+        assert created.status_code == 201, created.text
+        new_profile_id = created.json()["application_id"]
+        assert client.post("/auth/driver-register", json=application).status_code == 409
+        assert client.post("/auth/driver-login", data={"username": application["email"], "password": application["password"]}).status_code == 403
+        assert any(item["id"] == new_profile_id for item in client.get("/admin/driver-applications", headers=headers).json())
+        assert client.patch(f"/admin/driver-applications/{new_profile_id}/status", headers=headers, json={"status": "approved"}).status_code == 200
+        assert client.post("/auth/driver-login", data={"username": application["email"], "password": application["password"]}).json()["role"] == "driver"
         assert client.get("/routes/", headers=headers).status_code == 200
         assert client.get("/routes/").status_code == 401
 
         metrics = client.get("/admin/dashboard/metrics", headers=headers).json()
-        assert metrics == {"total_students": 1, "total_drivers": 1, "pending_drivers": 1, "active_routes": 1, "open_reports": 1}
+        assert metrics == {"total_students": 1, "total_drivers": 2, "pending_drivers": 1, "active_routes": 1, "open_reports": 1}
         assert client.get("/admin/dashboard/recent-approvals", headers=headers).json()[0]["applicant_name"] == "Driver"
         assert client.get("/admin/dashboard/recent-reports", headers=headers).json()[0]["subject"] == "Test report"
         assert client.get("/admin/route-demand", headers=headers).json()[0]["student_count"] == 1

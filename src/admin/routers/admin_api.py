@@ -134,6 +134,10 @@ def review_application(profile_id: int, update: ApplicationUpdate, session: Sess
     profile.rejection_reason = update.notes.strip() if update.status == "rejected" else None
     profile.reviewed_by = admin.id
     profile.reviewed_at = datetime.now(timezone.utc)
+    user = session.get(User, profile.Driver_id)
+    if user:
+        user.status = Status.ACTIVE if update.status == "approved" else Status.SUSPENDED
+        session.add(user)
     session.add(profile)
     session.commit()
     return {"status": profile.verification_status.value}

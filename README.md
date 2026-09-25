@@ -1,6 +1,6 @@
 # DarbGo
 
-No installation or build step is needed. For registration/login, run a local server so browser cryptography is available:
+The static pages need no build step. Driver applications also require the FastAPI server and its configured database. For local student registration/login, run a static server so browser cryptography is available:
 
 ```bash
 python -m http.server 5174 --bind 127.0.0.1
@@ -20,7 +20,7 @@ stylised Iraq map, local university-route examples, IQD pricing, a working route
 finder preview, clearer mobile navigation, and stronger accessible labels.
 There are no React, JSX, Vite, npm, or runtime framework dependencies.
 
-This remains a frontend concept. Registration/login now support local demo accounts, while homepage dialogs and route matching remain previews. No backend, booking, document upload or actual driver approval service exists. Use sample details.
+Student registration and login remain local demos. Driver applications now require the FastAPI server and its configured database; admins can approve them through the admin dashboard. Homepage dialogs and route matching remain previews. Document upload and booking are not implemented.
 
 The role-specific pages are grouped by feature:
 

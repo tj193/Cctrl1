@@ -1,0 +1,7 @@
+fastapi==0.141.1
+sqlmodel==0.0.47
+uvicorn==0.54.0
+pyjwt==2.15.0
+passlib==1.7.4
+bcrypt==4.0.1
+python-multipart==0.0.32

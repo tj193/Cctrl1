@@ -91,3 +91,4 @@
   .booking-confirmation { align-items: stretch; flex-direction: column; gap: 14px; padding: 16px; }
   .booking-confirmation .primary-action { width: 100%; }
 }
+.journey-local-map{width:100%;height:100%;display:block}.journey-local-map text{font:700 15px Arial,sans-serif;fill:#527064;paint-order:stroke;stroke:#e8eddf;stroke-width:4px}.journey-local-label{position:absolute;z-index:401;padding:5px 8px;border:1px solid #d7e7f5;border-radius:9px;background:#fff;color:#183b61;font-size:11px;font-weight:800;box-shadow:0 4px 12px #122e4c22}.journey-local-start{left:16%;top:28%}.journey-local-finish{right:9%;top:61%}

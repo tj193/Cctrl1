@@ -1,4 +1,8 @@
 import os
+from dotenv import load_dotenv
+
+# يجب تحميل ملف الـ .env أولاً قبل أي استيراد للملفات الأخرى
+load_dotenv()
 
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,7 +17,9 @@ from .security import require_admin, secret_key
 
 secret_key()
 app = FastAPI(title="DarbGo Admin API", version="1.0.0")
+
 origins = os.getenv("ADMIN_CORS_ORIGINS", "http://127.0.0.1:5500,http://localhost:5500,http://127.0.0.1:5501,http://localhost:5501,http://127.0.0.1:5174,http://localhost:5174").split(",")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[origin.strip() for origin in origins if origin.strip()],

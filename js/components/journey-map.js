@@ -8,6 +8,34 @@
   };
   let map;
 
+  // The recorded journey has a local geographic preview so it is usable when
+  // the map CDN, tile server, or public routing service is unavailable.
+  const demoJourney = options =>
+    options.governorate === 'baghdad' &&
+    options.origin === 'المنصور' &&
+    options.destination === 'جامعة بغداد';
+  const localJourney = (container, options) => {
+    const start = document.createElement('span');
+    start.className = 'journey-local-label journey-local-start';
+    start.textContent = options.origin;
+    const finish = document.createElement('span');
+    finish.className = 'journey-local-label journey-local-finish';
+    finish.textContent = options.destination;
+    container.innerHTML = `<svg class="journey-local-map" viewBox="0 0 800 440" role="img" aria-label="Map route from Al-Mansour to the University of Baghdad">
+      <rect width="800" height="440" fill="#e8eddf"/>
+      <path d="M0 53H800M0 117H800M0 181H800M0 246H800M0 312H800M0 381H800M77 0V440M159 0V440M243 0V440M327 0V440M411 0V440M495 0V440M579 0V440M663 0V440M747 0V440" stroke="#fff" stroke-width="10"/>
+      <path d="M-20 102C160 128 239 110 374 134S660 161 820 142M-20 283C178 267 272 286 384 269S625 270 820 245M190-20C213 104 232 206 265 460M555-20C536 117 546 247 572 460" stroke="#cbd5c4" stroke-width="5" fill="none"/>
+      <path d="M463-20C441 79 456 147 479 213S489 366 527 460" stroke="#a8d9eb" stroke-width="45" fill="none"/>
+      <path d="M463-20C441 79 456 147 479 213S489 366 527 460" stroke="#78c4e5" stroke-width="31" fill="none"/>
+      <path d="M179 168L245 180 327 181 410 181 479 213 541 246 620 284" fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M179 168L245 180 327 181 410 181 479 213 541 246 620 284" fill="none" stroke="#087bff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="179" cy="168" r="16" fill="#087bff" stroke="#fff" stroke-width="5"/><circle cx="620" cy="284" r="16" fill="#142d51" stroke="#fff" stroke-width="5"/>
+      <text x="75" y="92">Al-Mansour</text><text x="328" y="93">Baghdad</text><text x="533" y="389">University of Baghdad</text>
+    </svg>`;
+    container.append(start, finish);
+    container.dataset.mapReady = 'true';
+  };
+
   const wait = milliseconds => new Promise(resolve => window.setTimeout(resolve, milliseconds));
   const cacheKey = query => `darbgo-map:${query.toLowerCase()}`;
   const geocode = async query => {
@@ -61,7 +89,12 @@
   window.DarbJourneyMap = {
     init(options) {
       const container = document.getElementById('sceneMap');
-      if (!container || !window.L || map) return;
+      if (!container || map) return;
+      if (demoJourney(options)) {
+        localJourney(container, options);
+        return;
+      }
+      if (!window.L) return;
       container.replaceChildren();
       const center = centers[options.governorate] || centers.baghdad;
       map = window.L.map(container, { zoomControl: true, attributionControl: true, scrollWheelZoom: false }).setView(center, 12);

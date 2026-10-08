@@ -3,24 +3,28 @@
   const loginUrl = '../login.html?role=driver';
   const token = sessionStorage.getItem('driverToken');
   if (!token) {
-    window.location.replace(loginUrl);
+    location.replace(loginUrl);
     return;
   }
-  const apiBase = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-    ? `http://${window.location.hostname}:8000` : window.location.origin;
-  fetch(`${apiBase}/auth/driver-me`, { headers: { Authorization: `Bearer ${token}` } })
-    .then(async response => {
-      if (!response.ok) throw new Error('Driver session expired');
-      const profile = await response.json();
-      const welcome = document.getElementById('driverWelcome');
-      if (welcome) welcome.textContent = `Welcome, ${profile.name}`;
-    })
-    .catch(() => {
+  const apiBase = ['localhost', '127.0.0.1'].includes(location.hostname)
+    ? `http://${location.hostname}:8000` : location.origin;
+  window.DarbDriverSession = { token, apiBase, profile: null };
+  window.DarbDriverSession.ready = fetch(`${apiBase}/auth/driver-me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  }).then(async response => {
+    if (response.status === 401 || response.status === 403) {
       sessionStorage.removeItem('driverToken');
-      window.location.replace(loginUrl);
-    });
-  document.querySelectorAll('.logout').forEach(link => {
-    link.href = loginUrl;
-    link.addEventListener('click', () => sessionStorage.removeItem('driverToken'));
+      location.replace(loginUrl);
+      throw new Error('Driver session expired.');
+    }
+    if (!response.ok) throw new Error(`Profile could not be loaded (${response.status}).`);
+    const profile = await response.json();
+    window.DarbDriverSession.profile = profile;
+    return profile;
+  });
+  document.addEventListener('click', event => {
+    if (!event.target.closest('.logout')) return;
+    sessionStorage.removeItem('driverToken');
+    sessionStorage.removeItem('darbgoDriverDemo');
   });
 })();

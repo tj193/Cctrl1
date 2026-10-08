@@ -1,104 +1,155 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard Overview - DarbGo Admin</title>
 
-    <link rel="stylesheet" href="../css-file/stayle.css">
-</head>
-<body>
-
-    <div>
-        <h2>DarbGo Admin</h2>
-        <ul>
-            <li><a href="adminApproval.html">Driver Approvals</a></li>
-            <li><a href="adminStudent.html">Students</a></li>
-            <li><a href="adminDriver.html">Drivers</a></li>
-            <li><a href="adminRoute.html">Routes</a></li>
-            <li><a href="adminDemand.html">Route Demand</a></li>
-            <li><a href="adminUniversities.html">Universities & Areas</a></li>
-            <li><a href="adminReports.html">Reports</a></li>
-            <li><a href="createAdmin.html">Create Admin</a></li>
-            <li><a href="setting.html">Settings</a></li>
-            <li><a href="index.html">Dashboard Overview</a></li>
-            <li><button type="button" id="logoutBtn">Logout</button></li>
-        </ul>
+    <link rel="stylesheet" href="../css-file/admin.css" />
+  </head>
+  <body>
+    <div class="admin-shell">
+      <main class="admin-main">
+        <div class="admin-content">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">OPERATIONS OVERVIEW</p>
+              <h1>Dashboard Overview</h1>
+              <p>Current platform activity and tasks requiring review.</p>
+            </div>
+            <a class="admin-primary" href="adminDemand.html"
+              >Explore demand analytics →</a
+            >
+          </div>
+          <section class="kpi-grid" aria-label="Current metrics">
+            <a class="kpi-card" href="adminStudent.html"
+              ><span class="kpi-icon" aria-hidden="true">♙</span>
+              <h3>Total Active Students</h3>
+              <strong id="totalStudentsMetric">—</strong
+              ><small>Open student accounts →</small></a
+            >
+            <a class="kpi-card" href="adminDriver.html"
+              ><span class="kpi-icon" aria-hidden="true">◉</span>
+              <h3>Total Active Drivers</h3>
+              <strong id="totalDriversMetric">—</strong
+              ><small>Open driver accounts →</small></a
+            >
+            <a class="kpi-card" href="adminApproval.html"
+              ><span class="kpi-icon" aria-hidden="true">✓</span>
+              <h3>Pending Driver Applications</h3>
+              <strong id="pendingDriversMetric">—</strong
+              ><small>Review applications →</small></a
+            >
+            <a class="kpi-card" href="adminRoute.html"
+              ><span class="kpi-icon" aria-hidden="true">⇄</span>
+              <h3>Active Routes</h3>
+              <strong id="activeRoutesMetric">—</strong
+              ><small>Manage routes →</small></a
+            >
+            <a class="kpi-card" href="adminReports.html"
+              ><span class="kpi-icon" aria-hidden="true">◇</span>
+              <h3>Open Reports / Complaints</h3>
+              <strong id="openReportsMetric">—</strong
+              ><small>Investigate reports →</small></a
+            >
+          </section>
+          <div class="analytics-grid">
+            <section class="admin-panel">
+              <div class="panel-heading">
+                <h2>Requests Activity</h2>
+                <label for="activityRange"
+                  >Range
+                  <select id="activityRange">
+                    <option value="7">Last 7 days</option>
+                    <option value="30">Last 30 days</option>
+                  </select></label
+                >
+              </div>
+              <div class="chart-frame">
+                <canvas
+                  id="activityChart"
+                  role="img"
+                  aria-label="Requests per day"
+                ></canvas>
+              </div>
+              <p id="activitySummary" class="chart-summary" role="status">
+                Loading request activity…
+              </p>
+            </section>
+            <section class="admin-panel">
+              <h2>Most Requested Routes</h2>
+              <div class="chart-frame">
+                <canvas
+                  id="routesChart"
+                  role="img"
+                  aria-label="Top routes by request count"
+                ></canvas>
+              </div>
+              <p id="routesSummary" class="chart-summary" role="status">
+                Loading route demand…
+              </p>
+            </section>
+            <section class="admin-panel">
+              <h2>Request Status Distribution</h2>
+              <p class="notice">
+                The current admin analytics endpoint returns active demand only.
+                A status breakdown needs a dedicated backend response that
+                includes the complete request lifecycle.
+              </p>
+            </section>
+            <section class="admin-panel">
+              <h2>Seat Occupancy</h2>
+              <div class="chart-frame">
+                <canvas
+                  id="occupancyChart"
+                  role="img"
+                  aria-label="Occupied and available seats by route"
+                ></canvas>
+              </div>
+              <p id="occupancySummary" class="chart-summary" role="status">
+                Loading route occupancy…
+              </p>
+            </section>
+          </div>
+          <div class="attention-grid">
+            <section class="admin-panel">
+              <div class="panel-heading">
+                <h2>Pending Driver Applications</h2>
+                <a href="adminApproval.html">View all →</a>
+              </div>
+              <ul
+                id="recentApprovalsList"
+                class="attention-list"
+                aria-live="polite"
+              >
+                <li>Loading applications…</li>
+              </ul>
+            </section>
+            <section class="admin-panel">
+              <div class="panel-heading">
+                <h2>Open Complaints</h2>
+                <a href="adminReports.html">View all →</a>
+              </div>
+              <ul
+                id="recentReportsList"
+                class="attention-list"
+                aria-live="polite"
+              >
+                <li>Loading reports…</li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </main>
     </div>
 
-    <div>
-
-        <div>
-            <h1>Dashboard Overview</h1>
-            <p>System metrics, operational activity summary, and urgent administrative tasks</p>
-        </div>
-
-        <div>
-            <div>
-                <h3>Total Active Students</h3>
-                <p id="totalStudentsMetric">--</p>
-            </div>
-            <div>
-                <h3>Total Active Drivers</h3>
-                <p id="totalDriversMetric">--</p>
-            </div>
-            <div>
-                <h3>Pending Driver Applications</h3>
-                <p id="pendingDriversMetric">--</p>
-            </div>
-            <div>
-                <h3>Active Routes</h3>
-                <p id="activeRoutesMetric">--</p>
-            </div>
-            <div>
-                <h3>Open Reports / Complaints</h3>
-                <p id="openReportsMetric">--</p>
-            </div>
-        </div>
-
-        <hr>
-
-        <div>
-            <h2>Recent Pending Driver Applications</h2>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Application ID</th>
-                        <th>Applicant Name</th>
-                        <th>Vehicle Type</th>
-                        <th>Submission Date</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="recentApprovalsTableBody">
-
-                </tbody>
-            </table>
-        </div>
-
-        <hr>
-
-        <div>
-            <h2>Urgent Complaints & System Reports</h2>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Report ID</th>
-                        <th>Submitted By</th>
-                        <th>Subject</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="recentReportsTableBody">
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-
-    <script src="../JS-file/index.js"></script>
-</body>
+    <script src="../JS-file/apiClient.js"></script>
+    <script src="../JS-file/layout.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"
+      defer
+    ></script>
+    <script src="../JS-file/charts.js" defer></script>
+    <script src="../JS-file/index.js" defer></script>
+  </body>
 </html>

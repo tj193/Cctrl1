@@ -1,116 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Students Management - DarbGo Admin</title>
 
-    <link rel="stylesheet" href="../css-file/stayle.css">
-</head>
-<body>
-
-    <div>
-        <h2>DarbGo Admin</h2>
-        <ul>
-            <li><a href="adminApproval.html">Driver Approvals</a></li>
-            <li><a href="adminStudent.html">Students</a></li>
-            <li><a href="adminDriver.html">Drivers</a></li>
-            <li><a href="adminRoute.html">Routes</a></li>
-            <li><a href="adminDemand.html">Route Demand</a></li>
-            <li><a href="adminUniversities.html">Universities & Areas</a></li>
-            <li><a href="adminReports.html">Reports</a></li>
-            <li><a href="createAdmin.html">Create Admin</a></li>
-            <li><a href="setting.html">Settings</a></li>
-            <li><a href="index.html">Dashboard Overview</a></li>
-            <li><button type="button" id="logoutBtn">Logout</button></li>
-        </ul>
-    </div>
-
-    <div>
-
-        <div>
+    <link rel="stylesheet" href="../css-file/admin.css" />
+  </head>
+  <body>
+    <div class="admin-shell">
+      <main class="admin-main">
+        <div class="admin-content">
+          <div class="page-heading">
             <h1>Students Management</h1>
-            <p>View, manage, and audit all student accounts across universities and areas</p>
-        </div>
+            <p>
+              View, manage, and audit all student accounts across universities
+              and areas
+            </p>
+          </div>
 
-        <div>
-            <form id="studentFilterForm">
-                <div>
-                    <label for="searchInput">Search Students:</label>
-                    <input type="text" id="searchInput" placeholder="Search by name, phone, or ID...">
-                </div>
+          <div>
+            <form id="studentFilterForm" class="admin-filters">
+              <div>
+                <label for="searchInput">Search Students:</label>
+                <input
+                  type="text"
+                  id="searchInput"
+                  placeholder="Search by name, phone, or ID..."
+                />
+              </div>
 
-                <div>
-                    <label for="universityFilter">Filter by University:</label>
-                    <select id="universityFilter">
-                        <option value="all">All Universities</option>
-                    </select>
-                </div>
+              <div>
+                <label for="universityFilter">Filter by University:</label>
+                <select id="universityFilter">
+                  <option value="all">All Universities</option>
+                </select>
+              </div>
 
-                <div>
-                    <label for="areaFilter">Filter by Area:</label>
-                    <select id="areaFilter">
-                        <option value="all">All Areas</option>
-                    </select>
-                </div>
+              <div>
+                <label for="areaFilter">Filter by Area:</label>
+                <select id="areaFilter">
+                  <option value="all">All Areas</option>
+                </select>
+              </div>
 
-                <div>
-                    <label for="statusFilter">Filter by Status:</label>
-                    <select id="statusFilter">
-                        <option value="all">All Statuses</option>
-                        <option value="active">Active</option>
-                        <option value="suspended">Suspended</option>
-                    </select>
-                </div>
+              <div>
+                <label for="statusFilter">Filter by Status:</label>
+                <select id="statusFilter">
+                  <option value="all">All Statuses</option>
+                  <option value="active">Active</option>
+                  <option value="suspended">Suspended</option>
+                </select>
+              </div>
 
-                <button type="reset" id="resetFiltersBtn">Reset Filters</button>
+              <button type="reset" id="resetFiltersBtn">Reset Filters</button>
             </form>
-        </div>
+          </div>
 
-        <div>
-            <table border="1">
+          <div>
+            <div class="table-scroll">
+              <table>
                 <thead>
-                    <tr>
-                        <th>Student ID</th>
-                        <th>Name</th>
-                        <th>University</th>
-                        <th>Area</th>
-                        <th>Current Route</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
+                  <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>University</th>
+                    <th>Area</th>
+                    <th>Current Route</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
                 </thead>
-                <tbody id="studentsTableBody">
-                </tbody>
-            </table>
+                <tbody id="studentsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
-
+      </main>
     </div>
 
     <!-- Student Details Modal Window -->
-    <div id="studentModal" hidden>
-        <div>
-            <button type="button" id="closeModalBtn">&times; Close</button>
-            <h2>Student Full Profile</h2>
-            
-            <section id="studentDetailsSection">
-                <!-- Details will be populated dynamically via JavaScript -->
-            </section>
+    <div id="studentModal" class="admin-modal" hidden>
+      <div>
+        <button type="button" id="closeModalBtn">&times; Close</button>
+        <h2>Student Full Profile</h2>
 
-            <section>
-                <h3>Administrative Actions</h3>
-                <form id="studentStatusForm">
-                    <input type="hidden" id="modalStudentId">
-                    <label for="adminNotes">Reason for Action / Notes:</label><br>
-                    <textarea id="adminNotes" rows="3" placeholder="Enter reason for suspension or reactivation..."></textarea>
-                    <br>
-                    <button type="button" id="suspendStudentBtn">Suspend Account</button>
-                    <button type="button" id="activateStudentBtn">Activate Account</button>
-                </form>
-            </section>
-        </div>
+        <section id="studentDetailsSection">
+          <!-- Details will be populated dynamically via JavaScript -->
+        </section>
+
+        <section>
+          <h3>Administrative Actions</h3>
+          <form id="studentStatusForm">
+            <input type="hidden" id="modalStudentId" />
+            <label for="adminNotes">Reason for Action / Notes:</label><br />
+            <textarea
+              id="adminNotes"
+              rows="3"
+              placeholder="Enter reason for suspension or reactivation..."
+            ></textarea>
+            <br />
+            <button type="button" id="suspendStudentBtn">
+              Suspend Account
+            </button>
+            <button type="button" id="activateStudentBtn">
+              Activate Account
+            </button>
+          </form>
+        </section>
+      </div>
     </div>
 
+    <script src="../JS-file/apiClient.js"></script>
+    <script src="../JS-file/layout.js"></script>
     <script src="../JS-file/main.js"></script>
-</body>
+  </body>
 </html>

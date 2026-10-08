@@ -1,112 +1,112 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drivers Management - DarbGo Admin</title>
 
-        <link rel="stylesheet" href="../css-file/stayle.css">
-</head>
-<body>
-
-    <div>
-        <h2>DarbGo Admin</h2>
-        <ul>
-            <li><a href="adminApproval.html">Driver Approvals</a></li>
-            <li><a href="adminStudent.html">Students</a></li>
-            <li><a href="adminDriver.html">Drivers</a></li>
-            <li><a href="adminRoute.html">Routes</a></li>
-            <li><a href="adminDemand.html">Route Demand</a></li>
-            <li><a href="adminUniversities.html">Universities & Areas</a></li>
-            <li><a href="adminReports.html">Reports</a></li>
-            <li><a href="createAdmin.html">Create Admin</a></li>
-            <li><a href="setting.html">Settings</a></li>
-            <li><a href="index.html">Dashboard Overview</a></li>
-            <li><button type="button" id="logoutBtn">Logout</button></li>
-        </ul>
-    </div>
-
-    <div>
-        
-        <div>
+    <link rel="stylesheet" href="../css-file/admin.css" />
+  </head>
+  <body>
+    <div class="admin-shell">
+      <main class="admin-main">
+        <div class="admin-content">
+          <div class="page-heading">
             <h1>Drivers Management</h1>
-            <p>Manage registered drivers, active routes, student capacities, and account statuses</p>
-        </div>
+            <p>
+              Manage registered drivers, active routes, student capacities, and
+              account statuses
+            </p>
+          </div>
 
-        <div>
-            <form id="driverFilterForm">
-                <div>
-                    <label for="searchDriverInput">Search Drivers:</label>
-                    <input type="text" id="searchDriverInput" placeholder="Search by name, phone, or vehicle...">
-                </div>
+          <div>
+            <form id="driverFilterForm" class="admin-filters">
+              <div>
+                <label for="searchDriverInput">Search Drivers:</label>
+                <input
+                  type="text"
+                  id="searchDriverInput"
+                  placeholder="Search by name, phone, or vehicle..."
+                />
+              </div>
 
-                <div>
-                    <label for="verificationFilter">Filter by Verification:</label>
-                    <select id="verificationFilter">
-                        <option value="all">All Verification Statuses</option>
-                        <option value="verified">Verified</option>
-                        <option value="unverified">Unverified</option>
-                    </select>
-                </div>
+              <div>
+                <label for="verificationFilter">Filter by Verification:</label>
+                <select id="verificationFilter">
+                  <option value="all">All Verification Statuses</option>
+                  <option value="verified">Verified</option>
+                  <option value="unverified">Unverified</option>
+                </select>
+              </div>
 
-                <div>
-                    <label for="statusFilter">Filter by Status:</label>
-                    <select id="statusFilter">
-                        <option value="all">All Statuses</option>
-                        <option value="active">Active</option>
-                        <option value="suspended">Suspended</option>
-                    </select>
-                </div>
+              <div>
+                <label for="statusFilter">Filter by Status:</label>
+                <select id="statusFilter">
+                  <option value="all">All Statuses</option>
+                  <option value="active">Active</option>
+                  <option value="suspended">Suspended</option>
+                </select>
+              </div>
 
-                <button type="reset" id="resetDriverFiltersBtn">Reset Filters</button>
+              <button type="reset" id="resetDriverFiltersBtn">
+                Reset Filters
+              </button>
             </form>
-        </div>
+          </div>
 
-        <div>
-            <table border="1">
+          <div>
+            <div class="table-scroll">
+              <table>
                 <thead>
-                    <tr>
-                        <th>Driver ID</th>
-                        <th>Driver</th>
-                        <th>Vehicle</th>
-                        <th>Verification</th>
-                        <th>Number of Routes</th>
-                        <th>Number of Students</th>
-                        <th>Account Status</th>
-                        <th>Actions</th>
-                    </tr>
+                  <tr>
+                    <th>Driver ID</th>
+                    <th>Driver</th>
+                    <th>Vehicle</th>
+                    <th>Verification</th>
+                    <th>Number of Routes</th>
+                    <th>Number of Students</th>
+                    <th>Account Status</th>
+                    <th>Actions</th>
+                  </tr>
                 </thead>
-                <tbody id="driversTableBody">
-
-                </tbody>
-            </table>
+                <tbody id="driversTableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
-
+      </main>
     </div>
 
-    <div id="driverModal" hidden>
-        <div>
-            <button type="button" id="closeDriverModalBtn">&times; Close</button>
-            <h2>Driver Full Profile</h2>
-            
-            <section id="driverDetailsSection">
+    <div id="driverModal" class="admin-modal" hidden>
+      <div>
+        <button type="button" id="closeDriverModalBtn">&times; Close</button>
+        <h2>Driver Full Profile</h2>
 
-            </section>
+        <section id="driverDetailsSection"></section>
 
-            <section>
-                <h3>Administrative Actions</h3>
-                <form id="driverStatusForm">
-                    <input type="hidden" id="modalDriverId">
-                    <label for="driverAdminNotes">Reason for Action / Notes:</label><br>
-                    <textarea id="driverAdminNotes" rows="3" placeholder="Enter reason for status change..."></textarea>
-                    <br>
-                    <button type="button" id="suspendDriverBtn">Suspend Account</button>
-                    <button type="button" id="reactivateDriverBtn">Reactivate Account</button>
-                </form>
-            </section>
-        </div>
+        <section>
+          <h3>Administrative Actions</h3>
+          <form id="driverStatusForm">
+            <input type="hidden" id="modalDriverId" />
+            <label for="driverAdminNotes">Reason for Action / Notes:</label
+            ><br />
+            <textarea
+              id="driverAdminNotes"
+              rows="3"
+              placeholder="Enter reason for status change..."
+            ></textarea>
+            <br />
+            <button type="button" id="suspendDriverBtn">Suspend Account</button>
+            <button type="button" id="reactivateDriverBtn">
+              Reactivate Account
+            </button>
+          </form>
+        </section>
+      </div>
     </div>
 
+    <script src="../JS-file/apiClient.js"></script>
+    <script src="../JS-file/layout.js"></script>
     <script src="../JS-file/main.js"></script>
-</body>
+  </body>
 </html>

@@ -1,37 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - Admin Dashboard</title>
 
-    <link rel="stylesheet" href="../css-file/login.css">
-</head>
-<body class="login-body">
-
+    <link rel="stylesheet" href="../css-file/login.css" />
+  </head>
+  <body class="login-body">
     <div class="login-container">
-        <div class="login-header">
-            <h2>DarbGo Dashboard</h2>
-            <p>Please enter your credentials to login</p>
+      <div class="login-header">
+        <img
+          class="login-logo"
+          src="../../assets/logo/darbgo-logo.png"
+          alt="DarbGo"
+        />
+        <p class="login-kicker">ADMIN CONSOLE</p>
+        <h1>Welcome back</h1>
+        <p>Sign in to manage DarbGo operations.</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Username / Email</label>
+          <input
+            type="text"
+            id="email"
+            required
+            placeholder="admin@darbgo.com"
+          />
         </div>
 
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Username / Email</label>
-                <input type="text" id="email" required placeholder="admin@darbgo.com">
-            </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            required
+            placeholder="••••••••"
+          />
+        </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" required placeholder="••••••••">
-            </div>
+        <div
+          id="errorMessage"
+          class="error-message"
+          role="alert"
+          aria-live="assertive"
+          hidden
+        ></div>
 
-            <div id="errorMessage" class="error-message" style="display: none;"></div>
-
-            <button type="submit" id="loginBtn">Login</button>
-        </form>
+        <button type="submit" id="loginBtn">Sign in</button>
+      </form>
     </div>
 
+    <script src="../JS-file/apiClient.js"></script>
     <script src="../JS-file/login.js"></script>
-</body>
+  </body>
 </html>

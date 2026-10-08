@@ -1,120 +1,126 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Driver Applications & Approvals - DarbGo Admin</title>
 
-        <link rel="stylesheet" href="../css-file/stayle.css">
-</head>
-<body>
-
-    <div>
-        <h2>DarbGo Admin</h2>
-        <ul>
-            <li><a href="adminApproval.html">Driver Approvals</a></li>
-            <li><a href="adminStudent.html">Students</a></li>
-            <li><a href="adminDriver.html">Drivers</a></li>
-            <li><a href="adminRoute.html">Routes</a></li>
-            <li><a href="adminDemand.html">Route Demand</a></li>
-            <li><a href="adminUniversities.html">Universities & Areas</a></li>
-            <li><a href="adminReports.html">Reports</a></li>
-            <li><a href="createAdmin.html">Create Admin</a></li>
-            <li><a href="setting.html">Settings</a></li>
-            <li><a href="index.html">Dashboard Overview</a></li>
-            <li><button type="button" id="logoutBtn">Logout</button></li>
-        </ul>
-    </div>
-
-    <div>
-
-        <div>
+    <link rel="stylesheet" href="../css-file/admin.css" />
+  </head>
+  <body>
+    <div class="admin-shell">
+      <main class="admin-main">
+        <div class="admin-content">
+          <div class="page-heading">
             <h1>Driver Applications & Approvals</h1>
-            <p>Review new driver registrations, verify identity and vehicle documents, and manage approval decisions</p>
-        </div>
+            <p>
+              Review new driver registrations, verify identity and vehicle
+              documents, and manage approval decisions
+            </p>
+          </div>
 
-        <div>
-            <form id="approvalsFilterForm">
-                <div>
-                    <label for="searchApplicantInput">Search Applicants:</label>
-                    <input type="text" id="searchApplicantInput" placeholder="Search by applicant name, phone, or vehicle...">
-                </div>
+          <div>
+            <form id="approvalsFilterForm" class="admin-filters">
+              <div>
+                <label for="searchApplicantInput">Search Applicants:</label>
+                <input
+                  type="text"
+                  id="searchApplicantInput"
+                  placeholder="Search by applicant name, phone, or vehicle..."
+                />
+              </div>
 
-                <div>
-                    <label for="approvalStatusFilter">Status Filter:</label>
-                    <select id="approvalStatusFilter">
-                        <option value="pending">Pending Review</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
-                        <option value="all">All Applications</option>
-                    </select>
-                </div>
+              <div>
+                <label for="approvalStatusFilter">Status Filter:</label>
+                <select id="approvalStatusFilter">
+                  <option value="pending">Pending Review</option>
+                  <option value="approved">Approved</option>
+                  <option value="rejected">Rejected</option>
+                  <option value="all">All Applications</option>
+                </select>
+              </div>
 
-                <button type="reset" id="resetApprovalsFiltersBtn">Reset Filters</button>
+              <button type="reset" id="resetApprovalsFiltersBtn">
+                Reset Filters
+              </button>
             </form>
-        </div>
+          </div>
 
-        <div>
-            <table border="1">
+          <div>
+            <div class="table-scroll">
+              <table>
                 <thead>
-                    <tr>
-                        <th>Application ID</th>
-                        <th>Applicant Name</th>
-                        <th>Phone Number</th>
-                        <th>Vehicle Type & Model</th>
-                        <th>Submission Date</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
+                  <tr>
+                    <th>Application ID</th>
+                    <th>Applicant Name</th>
+                    <th>Phone Number</th>
+                    <th>Vehicle Type & Model</th>
+                    <th>Submission Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
                 </thead>
-                <tbody id="approvalTableBody">
-
-                </tbody>
-            </table>
+                <tbody id="approvalTableBody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
-
+      </main>
     </div>
 
-    <div id="approvalModal" hidden>
-        <div>
-            <button type="button" id="closeModalBtn">&times; Close</button>
-            <h2>Review Applicant Documents</h2>
-            
-            <section id="applicantDetailsSection">
+    <div id="approvalModal" class="admin-modal" hidden>
+      <div>
+        <button type="button" id="closeModalBtn">&times; Close</button>
+        <h2>Review Applicant Documents</h2>
 
-            </section>
+        <section id="applicantDetailsSection"></section>
 
-            <section>
-                <h3>Uploaded Documents Preview</h3>
-                <div id="documentsSection">
+        <section>
+          <h3>Uploaded Documents Preview</h3>
+          <div id="documentsSection"></div>
+        </section>
 
-                </div>
-            </section>
-
-            <section>
-                <h3>Approval Decision</h3>
-                <form id="approvalDecisionForm">
-                    <input type="hidden" id="modalApplicationId">
-                    <label for="adminNotes">Notes / Rejection Reason (Required if rejecting):</label><br>
-                    <textarea id="adminNotes" rows="3" placeholder="Enter reason if rejecting application..."></textarea>
-                    <br>
-                    <button type="button" id="approveBtn">Approve Application</button>
-                    <button type="button" id="rejectBtn">Reject Application</button>
-                </form>
-                <div id="decisionMessagePanel" hidden>
-                    <h3 id="decisionMessageTitle"></h3>
-                    <p id="decisionMessagePhone"></p>
-                    <label for="decisionMessagePreview">Message to send manually</label>
-                    <textarea id="decisionMessagePreview" rows="4" readonly></textarea>
-                    <div class="decision-actions">
-                        <a id="whatsAppDecisionLink" class="btn btn-primary" target="_blank" rel="noopener noreferrer" hidden>Message driver on WhatsApp</a>
-                        <button type="button" id="copyDecisionMessageBtn">Copy message</button>
-                    </div>
-                </div>
-            </section>
-        </div>
+        <section>
+          <h3>Approval Decision</h3>
+          <form id="approvalDecisionForm">
+            <input type="hidden" id="modalApplicationId" />
+            <label for="adminNotes"
+              >Notes / Rejection Reason (Required if rejecting):</label
+            ><br />
+            <textarea
+              id="adminNotes"
+              rows="3"
+              placeholder="Enter reason if rejecting application..."
+            ></textarea>
+            <br />
+            <button type="button" id="approveBtn">Approve Application</button>
+            <button type="button" id="rejectBtn">Reject Application</button>
+          </form>
+          <div id="decisionMessagePanel" hidden>
+            <h3 id="decisionMessageTitle"></h3>
+            <p id="decisionMessagePhone"></p>
+            <label for="decisionMessagePreview">Message to send manually</label>
+            <textarea id="decisionMessagePreview" rows="4" readonly></textarea>
+            <div class="decision-actions">
+              <a
+                id="whatsAppDecisionLink"
+                class="btn btn-primary"
+                target="_blank"
+                rel="noopener noreferrer"
+                hidden
+                >Message driver on WhatsApp</a
+              >
+              <button type="button" id="copyDecisionMessageBtn">
+                Copy message
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
 
+    <script src="../JS-file/apiClient.js"></script>
+    <script src="../JS-file/layout.js"></script>
     <script src="../JS-file/main.js"></script>
-</body>
+  </body>
 </html>

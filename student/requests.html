@@ -19,7 +19,22 @@
   </header>
 <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
 <aside class="student-sidebar" id="studentSidebar" aria-label="Student sidebar"><p class="sidebar-label">STUDENT SPACE</p><nav aria-label="Student navigation"><a href="dashboard.html" data-page="journey">Journey</a><a href="routes.html" data-page="routes">Routes</a><a href="requests.html" data-page="requests">Requests</a><a href="waitlist.html" data-page="waitlist">Waitlist</a><a href="upcoming.html" data-page="upcoming">Upcoming ride</a></nav><p class="sidebar-note">Your university journey,<br>one step at a time.</p></aside>
-  <main id="mainContent" tabindex="-1"></main>
+  
+  <main id="mainContent" tabindex="-1">
+
+    <section class="suggested-alternatives-section" id="suggestedAlternativesSection" hidden>
+      <div class="section-header">
+        <p class="eyebrow-label">RECOMMENDED FOR YOU</p>
+        <h2>Suggested Alternatives</h2>
+        <p class="section-subtitle">Your selected route is unavailable. We found other routes that match your schedule.</p>
+      </div>
+      <div class="alternatives-list" id="alternativesList"></div>
+      <div class="empty-state" id="alternativesEmptyState" hidden>
+        <p>No matching alternative routes available right now.</p>
+        <button type="button" class="btn-primary" id="joinWaitlistBtn">Join Route Demand</button>
+      </div>
+    </section>
+  </main>
 
   <div class="drawer-backdrop" id="drawerBackdrop" hidden></div><aside class="notification-drawer" id="notificationDrawer" aria-labelledby="notificationTitle" aria-hidden="true"><header><div><p class="eyebrow-label">STAY UPDATED</p><h2 id="notificationTitle">Notifications</h2></div><button class="icon-button" id="closeNotifications" type="button" aria-label="Close notifications">Close</button></header><button class="mark-read-button" id="markAllRead" type="button">Mark all as read</button><div class="notification-list" id="notificationList"></div></aside>
   <dialog class="route-dialog" id="routeDialog" aria-labelledby="dialogTitle"><button class="dialog-close" id="closeRouteDialog" type="button" aria-label="Close route details">Close</button><div id="routeDialogContent"></div></dialog><div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

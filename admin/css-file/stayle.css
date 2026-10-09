@@ -258,6 +258,11 @@ button[type="submit"], .btn-primary {
     padding: 11px 22px;
 }
 
+.decision-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 12px; }
+.decision-actions .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; text-decoration: none; }
+.decision-actions .btn[hidden] { display: none; }
+.decision-actions button { margin: 0; }
+
 button[type="submit"]:hover, .btn-primary:hover {
     background-color: var(--accent-strong);
 }

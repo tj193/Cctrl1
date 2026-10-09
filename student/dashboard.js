@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+  if (!window.DarbStudentApi?.demo) return;
   const page = document.body.dataset.page || 'journey';
   const pageFiles = { journey:'dashboard.html', routes:'routes.html', requests:'requests.html', waitlist:'waitlist.html', upcoming:'upcoming.html' };
   const targetPages = { journey:'journey', routeSearch:'routes', requests:'requests', waitlist:'waitlist', upcomingRide:'upcoming', messages:'upcoming' };

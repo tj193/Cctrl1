@@ -1,20 +1,50 @@
 from collections import defaultdict
 from datetime import datetime, timezone
+import re
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
 from ..DataBase import get_session
 from ..models import (
-    ApplicationStatus, Area, Driver_Profile, Report, ReportStatus, Route,
+    ApplicationStatus, Area, Driver_Profile, Report, ReportStatus, RideRequest,
+    RideRequestStatus, Route,
     RouteDemand, RouteDemandStatus, RouteStatus, RouteStudents,
-    RouteStudentStatus, Status, University, User, UserRole,
+    RouteStudentStatus, Status, University, UniversityStatus, User, UserRole,
 )
 from ..security import get_password_hash, require_admin, verify_password
+from .report_api import ReportReview, admin_report, apply_review, owner_report
 
 router = APIRouter(prefix="/admin", tags=["Admin dashboard"], dependencies=[Depends(require_admin)])
+
+
+class NewAdmin(BaseModel):
+    name: str = Field(min_length=2, max_length=120)
+    email: str = Field(min_length=3, max_length=255)
+    password: str = Field(min_length=12, max_length=72)
+
+
+@router.post("/admins", status_code=201)
+def create_admin(account: NewAdmin, session: Session = Depends(get_session)):
+    name = account.name.strip()
+    email = account.email.strip().lower()
+    if len(name) < 2 or not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email):
+        raise HTTPException(422, "Enter a valid name and email address")
+    if session.exec(select(User).where(User.email == email)).first():
+        raise HTTPException(409, "An account with this email already exists")
+    user = User(name=name, email=email, password_hash=get_password_hash(account.password),
+                role=UserRole.ADMIN, status=Status.ACTIVE)
+    try:
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(409, "An account with this email already exists") from None
+    return {"id": user.id, "name": user.name, "email": user.email}
 
 
 def records(session: Session):
@@ -25,6 +55,7 @@ def records(session: Session):
         "profiles": session.exec(select(Driver_Profile)).all(),
         "routes": session.exec(select(Route)).all(),
         "enrollments": session.exec(select(RouteStudents)).all(),
+        "requests": session.exec(select(RideRequest)).all(),
         "demands": session.exec(select(RouteDemand)).all(),
         "reports": session.exec(select(Report)).all(),
     }
@@ -49,6 +80,9 @@ def driver_application(profile, data):
         "vehicle_model": profile.vehicle_model,
         "vehicle_year": None,
         "plate_number": profile.vehicle_plate,
+        "license_number": profile.license_number,
+        "national_id": profile.national_id,
+        "rejection_reason": profile.rejection_reason,
         "capacity": None,
         "license_url": profile.license_photo_url,
         "id_card_url": profile.id_photo_url,
@@ -60,13 +94,17 @@ def driver_application(profile, data):
 def report_row(report, data):
     reporter = data["users"].get(report.report_id)
     target = data["users"].get(report.target_id)
+    display = owner_report(report)
     return {
         "id": report.id,
         "reporter_name": label(reporter, "name"),
         "reporter_role": label(reporter, "role", "User").value if reporter else "User",
         "reported_target_name": label(target, "name"),
-        "subject": report.reason,
-        "description": report.reason,
+        "subject": display.subject,
+        "description": display.description,
+        "legacy_fallback": display.legacy_fallback,
+        "type": report.type,
+        "public_resolution": report.public_resolution,
         "created_at": iso(report.created_at),
         "status": report.status.value,
     }
@@ -74,6 +112,12 @@ def report_row(report, data):
 
 def route_row(route, data):
     enrolled = sum(1 for item in data["enrollments"] if item.route_id == route.id and item.status == RouteStudentStatus.ACTIVE)
+    requires_review = (data["users"].get(route.driver_id) is None or
+                       data["users"][route.driver_id].status != Status.ACTIVE or
+                       not any(profile.Driver_id == route.driver_id and
+                               profile.verification_status == ApplicationStatus.APPROVED
+                               for profile in data["profiles"]))
+    pending = sum(1 for item in data["requests"] if item.route_id == route.id and item.status == RideRequestStatus.PENDING)
     return {
         "id": route.id,
         "driver_name": label(data["users"].get(route.driver_id), "name"),
@@ -81,8 +125,13 @@ def route_row(route, data):
         "destination_area": None,
         "university_name": label(data["universities"].get(route.to_university_id), "University_name"),
         "enrolled_students": enrolled,
+        "occupied_seats": enrolled,
+        "available_seats": max(0, route.capacity - enrolled),
         "max_capacity": route.capacity,
         "status": route.status.value,
+        "requires_review": requires_review,
+        "review_pending_requests": pending if requires_review else 0,
+        "review_active_enrollments": enrolled if requires_review else 0,
     }
 
 
@@ -125,7 +174,7 @@ class ApplicationUpdate(BaseModel):
 
 @router.patch("/driver-applications/{profile_id}/status")
 def review_application(profile_id: int, update: ApplicationUpdate, session: Session = Depends(get_session), admin: User = Depends(require_admin)):
-    profile = session.get(Driver_Profile, profile_id)
+    profile = session.exec(select(Driver_Profile).where(Driver_Profile.id == profile_id).with_for_update()).first()
     if not profile:
         raise HTTPException(404, "Driver application not found")
     if update.status == "rejected" and not update.notes.strip():
@@ -134,6 +183,10 @@ def review_application(profile_id: int, update: ApplicationUpdate, session: Sess
     profile.rejection_reason = update.notes.strip() if update.status == "rejected" else None
     profile.reviewed_by = admin.id
     profile.reviewed_at = datetime.now(timezone.utc)
+    user = session.exec(select(User).where(User.id == profile.Driver_id).with_for_update()).first()
+    if user:
+        user.status = Status.ACTIVE if update.status == "approved" else Status.SUSPENDED
+        session.add(user)
     session.add(profile)
     session.commit()
     return {"status": profile.verification_status.value}
@@ -189,8 +242,10 @@ def create_route(data: RouteCreate, session: Session = Depends(get_session)):
     profile = session.exec(select(Driver_Profile).where(Driver_Profile.Driver_id == driver.id)).first()
     if not profile or profile.verification_status != ApplicationStatus.APPROVED:
         raise HTTPException(400, "An approved driver is required")
-    if not session.get(Area, data.area_id) or not session.get(University, data.university_id):
-        raise HTTPException(400, "Area or university not found")
+    area = session.get(Area, data.area_id)
+    university = session.get(University, data.university_id)
+    if not area or not university or area.status != UniversityStatus.ACTIVE or university.status != UniversityStatus.ACTIVE:
+        raise HTTPException(400, "Active area and university are required")
     route = Route(driver_id=driver.id, from_area_id=data.area_id, to_university_id=data.university_id, capacity=data.capacity)
     session.add(route)
     session.commit()
@@ -211,9 +266,17 @@ class RouteUpdate(BaseModel):
 
 @router.patch("/routes/{route_id}/status")
 def route_status(route_id: int, update: RouteUpdate, session: Session = Depends(get_session)):
-    route = session.get(Route, route_id)
+    route = session.exec(select(Route).where(Route.id == route_id).with_for_update()).first()
     if not route:
         raise HTTPException(404, "Route not found")
+    if update.status == "active":
+        driver = session.get(User, route.driver_id)
+        profile = session.exec(select(Driver_Profile).where(Driver_Profile.Driver_id == route.driver_id)).first()
+        if not driver or driver.status != Status.ACTIVE or not profile or profile.verification_status != ApplicationStatus.APPROVED:
+            raise HTTPException(409, "An approved active driver is required")
+        if route.capacity <= sum(1 for item in session.exec(select(RouteStudents).where(
+                RouteStudents.route_id == route.id, RouteStudents.status == RouteStudentStatus.ACTIVE)).all()):
+            raise HTTPException(409, "No seats are available")
     route.status = RouteStatus(update.status.capitalize())
     session.add(route)
     session.commit()
@@ -224,6 +287,9 @@ def route_status(route_id: int, update: RouteUpdate, session: Session = Depends(
 def drivers(session: Session = Depends(get_session)):
     data = records(session)
     assigned = {route.driver_id: route.id for route in data["routes"] if route.status == RouteStatus.ACTIVE}
+    routes_by_driver = defaultdict(list)
+    for route in data["routes"]:
+        routes_by_driver[route.driver_id].append(route.id)
     return [
         {
             "id": user.id,
@@ -231,12 +297,38 @@ def drivers(session: Session = Depends(get_session)):
             "phone": profile.phone_number,
             "vehicle_type": profile.vehicle_name,
             "plate_number": profile.vehicle_plate,
+            "verification_status": profile.verification_status.value,
+            "route_count": len(routes_by_driver[user.id]),
+            "student_count": len({item.student_id for item in data["enrollments"]
+                                  if item.route_id in routes_by_driver[user.id]
+                                  and item.status == RouteStudentStatus.ACTIVE}),
             "assigned_route": f"Route #{assigned[user.id]}" if user.id in assigned else None,
             "rating": None,
             "status": user.status.value,
         }
         for profile in data["profiles"]
-        if (user := data["users"].get(profile.Driver_id)) is not None and user.role == UserRole.DRIVER
+        if profile.verification_status == ApplicationStatus.APPROVED
+        and (user := data["users"].get(profile.Driver_id)) is not None and user.role == UserRole.DRIVER
+    ]
+
+
+@router.get("/route-demand/analytics")
+def route_demand_analytics(session: Session = Depends(get_session)):
+    data = records(session)
+    active_routes = {(route.from_area_id, route.to_university_id)
+                     for route in data["routes"] if route.status == RouteStatus.ACTIVE}
+    return [
+        {
+            "area_id": demand.from_area_id,
+            "area_name": label(data["areas"].get(demand.from_area_id), "Area_name"),
+            "governorate": label(data["areas"].get(demand.from_area_id), "city"),
+            "university_id": demand.to_university_id,
+            "university_name": label(data["universities"].get(demand.to_university_id), "University_name"),
+            "created_at": iso(demand.created_at),
+            "preferred_time": iso(demand.preferred_time),
+            "route_exists": (demand.from_area_id, demand.to_university_id) in active_routes,
+        }
+        for demand in data["demands"] if demand.status == RouteDemandStatus.ACTIVE
     ]
 
 
@@ -246,7 +338,9 @@ class UserStatusUpdate(BaseModel):
 
 
 def update_user_status(user_id: int, role: UserRole, update: UserStatusUpdate, session: Session):
-    user = session.get(User, user_id)
+    if role == UserRole.DRIVER:
+        session.exec(select(Driver_Profile).where(Driver_Profile.Driver_id == user_id).with_for_update()).first()
+    user = session.exec(select(User).where(User.id == user_id).with_for_update()).first()
     if not user or user.role != role:
         raise HTTPException(404, "Account not found")
     user.status = Status(update.status.capitalize())
@@ -266,6 +360,25 @@ def reports(session: Session = Depends(get_session)):
     return [report_row(report, data) for report in data["reports"]]
 
 
+@router.get("/reports/{report_id}")
+def report_detail(report_id: int, session: Session = Depends(get_session)):
+    report = session.get(Report, report_id)
+    if report is None:
+        raise HTTPException(404, "Report not found")
+    return admin_report(report)
+
+
+@router.patch("/reports/{report_id}/review")
+def review_report(report_id: int, update: ReportReview, session: Session = Depends(get_session),
+                  admin: User = Depends(require_admin)):
+    report = session.get(Report, report_id)
+    if report is None:
+        raise HTTPException(404, "Report not found")
+    apply_review(report, update, admin, session)
+    session.refresh(report)
+    return admin_report(report)
+
+
 class ReportUpdate(BaseModel):
     status: Literal["resolved", "dismissed"]
     notes: str = ""
@@ -276,10 +389,9 @@ def report_status(report_id: int, update: ReportUpdate, session: Session = Depen
     report = session.get(Report, report_id)
     if not report:
         raise HTTPException(404, "Report not found")
-    report.status = ReportStatus(update.status.capitalize())
-    report.resolved_by = admin.id
-    session.add(report)
-    session.commit()
+    review = ReportReview(status=ReportStatus(update.status.capitalize()),
+                          **({"internal_notes": update.notes.strip()} if update.notes.strip() else {}))
+    apply_review(report, review, admin, session)
     return {"status": report.status.value}
 
 
@@ -317,7 +429,8 @@ def student_status(user_id: int, update: UserStatusUpdate, session: Session = De
 
 @router.get("/universities")
 def universities(session: Session = Depends(get_session)):
-    return [{"id": item.id, "name": item.University_name, "status": item.status.value} for item in session.exec(select(University)).all()]
+    return [{"id": item.id, "name": item.University_name, "governorate": item.governorate,
+             "status": item.status.value} for item in session.exec(select(University)).all()]
 
 
 @router.get("/areas")

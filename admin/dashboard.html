@@ -1,49 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Admin Dashboard</title>
-
-    <link rel="stylesheet"
-          href="../css/auth/forms.css">
-
-</head>
-
-<body data-role="admin">
-
-<div class="dashboard">
-
-    <h1>Admin Dashboard</h1>
-
-    <p>
-        Welcome to DarbGo Administration
-    </p>
-
-    <div class="admin-section">
-
-        <h2>Pending Driver Applications</h2>
-
-        <p>
-            Driver applications will appear here.
-        </p>
-
-    </div>
-
-    <button onclick="logout()">
-        Logout
-    </button>
-
-</div>
-
-<script src="../js/auth/account-store.js"></script>
-<script src="../js/auth/dashboard.js"></script>
-
-</body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Demo Gateway — DarbGo</title>
+    <link rel="stylesheet" href="css-file/admin.css" />
+  </head>
+  <body class="admin-gateway-body" data-role="admin">
+    <main class="dashboard admin-demo-gateway">
+      <a class="admin-brand" href="../index.html"
+        ><img src="../assets/logo/darbgo-logo.png" alt="" /><span
+          >Darb<span>Go</span><small>ADMIN CONSOLE</small></span
+        ></a
+      >
+      <span class="eyebrow">LOCAL DEMO ACCOUNT</span>
+      <h1>Admin Demo Gateway</h1>
+      <p>Checking your local demo session…</p>
+      <p>
+        This local account is a preview identity. Administrative records and
+        actions require a server authenticated admin session.
+      </p>
+      <div class="gateway-actions">
+        <a class="admin-primary" href="front-end/login.html"
+          >Sign in to Admin Console</a
+        ><button type="button" onclick="logout()">Log out of demo</button>
+      </div>
+    </main>
+    <script src="../js/auth/account-store.js"></script>
+    <script src="../js/auth/dashboard.js"></script>
+  </body>
 </html>

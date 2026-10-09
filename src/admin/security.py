@@ -42,7 +42,7 @@ def create_access_token(data: dict) -> str:
     return jwt.encode(payload, secret_key(), algorithm=ALGORITHM)
 
 
-def require_admin(
+def require_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(bearer),
     session: Session = Depends(get_session),
 ) -> User:
@@ -59,8 +59,27 @@ def require_admin(
     except (jwt.PyJWTError, ValueError, KeyError, TypeError):
         raise unauthorized from None
     user = session.get(User, user_id)
-    if not user or user.role != UserRole.ADMIN or user.status != Status.ACTIVE:
+    if not user or user.status != Status.ACTIVE or payload.get("role") != user.role.value:
         raise unauthorized
     if payload.get("pwd") != hashlib.sha256(user.password_hash.encode()).hexdigest():
         raise unauthorized
     return user
+
+
+def require_role(user: User, role: UserRole) -> User:
+    if user.role != role:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired session",
+                            headers={"WWW-Authenticate": "Bearer"})
+    return user
+
+
+def require_admin(user: User = Depends(require_user)) -> User:
+    return require_role(user, UserRole.ADMIN)
+
+
+def require_driver(user: User = Depends(require_user)) -> User:
+    return require_role(user, UserRole.DRIVER)
+
+
+def require_student(user: User = Depends(require_user)) -> User:
+    return require_role(user, UserRole.STUDENT)

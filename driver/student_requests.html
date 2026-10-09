@@ -1,64 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Requests - Driver Dashboard</title>
-    <link rel="stylesheet" href="../css/variables.css">
-    <link rel="stylesheet" href="../css/driver_dashboard.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>student requests — DarbGo Driver</title>
+  <link rel="stylesheet" href="driver.css">
+  <script src="session.js" defer></script>
+  <script src="demo-data.js" defer></script>
+  <script src="app.js" defer></script>
+  <script src="live-app.js" defer></script>
 </head>
-<body>
-
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <h2>Naseeb / Driver</h2>
-            <ul>
-                <li><a href="driver_dashboard.html">Dashboard</a></li>
-                <li><a href="#">My Routes</a></li>
-                <li><a href="create_route.html">Create Route</a></li>
-                <li><a href="opportunities.html">Opportunities 🔥</a></li>
-                <li><a href="#" class="active">Student Requests</a></li>
-                <li><a href="#">My Students</a></li>
-                <li><a href="#">Profile</a></li>
-                <li><a href="#" class="logout">Logout</a></li>
-            </ul>
-        </aside>
-
-        <main class="main-content">
-            <header>
-                <h1>Student Requests</h1>
-                <p>Review and manage join requests from students for your routes.</p>
-            </header>
-
-            <section class="requests-list">
-                <div class="request-card">
-                    <div class="request-info">
-                        <h3>Sara Mohammed</h3>
-                        <p><strong>Area:</strong> Talbiya</p>
-                        <p><strong>University:</strong> Mustansiriyah University</p>
-                        <span class="badge-compatible">Schedule Compatible ✓</span>
-                    </div>
-                    <div class="request-actions">
-                        <button class="btn-accept">Accept</button>
-                        <button class="btn-reject">Reject</button>
-                    </div>
-                </div>
-
-                <div class="request-card">
-                    <div class="request-info">
-                        <h3>Ali Ahmed</h3>
-                        <p><strong>Area:</strong> Shaab</p>
-                        <p><strong>University:</strong> Mustansiriyah University</p>
-                        <span class="badge-compatible">Schedule Compatible ✓</span>
-                    </div>
-                    <div class="request-actions">
-                        <button class="btn-accept">Accept</button>
-                        <button class="btn-reject">Reject</button>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
+<body data-page="requests">
+  <a class="skip-link" href="#pageContent">Skip to content</a>
+  <header class="driver-header">
+    <a class="brand" href="../index.html" aria-label="DarbGo home"><img src="../assets/logo/darbgo-logo.png" alt=""><span>Darb<span>Go</span></span></a>
+    <div class="header-right"><span id="pageTitle" class="identity"></span><span id="identity" class="identity"></span><button id="menuButton" class="button-secondary menu-button" type="button" aria-controls="driverSidebar" aria-expanded="false">Menu</button></div>
+  </header>
+  <div id="backdrop" class="backdrop" hidden></div>
+  <aside id="driverSidebar" class="driver-sidebar" aria-label="Driver navigation"><p class="nav-label">DRIVER SPACE</p><nav id="nav"></nav><p class="sidebar-foot">Your routes and student requests, clearly organized.</p></aside>
+  <div id="modeBanner" class="mode-banner" hidden></div><main id="pageContent" class="driver-main" tabindex="-1"><div class="empty">Verifying your driver session…</div></main>
+  <dialog id="actionDialog" class="dialog" aria-label="Action details"></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>reports — DarbGo Driver</title>
+  <link rel="stylesheet" href="driver.css">
+  <script src="session.js" defer></script>
+  <script src="demo-data.js" defer></script>
+  <script src="app.js" defer></script>
+  <script src="live-app.js" defer></script>
+</head>
+<body data-page="reports">
+  <a class="skip-link" href="#pageContent">Skip to content</a>
+  <header class="driver-header">
+    <a class="brand" href="../index.html" aria-label="DarbGo home"><img src="../assets/logo/darbgo-logo.png" alt=""><span>Darb<span>Go</span></span></a>
+    <div class="header-right"><span id="pageTitle" class="identity"></span><span id="identity" class="identity"></span><button id="menuButton" class="button-secondary menu-button" type="button" aria-controls="driverSidebar" aria-expanded="false">Menu</button></div>
+  </header>
+  <div id="backdrop" class="backdrop" hidden></div>
+  <aside id="driverSidebar" class="driver-sidebar" aria-label="Driver navigation"><p class="nav-label">DRIVER SPACE</p><nav id="nav"></nav><p class="sidebar-foot">Your routes and student requests, clearly organized.</p></aside>
+  <div id="modeBanner" class="mode-banner" hidden></div><main id="pageContent" class="driver-main" tabindex="-1"><div class="empty">Verifying your driver session…</div></main>
+  <dialog id="actionDialog" class="dialog" aria-label="Action details"></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

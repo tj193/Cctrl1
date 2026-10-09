@@ -91,3 +91,16 @@
   .booking-confirmation { align-items: stretch; flex-direction: column; gap: 14px; padding: 16px; }
   .booking-confirmation .primary-action { width: 100%; }
 }
+.journey-local-map{width:100%;height:100%;display:block}.journey-local-map text{font:700 15px Arial,sans-serif;fill:#527064;paint-order:stroke;stroke:#e8eddf;stroke-width:4px}.journey-local-label{position:absolute;z-index:401;padding:5px 8px;border:1px solid #d7e7f5;border-radius:9px;background:#fff;color:#183b61;font-size:11px;font-weight:800;box-shadow:0 4px 12px #122e4c22}.journey-local-start{left:16%;top:28%}.journey-local-finish{right:9%;top:61%}
+
+.profile-preferences{margin-top:32px;padding:28px;border:1px solid var(--dash-line);border-radius:22px;background:#fff;box-shadow:var(--dash-shadow)}
+.profile-preferences h2{margin:8px 0 18px;font-size:26px}
+.preferences-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:14px}
+.preferences-form .field{display:grid;gap:7px;color:var(--dash-muted);font-size:11px;font-weight:800}
+.preferences-form select,.preferences-form input{width:100%;min-height:46px;padding:0 12px;border:1px solid var(--dash-line);border-radius:11px;background:#f8faff;color:var(--dash-ink);font:inherit}
+.preferences-form .primary-action{grid-column:1/-1;justify-self:start}
+.scene-map .map-unavailable{z-index:1;padding:16px;text-align:center}
+.upcoming-card:has(.upcoming-ride-item){display:block}
+.upcoming-ride-item{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:34px}
+.upcoming-ride-item+.upcoming-ride-item{margin-top:24px;padding-top:24px;border-top:1px solid rgba(255,255,255,.16)}
+@media(max-width:700px){.preferences-form,.upcoming-ride-item{grid-template-columns:1fr}}

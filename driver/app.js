@@ -10,6 +10,7 @@
   const main = document.getElementById('pageContent');
   const session = window.DarbDriverSession;
   const demo = new URLSearchParams(location.search).get('demo') === '1';
+  if (!demo) return;
   const sample = window.DarbDriverDemo;
   const escape = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
   const url = (file, query = '') => `${file}${demo ? '?demo=1' + (query ? `&${query}` : '') : query ? `?${query}` : ''}`;

@@ -4,7 +4,7 @@
   const success = document.getElementById('driverRegistrationSuccess');
   const value = id => document.getElementById(id).value.trim();
   const apiBase = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-    ? `http://${window.location.hostname}:8000` : window.location.origin;
+    ? `http://${window.location.hostname}:8001` : window.location.origin;
   const message = document.createElement('p');
   message.className = 'auth-message';
   message.setAttribute('role', 'status');

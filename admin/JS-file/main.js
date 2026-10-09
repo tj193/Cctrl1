@@ -646,6 +646,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     const modalReportId = document.getElementById("modalReportId");
     const resolutionNotes = document.getElementById("resolutionNotes");
+    const publicResolution = document.getElementById("publicResolution");
     const resolveReportBtn = document.getElementById("resolveReportBtn");
     const dismissReportBtn = document.getElementById("dismissReportBtn");
     const typeFilter = document.getElementById("reportTypeFilter");
@@ -723,13 +724,13 @@ document.addEventListener("DOMContentLoaded", () => {
       reports.forEach((rep) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-                    <td>#${rep.id}</td>
-                    <td>${rep.reporter_role || "Unknown"}</td>
-                    <td>${rep.reporter_name || "Unknown"}</td>
-                    <td>${rep.subject || "No subject"}<br><small>Target: ${rep.reported_target_name || "N/A"}</small></td>
-                    <td>${rep.created_at || "N/A"}</td>
-                    <td><span class="status-badge" data-status="${String(rep.status || "").toLowerCase()}">${rep.status || "Unknown"}</span></td>
-                    <td><button type="button" class="view-btn" data-id="${rep.id}">Investigate</button></td>
+                    <td>#${escapeHtml(rep.id)}</td>
+                    <td>${escapeHtml(rep.reporter_role || "Unknown")}</td>
+                    <td>${escapeHtml(rep.reporter_name || "Unknown")}</td>
+                    <td>${escapeHtml(rep.subject || "No subject")}<br><small>Target: ${escapeHtml(rep.reported_target_name || "N/A")}</small></td>
+                    <td>${escapeHtml(rep.created_at || "N/A")}</td>
+                    <td><span class="status-badge" data-status="${escapeHtml(String(rep.status || "").toLowerCase())}">${escapeHtml(rep.status || "Unknown")}</span></td>
+                    <td><button type="button" class="view-btn" data-id="${escapeHtml(rep.id)}">Investigate</button></td>
                 `;
         reportsTableBody.appendChild(tr);
       });
@@ -741,24 +742,36 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    function openModal(id) {
+    async function openModal(id) {
       const rep = allReports.find((r) => r.id == id);
       if (!rep) return;
 
       selectedReport = rep;
       modalReportId.value = rep.id;
-      reportDetailsSection.innerHTML = `
-                <p><strong>Report ID:</strong> #${rep.id}</p>
-                <p><strong>Reporter:</strong> ${rep.reporter_name}</p>
-                <p><strong>Subject:</strong> ${rep.subject}</p>
-                <p><strong>Description:</strong> ${rep.description || "No detailed description"}</p>
-            `;
-      resolutionNotes.value = rep.notes || "";
-      actionFeedback.textContent = "";
-      messagePreview.value = window.DarbReportWhatsApp.message(rep);
-      messageFeedback.textContent = "Opening WhatsApp does not send the message or change the report status.";
-      refreshMessage();
+      reportDetailsSection.textContent = "Loading report details…";
+      resolveReportBtn.disabled = dismissReportBtn.disabled = true;
       reportModal.removeAttribute("hidden");
+      try {
+        const detail = safeRecord(await window.DarbAdminReports.detail(id));
+        if (modalReportId.value !== String(id)) return;
+        selectedReport = { ...rep, ...detail };
+        reportDetailsSection.innerHTML = `
+                <p><strong>Report ID:</strong> #${escapeHtml(rep.id)}</p>
+                <p><strong>Reporter:</strong> ${escapeHtml(rep.reporter_name)}</p>
+                <p><strong>Subject:</strong> ${escapeHtml(detail.subject || rep.subject)}</p>
+                <p><strong>Description:</strong> ${escapeHtml(detail.description || "No detailed description")}</p>
+            `;
+        publicResolution.value = detail.public_resolution || "";
+        resolutionNotes.value = detail.internal_notes || "";
+        actionFeedback.textContent = "";
+        messagePreview.value = window.DarbReportWhatsApp.message(selectedReport);
+        messageFeedback.textContent = "Opening WhatsApp does not send the message or change the report status.";
+        refreshMessage();
+        resolveReportBtn.disabled = dismissReportBtn.disabled = false;
+      } catch (error) {
+        reportDetailsSection.textContent = error.message || "Could not load report details.";
+        resolveReportBtn.disabled = dismissReportBtn.disabled = true;
+      }
     }
 
     closeModalBtn.addEventListener("click", () =>
@@ -774,15 +787,20 @@ document.addEventListener("DOMContentLoaded", () => {
     async function updateReportStatus(status) {
       const id = modalReportId.value;
       const notes = resolutionNotes.value.trim();
+      const publicText = publicResolution.value.trim();
       if (!window.confirm(`Mark report #${id} as ${status}?`)) return;
       actionFeedback.textContent = "Saving report status…";
       resolveReportBtn.disabled = dismissReportBtn.disabled = true;
       try {
-        const result = await window.DarbAdminReports.updateStatus(id, status, notes);
+        const result = await window.DarbAdminReports.review(id, status, publicText, notes);
         selectedReport.status = result.status;
+        selectedReport.public_resolution = result.public_resolution;
+        selectedReport.internal_notes = result.internal_notes;
+        const summary = allReports.find(report => String(report.id) === String(id));
+        if (summary) summary.status = result.status;
         messagePreview.value = window.DarbReportWhatsApp.message(selectedReport);
         refreshMessage();
-        actionFeedback.textContent = `Report #${id} status saved as ${result.status}. Notes are not persisted by the current API.`;
+        actionFeedback.textContent = `Report #${id} saved as ${result.status}. Public response and private notes were stored separately.`;
         applyFilters();
       } catch (err) {
         actionFeedback.textContent = err.message || "Could not update report.";

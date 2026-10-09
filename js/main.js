@@ -161,14 +161,15 @@ const NO_MATCH_AREAS = new Set(["Al-Jadriya"]);
 
 function renderNoMatch(area, university) {
   matchResult.className = "match-result no-match";
-  matchResult.innerHTML = `<strong>No exact match yet</strong><span>No reviewed route currently covers ${area} → ${university}. Join Route Demand so drivers can see students need this line.</span><button type="button" class="text-button demand-button">Join Route Demand ↗</button>`;
+  matchResult.innerHTML = `<strong>No sample routes for this search</strong><span>The demo has no sample line for ${area} → ${university}. Preview Route Demand to see how students could express interest in a new line. No request is sent.</span><button type="button" class="text-button demand-button">Preview Route Demand ↗</button>`;
 }
 
 function renderMatch(area, university, arrival) {
   matchResult.className = "match-result";
   matchResult.innerHTML = `
+    <p class="sample-results-note">This is a sample route, not a live offer. No seat has been reserved.</p>
     <div class="result-card">
-      <strong>Best match · 94%</strong>
+      <strong>Sample match · 94%</strong>
       <h3>${area} → ${university}</h3>
       <dl class="result-facts">
         <div><dt>Departs</dt><dd>7:30 AM</dd></div>
@@ -178,7 +179,7 @@ function renderMatch(area, university, arrival) {
         <div><dt>Driver</dt><dd>Approved </dd></div>
         <div><dt>Match</dt><dd>94%</dd></div>
       </dl>
-      <button type="button" class="button primary" data-preview="join">Send join request ↗</button>
+      <button type="button" class="button primary" data-preview="join">Preview join request ↗</button>
     </div>`;
   matchResult.querySelector("[data-preview]")?.addEventListener("click", (event) => {
     openPreview(event.currentTarget.dataset.preview);
@@ -222,5 +223,5 @@ routeSearch?.addEventListener("submit", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  if (event.target.closest(".demand-button")) openPreview("join");
+  if (event.target.closest(".demand-button")) openPreview("demand");
 });

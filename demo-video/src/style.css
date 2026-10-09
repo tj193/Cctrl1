@@ -1,0 +1,144 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+.rail {
+  position: absolute;
+  left: 35px;
+  top: 75px;
+  width: 220px;
+  height: 940px;
+}
+.step {
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: #1677ff;
+  font-weight: 700;
+}
+.rail h1 {
+  font-size: 38px;
+  line-height: 1.6;
+  margin: 55px 0 25px;
+  text-align: right;
+  font-weight: 700;
+}
+.rule {
+  height: 5px;
+  width: 55px;
+  margin-left: auto;
+  background: #1677ff;
+  border-radius: 5px;
+}
+.rail p {
+  font-size: 27px;
+  line-height: 1.85;
+  margin-top: 26px;
+  color: #55617a;
+  text-align: right;
+}
+.screen {
+  position: absolute;
+  left: 290px;
+  top: 36px;
+  width: 1600px;
+  height: 1000px;
+  border: 1px solid #e3e8f2;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 16px 42px #0a193016;
+  background: white;
+}
+.demo {
+  position: absolute;
+  bottom: 0;
+  width: 220px;
+  padding: 18px 12px;
+  background: #eef4ff;
+  border: 1px solid #dbe8ff;
+  border-radius: 14px;
+  font-size: 23px;
+  line-height: 1.8;
+  text-align: center;
+  color: #0b3a91;
+}
+.demo small {
+  font-size: 19px;
+  color: #55617a;
+}
+.note,
+.limitation {
+  font-size: 23px;
+  line-height: 1.8;
+  margin-top: 35px;
+  padding: 18px 12px;
+  border-radius: 14px;
+  background: #eef4ff;
+  color: #0b3a91;
+}
+.limitation {
+  background: #f2e7d7;
+  color: #86613c;
+}
+.focus-label {
+  position: absolute;
+  left: 42px;
+  bottom: 248px;
+  width: 206px;
+  font-size: 24px;
+  line-height: 1.6;
+  text-align: right;
+  color: #0f5fe0;
+  font-weight: 700;
+}
+.ending {
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 25% 0%, #dbe8ff 0%, transparent 55%),
+    linear-gradient(135deg, #fbfdff, #eef7ff);
+  gap: 12px;
+}
+.brand {
+  font-size: 78px;
+  font-weight: 800;
+  letter-spacing: -4px;
+}
+.brand span {
+  color: #1677ff;
+}
+.ending h1 {
+  font-size: 60px;
+  margin: 8px 0 22px;
+}
+.relationship {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: 35px;
+}
+.relationship span,
+.relationship strong {
+  padding: 24px 40px;
+  border: 1px solid #dbe8ff;
+  border-radius: 22px;
+  background: white;
+}
+.relationship strong {
+  background: #1677ff;
+  color: white;
+}
+.relationship i {
+  font-style: normal;
+  color: #1677ff;
+}
+.ending p {
+  font-size: 30px;
+  color: #55617a;
+  margin-top: 28px;
+}
+.ending small {
+  font-size: 22px;
+  color: #55617a;
+}

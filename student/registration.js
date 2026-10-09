@@ -49,7 +49,7 @@
   function renderUniversities() {
     const previous = university.value;
     const query = normalize(byId('universitySearch').value);
-    const all = universities.filter(item => item.governorate === provinceInput.value);
+    const all = universities;
     const filtered = all.filter(item => normalize(item.name).includes(query));
     university.replaceChildren(new Option('Choose your university', ''));
     for (const [type, title] of [['public', 'Public universities · حكومية'], ['private', 'Private universities & colleges · أهلية']]) {
@@ -115,7 +115,7 @@
     document.querySelector('.progress-track').setAttribute('aria-valuenow', step + 1);
     byId('previousStep').hidden = step === 0;
     byId('stepHint').textContent = ['Start with your governorate', 'Your daily route, your way', 'One last step'][step];
-    byId('nextStep').textContent = step === 2 ? 'Create demo account →' : 'Continue →';
+    byId('nextStep').textContent = step === 2 ? 'Create account →' : 'Continue →';
     error.hidden = true;
     steps[step].querySelector('h2').focus();
   }
@@ -170,20 +170,43 @@
     byId('nextStep').disabled = true;
     byId('nextStep').textContent = 'Creating your account…';
     try {
-      await window.DarbAccounts.create({
-        fullName: byId('studentName').value.trim(), email: byId('studentEmail').value.trim(), phone: byId('studentPhone').value,
-        governorate: provinceInput.value, homeArea: area.value === '__other' ? byId('customArea').value.trim() : area.value,
-        university: university.value === '__other' ? byId('customUniversity').value.trim() : university.value,
-        arrivalTime: byId('studentArrivalTime').value, role: 'student', status: 'active'
-      }, byId('studentPassword').value);
+      if (area.value === '__other' || university.value === '__other') {
+        throw new Error('Custom areas and campuses are not yet supported by the account service. Select a listed choice.');
+      }
+      const apiBase = ['localhost', '127.0.0.1'].includes(location.hostname)
+        ? `http://${location.hostname}:8001` : location.origin;
+      const [areaResponse, universityResponse] = await Promise.all([
+        fetch(`${apiBase}/public/catalogue/areas`), fetch(`${apiBase}/public/catalogue/universities`)
+      ]);
+      if (!areaResponse.ok || !universityResponse.ok) throw new Error('Location choices are unavailable. Try again when the API is running.');
+      const [canonicalAreas, canonicalUniversities] = await Promise.all([areaResponse.json(), universityResponse.json()]);
+      const governorate = governorates.find(item => item.id === provinceInput.value)?.arabic;
+      const matchingAreas = canonicalAreas.filter(item => item.name === area.value && item.governorate === governorate);
+      const matchingUniversities = canonicalUniversities.filter(item => item.name === university.value);
+      if (matchingAreas.length !== 1 || matchingUniversities.length !== 1) {
+        throw new Error('A selected location is unavailable or ambiguous in the current catalogue. Choose another listed option.');
+      }
+      const response = await fetch(`${apiBase}/auth/student-register`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: byId('studentName').value.trim(), email: byId('studentEmail').value.trim(),
+          phone: byId('studentPhone').value, password: byId('studentPassword').value,
+          area_id: matchingAreas[0].id, university_id: matchingUniversities[0].id,
+          preferred_arrival_time: byId('studentArrivalTime').value || null
+        })
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(typeof body.detail === 'string' ? body.detail : 'Registration could not be completed. Check your details.');
+      }
       byId('studentPassword').value = ''; byId('studentConfirmPassword').value = '';
       form.hidden = true;
       byId('registrationSuccess').hidden = false;
       byId('registrationSuccess').focus();
     } catch (failure) {
-      showError(failure instanceof SyntaxError ? 'Saved demo data could not be read. Try a separate browser profile.' : failure.message || 'We couldn’t save this account. Check that browser storage is enabled.');
+      showError(failure instanceof TypeError ? 'Could not reach the DarbGo API. Start the server and try again.' : failure.message || 'Registration could not be completed.');
     } finally {
-      saving = false; byId('nextStep').disabled = false; byId('nextStep').textContent = 'Create demo account →';
+      saving = false; byId('nextStep').disabled = false; byId('nextStep').textContent = 'Create account →';
     }
   });
   renderGovernorates();

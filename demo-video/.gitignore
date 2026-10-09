@@ -1,0 +1,16 @@
+node_modules
+dist
+.DS_Store
+.env
+
+# Ignore the output video from Git but not videos you import into src/.
+out
+python-deps/
+local-demo.sqlite
+raw/
+audit/
+test-capture/
+
+public/frames/
+public/capture.mp4
+

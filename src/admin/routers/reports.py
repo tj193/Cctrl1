@@ -3,7 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 
 from ..DataBase import get_session
-from ..models import Report, ReportStatus
+from ..models import Report, ReportStatus, User
+from ..security import require_admin
+from .report_api import ReportReview, apply_review
 
 router = APIRouter(prefix="/reports", tags=["Report Management"])
 
@@ -28,16 +30,13 @@ def get_report_details(report_id: int, session: Session = Depends(get_session)):
 
 @router.patch("/{report_id}/status", response_model=Report)
 
-def update_report_status(report_id: int , new_status: ReportStatus , admin_id: int , session: Session = Depends(get_session)):
+def update_report_status(report_id: int , new_status: ReportStatus , session: Session = Depends(get_session),
+                         admin: User = Depends(require_admin)):
 
     report = session.get(Report, report_id)
     if not report:
         raise HTTPException(status_code=404, detail="Report not found")
 
-    report.status = new_status
-    report.resolved_by = admin_id
-
-    session.add(report)
-    session.commit()
+    apply_review(report, ReportReview(status=new_status), admin, session)
     session.refresh(report)
     return report

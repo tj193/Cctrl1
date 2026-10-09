@@ -7,3 +7,5 @@ __pycache__/
 !.env.example
 *.pyc
 .pytest_cache/
+.uv-cache-local/
+demo-video/*.sqlite

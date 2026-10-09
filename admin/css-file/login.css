@@ -4,170 +4,249 @@
 
 /* 1. System Variables & Color System */
 :root {
-    --navy-900: #0f172a;
-    --navy-800: #1e293b;
-    --blue-600: #2563eb;
-    --blue-100: #dbeafe;
-    --blue-50: #eff6ff;
-    
-    --teal-400: #2dd4bf;
-    --slate-600: #475569;
-    --slate-400: #94a3b8;
-    --slate-100: #f1f5f9;
-    
-    --brick-500: #ef4444;
-    --accent: #2563eb;
-    --accent-strong: #1d4ed8;
-    
-    --paper: #ffffff;
-    --cloud: #f8fafc;
-    --ink: #0f172a;
-    --text: #334155;
-    --border: #e2e8f0;
+  --navy-900: #0f172a;
+  --navy-800: #1e293b;
+  --blue-600: #2563eb;
+  --blue-100: #dbeafe;
+  --blue-50: #eff6ff;
 
-    --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-    --radius: 12px;
-    --radius-sm: 8px;
+  --teal-400: #2dd4bf;
+  --slate-600: #475569;
+  --slate-400: #94a3b8;
+  --slate-100: #f1f5f9;
 
-    --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --brick-500: #ef4444;
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+
+  --paper: #ffffff;
+  --cloud: #f8fafc;
+  --ink: #0f172a;
+  --text: #334155;
+  --border: #e2e8f0;
+
+  --shadow-lg:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --radius: 12px;
+  --radius-sm: 8px;
+
+  --font:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, sans-serif;
 }
 
 /* 2. Global Resets & Layout */
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: var(--font);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font);
 }
 
 body {
-    background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+  background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
 /* 3. Login Box Container */
 .login-container,
 body > div:first-child {
-    background: var(--paper);
-    width: 100%;
-    max-width: 420px;
-    padding: 40px 35px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--border);
-    text-align: center;
+  background: var(--paper);
+  width: 100%;
+  max-width: 420px;
+  padding: 40px 35px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  text-align: center;
 }
 
 /* Header Area */
 .login-header,
 .login-container > div:first-child {
-    margin-bottom: 28px;
+  margin-bottom: 28px;
 }
 
 .login-header h1,
 .login-container h1 {
-    font-size: 26px;
-    color: var(--ink);
-    font-family: var(--font-display);
-    font-weight: 700;
-    margin-bottom: 8px;
+  font-size: 26px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
 .login-header h1 span,
 .login-container h1 span {
-    color: var(--teal-400);
+  color: var(--teal-400);
 }
 
 .login-header p,
 .login-container > div:first-child p {
-    color: var(--slate-600);
-    font-size: 14px;
+  color: var(--slate-600);
+  font-size: 14px;
 }
 
 /* 4. Form Styling */
 form {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
 }
 
 input[type="email"],
 input[type="password"],
 input[type="text"] {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background-color: var(--cloud);
-    color: var(--text);
-    font-size: 14px;
-    outline: none;
-    transition: all 0.2s ease;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--cloud);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
 input:focus {
-    border-color: var(--accent);
-    background-color: var(--paper);
-    box-shadow: 0 0 0 3px var(--blue-50);
+  border-color: var(--accent);
+  background-color: var(--paper);
+  box-shadow: 0 0 0 3px var(--blue-50);
 }
 
 /* 5. Submit Button */
 button[type="submit"],
 .btn-login {
-    width: 100%;
-    background-color: var(--accent);
-    color: var(--paper);
-    border: none;
-    padding: 12px;
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 10px;
+  width: 100%;
+  background-color: var(--accent);
+  color: var(--paper);
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
 }
 
 button[type="submit"]:hover,
 .btn-login:hover {
-    background-color: var(--accent-strong);
+  background-color: var(--accent-strong);
 }
 
 /* 6. Error & Alert Messages */
 .error-message,
 #errorMessage {
-    background-color: #fdf2f2;
-    color: var(--brick-500);
-    border: 1px solid #f87171;
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 15px;
-    text-align: center;
+  background-color: #fdf2f2;
+  color: var(--brick-500);
+  border: 1px solid #f87171;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
 /* Hide error message if empty or hidden attribute exists */
 .error-message[hidden],
 #errorMessage[hidden],
 #errorMessage:empty {
-    display: none !important;
+  display: none !important;
+}
+/* DarbGo admin sign-in */
+:root {
+  --navy-900: #11213e;
+  --navy-800: #19345f;
+  --blue-600: #146ff5;
+  --blue-100: #dceaff;
+  --blue-50: #edf4ff;
+  --teal-400: #15b7a4;
+  --accent: #146ff5;
+  --accent-strong: #0b5ed5;
+  --ink: #11213e;
+  --text: #40516d;
+  --border: #dfe7f3;
+  --cloud: #f7f9fd;
+  --radius: 20px;
+  --radius-sm: 10px;
+}
+body {
+  background:
+    radial-gradient(circle at 20% 20%, #e5f0ff 0, transparent 35%),
+    radial-gradient(circle at 90% 90%, #dff8f3 0, transparent 33%), #f7f9fd;
+}
+.login-container {
+  max-width: 440px;
+  padding: 42px;
+  border-radius: 22px;
+  box-shadow: 0 28px 75px rgba(17, 33, 62, 0.12);
+  text-align: left;
+}
+.login-header {
+  text-align: center;
+}
+.login-logo {
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 10px;
+  object-fit: contain;
+}
+.login-kicker {
+  margin: 0 0 9px;
+  color: #146ff5 !important;
+  font-size: 10px !important;
+  font-weight: 850;
+  letter-spacing: 0.15em;
+}
+.login-header h1 {
+  margin: 0 0 8px;
+  font-size: 30px;
+  letter-spacing: -0.04em;
+}
+.login-header p {
+  line-height: 1.6;
+}
+input:focus-visible,
+button:focus-visible {
+  outline: 3px solid #146ff5;
+  outline-offset: 3px;
+}
+button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+@media (max-width: 480px) {
+  .login-container {
+    padding: 32px 22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    transition: none !important;
+    animation: none !important;
+  }
 }

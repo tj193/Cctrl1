@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Route Demand - DarbGo Admin</title>
+    <link rel="stylesheet" href="../css-file/admin.css" />
+  </head>
+  <body>
+    <div class="admin-shell">
+      <main class="admin-main">
+        <div class="admin-content">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">TRANSPORTATION</p>
+              <h1>Route Demand</h1>
+              <p>
+                Active student demand grouped by origin area and destination
+                university. Counts are requests, not confirmed seats.
+              </p>
+            </div>
+            <a class="admin-primary" href="adminDemand.html"
+              >Demand Analytics →</a
+            >
+          </div>
+          <section class="admin-panel">
+            <h2>Demand Opportunities</h2>
+            <p>
+              Groups without an active route appear first, ordered by request
+              count.
+            </p>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Demand ID</th>
+                    <th>Origin Area</th>
+                    <th>University</th>
+                    <th>Active Requests</th>
+                    <th>Service Coverage</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="demandTableBody">
+                  <tr>
+                    <td colspan="7">Loading demand…</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div id="createRouteModal" class="admin-modal" hidden>
+      <div>
+        <button type="button" id="closeRouteModalBtn">&times; Close</button>
+        <h2>Create Route</h2>
+        <p class="notice">
+          Route creation provides service coverage. It does not confirm bookings
+          for these students.
+        </p>
+        <p><strong>Origin:</strong> <span id="modalAreaName"></span></p>
+        <p>
+          <strong>University:</strong> <span id="modalUniversityName"></span>
+        </p>
+        <p>
+          <strong>Active requests:</strong> <span id="modalDemandCount"></span>
+        </p>
+        <form id="confirmCreateRouteForm">
+          <input id="modalAreaId" type="hidden" /><input
+            id="modalUniversityId"
+            type="hidden"
+          />
+          <div>
+            <label for="driverSelect">Approved driver</label
+            ><select id="driverSelect" required>
+              <option value="">Select driver</option>
+            </select>
+          </div>
+          <div>
+            <label for="routeCapacityInput">Seat capacity</label
+            ><input
+              id="routeCapacityInput"
+              type="number"
+              min="1"
+              step="1"
+              required
+            />
+          </div>
+          <button id="confirmCreateRouteBtn" type="submit">Create Route</button>
+        </form>
+      </div>
+    </div>
+    <script src="../JS-file/apiClient.js"></script>
+    <script src="../JS-file/layout.js"></script>
+    <script src="../JS-file/main.js"></script>
+  </body>
+</html>

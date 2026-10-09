@@ -1,0 +1,15 @@
+{
+  "status": "first_page_candidates_only_no_import_approval",
+  "source_url": "https://mohesr.gov.iq/ar/home/private_universities/",
+  "checked_on": "2026-10-09",
+  "institutions": [
+    {"name_ar": "كلية التراث الجامعة", "governorate_ar": "بغداد", "kind": "private", "verification_status": "ministry_listing_name_requires_crosscheck"},
+    {"name_ar": "كلية المنصور الجامعة", "governorate_ar": "بغداد", "kind": "private", "verification_status": "ministry_listing_name_requires_crosscheck"},
+    {"name_ar": "كلية الرافدين الجامعة", "governorate_ar": "بغداد", "kind": "private", "verification_status": "ministry_listing_name_requires_crosscheck"},
+    {"name_ar": "كلية المامون الجامعة", "governorate_ar": "بغداد", "kind": "private", "verification_status": "ministry_listing_name_requires_crosscheck"},
+    {"name_ar": "كلية شط العرب الجامعة", "governorate_ar": "البصرة", "kind": "private", "verification_status": "ministry_listing_name_requires_crosscheck"},
+    {"name_ar": "كلية المعارف الجامعة", "governorate_ar": "الأنبار", "kind": "private", "verification_status": "ministry_listing_name_requires_crosscheck"},
+    {"name_ar": "كلية الحدباء الجامعة", "governorate_ar": "نينوى", "kind": "private", "verification_status": "ministry_listing_name_requires_crosscheck"},
+    {"name_ar": "كلية اليرموك الجامعة", "governorate_ar": "ديالى", "kind": "private", "verification_status": "ministry_listing_name_requires_crosscheck"}
+  ]
+}

@@ -1,0 +1,6 @@
+.report-message-panel { margin-top: 24px; }
+.report-message-panel p { color: #61718a; }
+.report-message-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.report-message-actions .btn { display: inline-flex; align-items: center; }
+#reportActionFeedback { margin-top: 12px; color: #24466e; }
+#reportMessageFeedback { margin-top: 10px; font-size: 12px; }

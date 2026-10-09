@@ -1,123 +1,146 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Universities & Areas Management - DarbGo Admin</title>
 
-        <link rel="stylesheet" href="../css-file/stayle.css">
-</head>
-<body>
-
-    <div>
-        <h2>DarbGo Admin</h2>
-        <ul>
-            <li><a href="adminApproval.html">Driver Approvals</a></li>
-            <li><a href="adminStudent.html">Students</a></li>
-            <li><a href="adminDriver.html">Drivers</a></li>
-            <li><a href="adminRoute.html">Routes</a></li>
-            <li><a href="adminDemand.html">Route Demand</a></li>
-            <li><a href="adminUniversities.html">Universities & Areas</a></li>
-            <li><a href="adminReports.html">Reports</a></li>
-            <li><a href="createAdmin.html">Create Admin</a></li>
-            <li><a href="setting.html">Settings</a></li>
-            <li><a href="index.html">Dashboard Overview</a></li>
-            <li><button type="button" id="logoutBtn">Logout</button></li>
-        </ul>
-    </div>
-
-    <div>
-
-        <div>
+    <link rel="stylesheet" href="../css-file/admin.css" />
+  </head>
+  <body>
+    <div class="admin-shell">
+      <main class="admin-main">
+        <div class="admin-content">
+          <div class="page-heading">
             <h1>Universities & Areas Management</h1>
-            <p>Standardize geographic data to prevent duplicate entries across student and driver applications</p>
-        </div>
+            <p>Browse the universities and areas available to the service.</p>
+          </div>
 
-        <section>
+          <div class="catalogue-filters">
+            <label for="catalogueGovernorate">Governorate</label>
+            <select id="catalogueGovernorate">
+              <option value="all">All governorates</option>
+            </select>
+            <label for="catalogueSearch">Search</label>
+            <input
+              id="catalogueSearch"
+              type="search"
+              placeholder="Search university or area"
+            />
+          </div>
+
+          <section>
             <div>
-                <h2>Universities</h2>
-                <button type="button" id="openAddUniversityModalBtn">+ Add New University</button>
+              <h2>Universities</h2>
+              <p id="universityCount"></p>
             </div>
 
-            <table border="1">
+            <div class="table-scroll">
+              <table>
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>University Name</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
+                  <tr>
+                    <th>ID</th>
+                    <th>University Name</th>
+                    <th>Governorate</th>
+                    <th>Status</th>
+                  </tr>
                 </thead>
-                <tbody id="universitiesTableBody">
+                <tbody id="universitiesTableBody"></tbody>
+              </table>
+            </div>
+            <div class="catalogue-pagination">
+              <button type="button" id="universitiesPrevious">Previous</button
+              ><span id="universitiesPage"></span
+              ><button type="button" id="universitiesNext">Next</button>
+            </div>
+          </section>
 
-                </tbody>
-            </table>
-        </section>
+          <hr />
 
-        <hr>
-
-        <section>
+          <section>
             <div>
-                <h2>Residential Areas</h2>
-                <button type="button" id="openAddAreaModalBtn">+ Add New Area</button>
+              <h2>Residential Areas</h2>
+              <p id="areaCount"></p>
             </div>
 
-            <table border="1">
+            <div class="table-scroll">
+              <table>
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Area Name</th>
-                        <th>City / Governorate</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
+                  <tr>
+                    <th>ID</th>
+                    <th>Area Name</th>
+                    <th>City / Governorate</th>
+                    <th>Status</th>
+                  </tr>
                 </thead>
-                <tbody id="areasTableBody">
-
-                </tbody>
-            </table>
-        </section>
-
-    </div>
-
-    <div id="universityModal" hidden>
-        <div>
-            <button type="button" id="closeUnivModalBtn">&times; Close</button>
-            <h2 id="univModalTitle">Add University</h2>
-            
-            <form id="universityForm">
-                <input type="hidden" id="universityId">
-                <div>
-                    <label for="universityNameInput">University Name:</label><br>
-                    <input type="text" id="universityNameInput" required placeholder="e.g. Mustansiriyah University">
-                </div>
-                <br>
-                <button type="submit" id="saveUniversityBtn">Save University</button>
-            </form>
+                <tbody id="areasTableBody"></tbody>
+              </table>
+            </div>
+            <div class="catalogue-pagination">
+              <button type="button" id="areasPrevious">Previous</button
+              ><span id="areasPage"></span
+              ><button type="button" id="areasNext">Next</button>
+            </div>
+          </section>
         </div>
+      </main>
     </div>
 
-    <div id="areaModal" hidden>
-        <div>
-            <button type="button" id="closeAreaModalBtn">&times; Close</button>
-            <h2 id="areaModalTitle">Add Area</h2>
-            
-            <form id="areaForm">
-                <input type="hidden" id="areaId">
-                <div>
-                    <label for="areaNameInput">Area Name:</label><br>
-                    <input type="text" id="areaNameInput" required placeholder="e.g. Talbiya">
-                </div>
-                <div>
-                    <label for="areaCityInput">City / Governorate:</label><br>
-                    <input type="text" id="areaCityInput" required placeholder="e.g. Baghdad">
-                </div>
-                <br>
-                <button type="submit" id="saveAreaBtn">Save Area</button>
-            </form>
-        </div>
+    <div id="universityModal" class="admin-modal" hidden>
+      <div>
+        <button type="button" id="closeUnivModalBtn">&times; Close</button>
+        <h2 id="univModalTitle">Add University</h2>
+
+        <form id="universityForm">
+          <input type="hidden" id="universityId" />
+          <div>
+            <label for="universityNameInput">University Name:</label><br />
+            <input
+              type="text"
+              id="universityNameInput"
+              required
+              placeholder="e.g. Mustansiriyah University"
+            />
+          </div>
+          <br />
+          <button type="submit" id="saveUniversityBtn">Save University</button>
+        </form>
+      </div>
     </div>
 
-    <script src="JS-file/main.js"></script>
-</body>
+    <div id="areaModal" class="admin-modal" hidden>
+      <div>
+        <button type="button" id="closeAreaModalBtn">&times; Close</button>
+        <h2 id="areaModalTitle">Add Area</h2>
+
+        <form id="areaForm">
+          <input type="hidden" id="areaId" />
+          <div>
+            <label for="areaNameInput">Area Name:</label><br />
+            <input
+              type="text"
+              id="areaNameInput"
+              required
+              placeholder="e.g. Talbiya"
+            />
+          </div>
+          <div>
+            <label for="areaCityInput">City / Governorate:</label><br />
+            <input
+              type="text"
+              id="areaCityInput"
+              required
+              placeholder="e.g. Baghdad"
+            />
+          </div>
+          <br />
+          <button type="submit" id="saveAreaBtn">Save Area</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="../JS-file/apiClient.js"></script>
+    <script src="../JS-file/layout.js"></script>
+    <script src="../JS-file/main.js"></script>
+  </body>
 </html>

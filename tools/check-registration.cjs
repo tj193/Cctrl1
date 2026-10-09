@@ -25,7 +25,8 @@ for (const file of htmlFiles) {
     if (/^(https?:|mailto:|tel:|data:)/.test(target)) continue;
     assert(fs.existsSync(path.resolve(path.dirname(file), target.split('#')[0])), `${file}: missing ${target}`);
   }
-  assert(!/[\u{1F000}-\u{1FAFF}\u2600-\u27BF]/u.test(html), `${file}: emoji found`);
+  // Keep the form's text checkmark; reject the original pictographic ranges.
+  assert(!/[\u{1F000}-\u{1FAFF}\u2600-\u27BF]/u.test(html.replace(/\u2713/g, '')), `${file}: emoji found`);
 }
 
 async function checkAccounts() {

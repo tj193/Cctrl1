@@ -333,12 +333,16 @@
     section.querySelector('h2').textContent = 'Your accepted rides.';
     section.querySelector('.section-intro > p').textContent = 'Accepted requests with a reserved seat appear here.';
     const card = $('upcomingCard');
+    const safetyRides = [];
     try {
       state.requests = await api.request('/student/ride-requests');
       const accepted = state.requests.filter(item => item.status === 'Accepted');
-      if (!accepted.length) { card.append(element('h3', '', 'No accepted ride yet.'), element('p', '', 'Your upcoming ride appears after a driver accepts your request.')); return; }
+      if (!accepted.length) { card.append(element('h3', '', 'No accepted ride yet.'), element('p', '', 'Your upcoming ride appears after a driver accepts your request.')); return safetyRides; }
       for (const request of accepted) {
         const route = await routeFor(request);
+        safetyRides.push({ id: request.id, driver_name: route?.driver_name,
+          pickup_area: route?.origin_area, university: route?.destination_university,
+          departure_time: route?.departure_time });
         const ride = element('div', 'upcoming-ride-item');
         const details = element('div');
         details.append(element('p', 'eyebrow-label', 'SEAT RESERVED'), element('h3', '', route ? `${route.origin_area} → ${route.destination_university}` : `Route ${request.route_id}`));
@@ -354,7 +358,11 @@
         ride.append(details, facts);
         card.append(ride);
       }
-    } catch (error) { message(card, error.message, true); }
+    } catch (error) {
+      card.replaceChildren(message(card, 'Could not load your rides. Please try again later.', true));
+      return null;
+    }
+    return safetyRides;
   }
 
   async function renderWaitlist() {
@@ -431,7 +439,10 @@
       else if (page === 'routes') await renderRoutes();
       else if (page === 'requests') await renderRequests();
       else if (page === 'waitlist') await renderWaitlist();
-      else if (page === 'upcoming') await renderUpcoming();
+      else if (page === 'upcoming') {
+        const safetyRides = await renderUpcoming();
+        window.DarbStudentSafety?.init(safetyRides);
+      }
     } catch (error) { main.replaceChildren(message(main, error.message || 'Could not load your journey.', true)); }
   }
   init();

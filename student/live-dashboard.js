@@ -43,6 +43,14 @@
     select.required = true;
   };
   const existingRequest = routeId => state.requests.find(item => item.route_id === routeId && ['Pending', 'Accepted'].includes(item.status));
+  const alternativeRoutes = (routes, originalId) => {
+    const rejected = new Set(state.requests.filter(item => item.status === 'Declined').map(item => item.route_id));
+    return routes.filter(route => route.id !== originalId && !rejected.has(route.id) &&
+      !existingRequest(route.id) && route.from_area_id === state.profile.area_id &&
+      route.to_university_id === state.profile.university_id &&
+      route.status === 'Active' && route.available_seats > 0)
+      .sort((a, b) => String(a.departure_time || '').localeCompare(String(b.departure_time || '')));
+  };
 
   function showToast(value) {
     const toast = $('toast');
@@ -220,12 +228,42 @@
         state.requests = await api.request('/student/ride-requests');
         request.textContent = 'Request pending';
         showToast('Request sent. A seat is reserved only after the driver accepts.');
-        await searchRoutes();
+        if (page === 'requests') await renderRequests();
+        else await searchRoutes();
       } catch (error) { message(card, error.message, true); request.disabled = false; }
     };
-    actions.append(details, request);
+    if (route.available_seats < 1 || route.status !== 'Active') {
+      const findAlternatives = element('button', 'request-button', 'Find alternatives');
+      findAlternatives.type = 'button';
+      findAlternatives.onclick = () => {
+        card.querySelector('.alternative-results')?.remove();
+        card.append(alternativesPanel(state.routes, route.id));
+      };
+      actions.append(details, findAlternatives);
+    } else actions.append(details, request);
     card.append(actions);
     return card;
+  }
+
+  function alternativesPanel(routes, originalId, error = false) {
+    const panel = element('section', 'alternative-results');
+    panel.append(element('h4', '', 'Alternative routes'));
+    if (error) {
+      message(panel, 'Could not load alternative routes. Please try again later.', true);
+      return panel;
+    }
+    const matches = alternativeRoutes(routes, originalId);
+    if (!matches.length) {
+      panel.append(element('p', 'action-note', 'No available routes match your saved pickup area and university.'));
+      const waitlist = element('a', 'secondary-action', 'View waitlist / route demand');
+      waitlist.href = 'waitlist.html';
+      panel.append(waitlist);
+      return panel;
+    }
+    const list = element('div', 'alternative-route-list');
+    list.append(...matches.map(routeCard));
+    panel.append(list);
+    return panel;
   }
 
   function displayRoutes() {
@@ -306,8 +344,22 @@
     try {
       state.requests = await api.request('/student/ride-requests');
       $('requestsEmpty').hidden = state.requests.length > 0;
-      for (const request of state.requests) {
-        const route = await routeFor(request);
+      const requestRoutes = [];
+      for (const request of state.requests) requestRoutes.push({ request, route: await routeFor(request) });
+      const needsAlternatives = ({ request, route }) => request.status === 'Declined' ||
+        (request.status === 'Pending' && (!route || route.status === 'Full' || route.available_seats < 1));
+      let alternatives = [];
+      let alternativeError = false;
+      if (requestRoutes.some(needsAlternatives)) {
+        if (state.profile.area_id && state.profile.university_id) {
+          const query = new URLSearchParams({
+            from_area_id: state.profile.area_id, to_university_id: state.profile.university_id
+          });
+          try { alternatives = await api.request(`/student/routes?${query}`); }
+          catch { alternativeError = true; }
+        }
+      }
+      for (const { request, route } of requestRoutes) {
         const card = element('article', 'request-card');
         const header = element('div', 'request-card-header');
         const heading = element('div');
@@ -322,6 +374,7 @@
         driver.append(element('span', 'avatar', name[0].toUpperCase()), driverCopy);
         body.append(driver, requestTimeline(request.status));
         card.append(header, body);
+        if (needsAlternatives({ request, route })) card.append(alternativesPanel(alternatives, request.route_id, alternativeError));
         list.append(card);
       }
     } catch (error) { message(list, error.message, true); }

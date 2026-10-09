@@ -7,9 +7,11 @@ from sqlmodel import Session, select
 
 from ..DataBase import get_session
 from ..catalog import active_area, active_university
-from ..models import Route, RouteDemand, RouteDemandStatus, RouteStatus, User
+from ..models import (RideRequest, RideRequestStatus, Route, RouteDemand,
+                      RouteDemandStatus, RouteStatus, RouteStudents,
+                      RouteStudentStatus, User)
 from ..security import require_student
-from .journey_api import discoverable
+from .journey_api import discoverable, occupancy
 
 router = APIRouter(prefix="/student/route-demand", tags=["Student Route Demand"])
 
@@ -42,12 +44,25 @@ def create_demand(data: DemandCreate, student: User = Depends(require_student),
                   session: Session = Depends(get_session)):
     active_area(session, data.from_area_id)
     active_university(session, data.to_university_id)
+    enrolled = session.exec(select(RouteStudents.id).join(Route).where(
+        RouteStudents.student_id == student.id,
+        RouteStudents.status == RouteStudentStatus.ACTIVE,
+        Route.from_area_id == data.from_area_id,
+        Route.to_university_id == data.to_university_id,
+    )).first()
+    if enrolled is not None:
+        raise HTTPException(409, "Student already has an active route for this journey")
     routes = session.exec(select(Route).where(
         Route.from_area_id == data.from_area_id,
         Route.to_university_id == data.to_university_id,
-        Route.status.in_([RouteStatus.ACTIVE, RouteStatus.FULL]),
+        Route.status == RouteStatus.ACTIVE,
     )).all()
-    if any(discoverable(route, session) for route in routes):
+    rejected_route_ids = set(session.exec(select(RideRequest.route_id).where(
+        RideRequest.student_id == student.id, RideRequest.status == RideRequestStatus.DECLINED
+    )).all())
+    if any(route.id not in rejected_route_ids and discoverable(route, session) and
+           occupancy(session, route.id) < route.capacity
+           for route in routes):
         raise HTTPException(409, "A route exists for this journey; route-specific waitlisting is unsupported")
     duplicate = session.exec(select(RouteDemand.id).where(
         RouteDemand.student_id == student.id,

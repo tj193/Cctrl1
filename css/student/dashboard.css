@@ -139,3 +139,10 @@
 .safety-dialog [hidden],.safety-panel [hidden]{display:none!important}
 @media(max-width:700px){.safety-panel{padding:20px}.safety-card-grid,.safety-option-grid,.safety-location-grid{grid-template-columns:1fr}.safety-action-card{min-height:0}.safety-dialog .safety-dialog-content{padding:24px 18px}.safety-modal-heading{padding-right:38px}.safety-modal-heading h2{font-size:23px}.safety-option{padding:15px}.safety-location-section{padding:14px}.safety-modal-cta{min-height:46px}.safety-location-results{display:grid}.safety-location-results .safety-modal-cta{width:100%}}
 @media(prefers-reduced-motion:reduce){.safety-action-card,.safety-cta,.safety-modal-cta{transition:none}.safety-action-card:hover,.safety-cta:hover,.safety-modal-cta:hover{transform:none}}
+.alternative-results{margin-top:20px;padding-top:18px;border-top:1px solid var(--dash-line)}
+.alternative-results h4{margin:0 0 12px;color:var(--dash-ink);font-size:16px}
+.alternative-results .action-note{margin:0 0 12px}.alternative-route-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.alternative-route-list .route-card{min-width:0;padding:18px;box-shadow:none}.alternative-route-list .route-path-title{margin-top:12px;font-size:16px}
+.alternative-route-list .route-card-actions{display:flex}.alternative-route-list .route-card-actions button{min-height:44px}
+.route-card>.alternative-results .alternative-route-list{grid-template-columns:1fr}
+@media(max-width:700px){.alternative-route-list{grid-template-columns:1fr}.alternative-route-list .route-card-actions{display:grid;grid-template-columns:1fr 1fr}}

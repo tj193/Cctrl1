@@ -18,7 +18,7 @@ from sqlmodel import Session, SQLModel, create_engine, select
 from src.admin.DataBase import get_session
 from src.admin.main import app
 from src.admin.models import (ApplicationStatus, Area, Driver_Profile, Report, ReportStatus,
-                              RideRequest, RideRequestStatus, Route, RouteDemand,
+                              RideRequest, RideRequestStatus, Route, RouteStatus, RouteDemand,
                               RouteDemandStatus, RouteStudents, Status, University,
                               User, UserRole)
 from src.admin.security import get_password_hash
@@ -225,6 +225,74 @@ def test_route_demand_duplicates_cancellation_and_analytics(api):
     assert client.get("/admin/route-demand", headers=admin).json()[0]["student_count"] == 1
     with Session(engine) as session:
         assert len(session.exec(select(RouteDemand).where(RouteDemand.status == RouteDemandStatus.ACTIVE)).all()) == 1
+
+
+def test_route_demand_when_matching_routes_have_no_seats(api):
+    client, engine = api
+    ids = setup(engine)
+    student = auth(client, "student")
+    other_student = auth(client, "otherstudent")
+    driver = auth(client, "driver")
+    request = client.post("/student/ride-requests", headers=other_student,
+                          json={"route_id": ids["route"]}).json()
+    assert client.post(f"/driver/ride-requests/{request['id']}/accept", headers=driver).status_code == 200
+    with Session(engine) as session:
+        other_route = session.get(Route, ids["other_route"])
+        other_route.status = RouteStatus.FULL
+        session.add(other_route)
+        session.commit()
+    assert client.post("/student/route-demand", headers=other_student,
+                       json={"from_area_id": ids["area"],
+                             "to_university_id": ids["university"]}).status_code == 409
+    response = client.post("/student/route-demand", headers=student,
+                           json={"from_area_id": ids["area"], "to_university_id": ids["university"]})
+    assert response.status_code == 201, response.text
+
+
+def test_declined_request_can_use_existing_route_and_request_apis(api):
+    client, engine = api
+    ids = setup(engine)
+    student = auth(client, "student")
+    driver = auth(client, "driver")
+    other_driver = auth(client, "otherdriver")
+    original = client.post("/student/ride-requests", headers=student,
+                           json={"route_id": ids["route"]}).json()
+    assert client.post(f"/driver/ride-requests/{original['id']}/decline",
+                       headers=driver).status_code == 200
+    routes = client.get("/student/routes", headers=student,
+                        params={"from_area_id": ids["area"],
+                                "to_university_id": ids["university"]}).json()
+    assert any(route["id"] == ids["other_route"] and route["available_seats"] > 0
+               for route in routes)
+    replacement = client.post("/student/ride-requests", headers=student,
+                              json={"route_id": ids["other_route"]})
+    assert replacement.status_code == 201, replacement.text
+    assert client.post("/student/ride-requests", headers=student,
+                       json={"route_id": ids["other_route"]}).status_code == 409
+    assert client.get(f"/student/ride-requests/{original['id']}",
+                      headers=student).json()["status"] == "Declined"
+    incoming = client.get("/driver/ride-requests", headers=other_driver).json()
+    assert any(item["id"] == replacement.json()["id"] for item in incoming)
+    with Session(engine) as session:
+        assert session.exec(select(RouteStudents).where(
+            RouteStudents.route_id == ids["other_route"])).all() == []
+
+
+def test_route_demand_when_only_matching_routes_were_declined(api):
+    client, engine = api
+    ids = setup(engine)
+    student = auth(client, "student")
+    for route_id, driver_role in ((ids["route"], "driver"),
+                                  (ids["other_route"], "otherdriver")):
+        request = client.post("/student/ride-requests", headers=student,
+                              json={"route_id": route_id}).json()
+        driver = auth(client, driver_role)
+        assert client.post(f"/driver/ride-requests/{request['id']}/decline",
+                           headers=driver).status_code == 200
+    response = client.post("/student/route-demand", headers=student,
+                           json={"from_area_id": ids["area"],
+                                 "to_university_id": ids["university"]})
+    assert response.status_code == 201, response.text
 
 
 def test_report_creation_fails_closed_before_reason_migration(api, monkeypatch):

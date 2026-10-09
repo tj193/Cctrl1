@@ -1,6 +1,5 @@
 (() => {
   'use strict';
-  if (!window.DarbStudentApi?.demo) return;
   const page = document.body.dataset.page || 'journey';
   const pageFiles = { journey:'dashboard.html', routes:'routes.html', requests:'requests.html', waitlist:'waitlist.html', upcoming:'upcoming.html' };
   const targetPages = { journey:'journey', routeSearch:'routes', requests:'requests', waitlist:'waitlist', upcomingRide:'upcoming', messages:'upcoming' };
@@ -105,9 +104,112 @@
     return '';
   };
 
+  const renderAlternativesSection = (request) => {
+    if (request.status !== 'declined') return '';
+    return `
+      <div class="alternatives-section" id="alternatives-wrapper-${request.id}">
+        <div class="alternatives-header">
+          <p class="text-muted">Your selected route was unavailable or declined. We found other routes that may match your schedule.</p>
+          <button class="secondary-action btn-sm" data-request-action="fetch-alternatives" data-request-id="${request.id}">Show Suggested Alternatives</button>
+        </div>
+        <div class="alternatives-container" id="alternatives-list-${request.id}" hidden></div>
+      </div>
+    `;
+  };
+
+  const loadAlternatives = async (requestId) => {
+    const listContainer = document.getElementById(`alternatives-list-${requestId}`);
+    if (!listContainer) return;
+    listContainer.hidden = false;
+    listContainer.innerHTML = `<p class="loading-text">Loading suggested alternatives...</p>`;
+
+    try {
+      const response = await fetch(`/ride-requests/${requestId}/alternatives`, {
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('studentToken') || ''}` }
+      });
+      
+      let alternatives = [];
+      if (response.ok) {
+        alternatives = await response.json();
+      } else {
+        // Fallback to local demo routes matching area/university excluding current request route
+        const currentReq = state.requests.find(r => r.id === requestId);
+        alternatives = state.routes
+          .filter(r => r.id !== currentReq?.routeId && r.seats > 0)
+          .map(r => ({
+            id: r.id,
+            driver_name: r.driver.name,
+            departure_time: r.departure,
+            match_score: r.match,
+            available_seats: r.seats,
+            university: r.destination,
+            area_name: r.startArea
+          }));
+      }
+
+      if (!alternatives || alternatives.length === 0) {
+        listContainer.innerHTML = `
+          <div class="empty-alternatives">
+            <p>No alternative routes available at the moment.</p>
+            <button class="primary-action" id="joinDemandBtn">Join Route Demand</button>
+          </div>
+        `;
+        const joinBtn = listContainer.querySelector('#joinDemandBtn');
+        if (joinBtn) {
+          joinBtn.onclick = () => {
+            state.waitlist = { joined: true, newMatch: false };
+            saveState();
+            renderWaitlist();
+            navigate('waitlist');
+            toast('Joined Route Demand successfully!');
+          };
+        }
+        return;
+      }
+
+      listContainer.innerHTML = alternatives.slice(0, 5).map(alt => `
+        <div class="alternative-item-card" data-alt-route-id="${alt.id}">
+          <div class="alt-card-header">
+            <strong>${alt.driver_name || 'Driver'}</strong>
+            <span class="match-badge">${alt.match_score || alt.match || 80}% Match</span>
+          </div>
+          <p class="alt-card-details">${alt.departure_time || alt.departure} departure · ${alt.available_seats || alt.seats} seats available</p>
+          <div class="alt-card-actions">
+            <button class="details-button btn-sm" type="button" data-alt-action="details" data-route-id="${alt.id}">View Details</button>
+            <button class="primary-action btn-sm" type="button" data-alt-action="request-new" data-route-id="${alt.id}" data-old-request-id="${requestId}">Request Join</button>
+          </div>
+        </div>
+      `).join('');
+
+    } catch (err) {
+      listContainer.innerHTML = `<p class="error-text">Failed to fetch alternatives. Please try again.</p>`;
+    }
+  };
+
+  const requestAlternativeJoin = (newRouteId, oldRequestId) => {
+    const existing = requestForRoute(newRouteId);
+    if (existing) {
+      toast('You already have an active request for this route.');
+      return;
+    }
+    state.requests.unshift({
+      id: `request-${Date.now()}`,
+      routeId: newRouteId,
+      previousRequestId: oldRequestId,
+      status: 'pending',
+      created: 'Just now',
+      updated: 'Just now'
+    });
+    saveState();
+    renderRequests();
+    renderRoutes();
+    addNotification('Alternative Request Sent', 'Your new independent request has been submitted.');
+    toast('New request created from alternative route!');
+  };
+
   const renderRequests = () => {
     get('requestsEmpty').hidden = state.requests.length > 0;
-    get('requestList').innerHTML = state.requests.map(request=>{ const route=routeById(request.routeId); if(!route)return''; return `<article class="request-card" data-request-id="${request.id}"><div class="request-card-header"><div><h3>${route.startArea} → ${route.destination}</h3><p class="request-meta">Requested ${request.created} · Updated ${request.updated}</p></div><span class="status-badge ${request.status}">${statusLabel[request.status]}</span></div><div class="request-body"><div class="request-driver"><span class="avatar">${route.driver.initials}</span><div><strong>${route.driver.name}</strong><small>${route.vehicle.model}</small></div></div><ol class="request-timeline">${timelineFor(request.status)}</ol></div>${request.status==='action_required'?`<div class="request-action"><p>Driver suggested a different pickup time: <strong>${request.suggestedTime}</strong></p><div><button class="accept-change" data-request-action="accept" type="button">Accept</button><button class="decline-change" data-request-action="decline" type="button">Decline</button></div></div>`:''}${bookingAction(request)}</article>`;}).join('');
+    get('requestList').innerHTML = state.requests.map(request=>{ const route=routeById(request.routeId); if(!route)return''; return `<article class="request-card" data-request-id="${request.id}"><div class="request-card-header"><div><h3>${route.startArea} → ${route.destination}</h3><p class="request-meta">Requested ${request.created} · Updated ${request.updated}</p></div><span class="status-badge ${request.status}">${statusLabel[request.status]}</span></div><div class="request-body"><div class="request-driver"><span class="avatar">${route.driver.initials}</span><div><strong>${route.driver.name}</strong><small>${route.vehicle.model}</small></div></div><ol class="request-timeline">${timelineFor(request.status)}</ol></div>${request.status==='action_required'?`<div class="request-action"><p>Driver suggested a different pickup time: <strong>${request.suggestedTime}</strong></p><div><button class="accept-change" data-request-action="accept" type="button">Accept</button><button class="decline-change" data-request-action="decline" type="button">Decline</button></div></div>`:''}${bookingAction(request)}${renderAlternativesSection(request)}</article>`;}).join('');
     renderUpcoming(); updateProgressFromRequests();
   };
   const updateProgressFromRequests = () => { const confirmed=state.requests.some(item=>item.status==='confirmed'); const active=state.requests.some(item=>!['declined','cancelled'].includes(item.status)); get('progressRequest').textContent=active?'Request in progress':'No active request'; get('progressConfirmed').textContent=confirmed?'Seat confirmed':'Waiting for confirmation'; setProgress(confirmed?'confirmed':active?'request':state.searched?'request':'search'); };
@@ -143,11 +245,31 @@
   get('findRouteButton').onclick=findRoutes; get('panelFindRouteButton').onclick=findRoutes; get('editJourneyButton').onclick=()=>location.href='register.html'; get('sortRoutes').onchange=renderRoutes; get('seatFilter').onchange=renderRoutes;
   get('routeGrid').addEventListener('click',event=>{const card=event.target.closest('.route-card');if(!card)return;if(event.target.dataset.action==='details')openDetails(card.dataset.routeId);if(event.target.dataset.action==='request')requestSeat(card.dataset.routeId);});
   get('requestList').addEventListener('click', event => {
-    const action = event.target.closest('[data-request-action]')?.dataset.requestAction;
+    const actionBtn = event.target.closest('[data-request-action]');
+    const altBtn = event.target.closest('[data-alt-action]');
     const card = event.target.closest('.request-card');
-    if (!card || !action) return;
-    const request = state.requests.find(item => item.id === card.dataset.requestId);
+
+    if (altBtn) {
+      const altAction = altBtn.dataset.altAction;
+      const routeId = altBtn.dataset.routeId;
+      if (altAction === 'details') {
+        openDetails(routeId);
+      } else if (altAction === 'request-new') {
+        const oldReqId = altBtn.dataset.oldRequestId;
+        requestAlternativeJoin(routeId, oldReqId);
+      }
+      return;
+    }
+
+    if (!card || !actionBtn) return;
+    const action = actionBtn.dataset.requestAction;
+    const request = state.requests.find(item => item.id === card.dataset.requestId || item.id === actionBtn.dataset.requestId);
     if (!request) return;
+
+    if (action === 'fetch-alternatives') {
+      loadAlternatives(request.id);
+      return;
+    }
 
     if (action === 'confirm' && request.status === 'accepted') {
       request.status = 'confirmed';

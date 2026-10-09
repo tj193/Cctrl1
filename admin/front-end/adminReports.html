@@ -80,13 +80,20 @@
           <h3>Administrative Resolution</h3>
           <form id="reportResolutionForm">
             <input type="hidden" id="modalReportId" />
+            <label for="publicResolution"
+              >Public response visible to the reporter:</label
+            <br />
+            <textarea id="publicResolution" rows="3" maxlength="4000"
+              placeholder="Explain the outcome to the reporter..."></textarea>
+            <br />
             <label for="resolutionNotes"
-              >Resolution Summary / Admin Action Notes:</label
+              >Private Admin notes:</label
             ><br />
             <textarea
               id="resolutionNotes"
               rows="3"
-              placeholder="Enter resolution details..."
+              maxlength="4000"
+              placeholder="Internal review notes, never shown to the reporter..."
             ></textarea>
             <br />
             <button type="button" id="resolveReportBtn">

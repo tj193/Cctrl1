@@ -4,7 +4,10 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Reports & Support — DarbGo</title>
   <link rel="stylesheet" href="../css/variables.css"><link rel="stylesheet" href="../css/student/dashboard.css"><link rel="stylesheet" href="../css/student/reports.css">
-  <script src="../js/auth/account-store.js" defer></script><script src="reports-service.js" defer></script><script src="reports.js" defer></script>
+  <script src="../js/auth/account-store.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="reports-service.js" defer></script>
+  <script src="reports.js" defer></script>
 </head>
 <body data-role="student" data-page="reports">
   <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -21,14 +24,14 @@
   <main id="mainContent" tabindex="-1">
     <section class="dashboard-section support-section">
       <div class="section-intro"><div><p class="eyebrow-label">STUDENT SPACE / SUPPORT</p><h1>Reports & Support</h1></div><p>Share a concern and keep its reference handy.</p></div>
-      <div class="support-demo-note" role="note"><strong>Demo mode</strong><p>Reports on this page stay in this browser session. They are not sent to DarbGo admins or the live database.</p></div>
+      <div class="support-demo-note" role="note"><strong>Support</strong><p>Reports are visible to your account and authorized Admins. Private Admin notes are not shared here.</p></div>
       <div class="support-grid">
         <section class="support-panel" aria-labelledby="createTitle"><p class="panel-label">CREATE REPORT</p><h2 id="createTitle">Tell us what happened</h2>
           <form id="createReportForm">
             <label for="reportType">Report type</label><select id="reportType" required><option value="">Choose a type</option><option value="safety">Safety concern</option><option value="driver">Driver concern</option><option value="route">Route issue</option><option value="service">Service or app issue</option><option value="other">Other</option></select>
             <label for="reportSubject">Subject</label><input id="reportSubject" required minlength="5" maxlength="120" placeholder="A short summary">
             <label for="reportDescription">Description</label><textarea id="reportDescription" required minlength="20" maxlength="2000" rows="6" placeholder="Describe the issue without sharing passwords or payment details"></textarea>
-            <p id="reportFeedback" role="status" aria-live="polite"></p><button id="submitReport" class="primary-action" type="submit">Save demo report</button>
+            <p id="reportFeedback" role="status" aria-live="polite"></p><button id="submitReport" class="primary-action" type="submit">Submit report</button>
           </form>
         </section>
         <section class="support-panel" aria-labelledby="reportsTitle"><p class="panel-label">MY REPORTS</p><h2 id="reportsTitle">Track your reports</h2><div id="reportsList" aria-live="polite">Loading reports…</div></section>

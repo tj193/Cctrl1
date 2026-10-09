@@ -10,11 +10,13 @@ from sqlmodel import Session, select
 
 from ..DataBase import get_session
 from ..models import (
-    ApplicationStatus, Area, Driver_Profile, Report, ReportStatus, Route,
+    ApplicationStatus, Area, Driver_Profile, Report, ReportStatus, RideRequest,
+    RideRequestStatus, Route,
     RouteDemand, RouteDemandStatus, RouteStatus, RouteStudents,
-    RouteStudentStatus, Status, University, User, UserRole,
+    RouteStudentStatus, Status, University, UniversityStatus, User, UserRole,
 )
 from ..security import get_password_hash, require_admin, verify_password
+from .report_api import ReportReview, admin_report, apply_review, owner_report
 
 router = APIRouter(prefix="/admin", tags=["Admin dashboard"], dependencies=[Depends(require_admin)])
 
@@ -53,6 +55,7 @@ def records(session: Session):
         "profiles": session.exec(select(Driver_Profile)).all(),
         "routes": session.exec(select(Route)).all(),
         "enrollments": session.exec(select(RouteStudents)).all(),
+        "requests": session.exec(select(RideRequest)).all(),
         "demands": session.exec(select(RouteDemand)).all(),
         "reports": session.exec(select(Report)).all(),
     }
@@ -91,13 +94,17 @@ def driver_application(profile, data):
 def report_row(report, data):
     reporter = data["users"].get(report.report_id)
     target = data["users"].get(report.target_id)
+    display = owner_report(report)
     return {
         "id": report.id,
         "reporter_name": label(reporter, "name"),
         "reporter_role": label(reporter, "role", "User").value if reporter else "User",
         "reported_target_name": label(target, "name"),
-        "subject": report.reason,
-        "description": report.reason,
+        "subject": display.subject,
+        "description": display.description,
+        "legacy_fallback": display.legacy_fallback,
+        "type": report.type,
+        "public_resolution": report.public_resolution,
         "created_at": iso(report.created_at),
         "status": report.status.value,
     }
@@ -105,6 +112,12 @@ def report_row(report, data):
 
 def route_row(route, data):
     enrolled = sum(1 for item in data["enrollments"] if item.route_id == route.id and item.status == RouteStudentStatus.ACTIVE)
+    requires_review = (data["users"].get(route.driver_id) is None or
+                       data["users"][route.driver_id].status != Status.ACTIVE or
+                       not any(profile.Driver_id == route.driver_id and
+                               profile.verification_status == ApplicationStatus.APPROVED
+                               for profile in data["profiles"]))
+    pending = sum(1 for item in data["requests"] if item.route_id == route.id and item.status == RideRequestStatus.PENDING)
     return {
         "id": route.id,
         "driver_name": label(data["users"].get(route.driver_id), "name"),
@@ -112,8 +125,13 @@ def route_row(route, data):
         "destination_area": None,
         "university_name": label(data["universities"].get(route.to_university_id), "University_name"),
         "enrolled_students": enrolled,
+        "occupied_seats": enrolled,
+        "available_seats": max(0, route.capacity - enrolled),
         "max_capacity": route.capacity,
         "status": route.status.value,
+        "requires_review": requires_review,
+        "review_pending_requests": pending if requires_review else 0,
+        "review_active_enrollments": enrolled if requires_review else 0,
     }
 
 
@@ -156,7 +174,7 @@ class ApplicationUpdate(BaseModel):
 
 @router.patch("/driver-applications/{profile_id}/status")
 def review_application(profile_id: int, update: ApplicationUpdate, session: Session = Depends(get_session), admin: User = Depends(require_admin)):
-    profile = session.get(Driver_Profile, profile_id)
+    profile = session.exec(select(Driver_Profile).where(Driver_Profile.id == profile_id).with_for_update()).first()
     if not profile:
         raise HTTPException(404, "Driver application not found")
     if update.status == "rejected" and not update.notes.strip():
@@ -165,7 +183,7 @@ def review_application(profile_id: int, update: ApplicationUpdate, session: Sess
     profile.rejection_reason = update.notes.strip() if update.status == "rejected" else None
     profile.reviewed_by = admin.id
     profile.reviewed_at = datetime.now(timezone.utc)
-    user = session.get(User, profile.Driver_id)
+    user = session.exec(select(User).where(User.id == profile.Driver_id).with_for_update()).first()
     if user:
         user.status = Status.ACTIVE if update.status == "approved" else Status.SUSPENDED
         session.add(user)
@@ -224,8 +242,10 @@ def create_route(data: RouteCreate, session: Session = Depends(get_session)):
     profile = session.exec(select(Driver_Profile).where(Driver_Profile.Driver_id == driver.id)).first()
     if not profile or profile.verification_status != ApplicationStatus.APPROVED:
         raise HTTPException(400, "An approved driver is required")
-    if not session.get(Area, data.area_id) or not session.get(University, data.university_id):
-        raise HTTPException(400, "Area or university not found")
+    area = session.get(Area, data.area_id)
+    university = session.get(University, data.university_id)
+    if not area or not university or area.status != UniversityStatus.ACTIVE or university.status != UniversityStatus.ACTIVE:
+        raise HTTPException(400, "Active area and university are required")
     route = Route(driver_id=driver.id, from_area_id=data.area_id, to_university_id=data.university_id, capacity=data.capacity)
     session.add(route)
     session.commit()
@@ -246,9 +266,17 @@ class RouteUpdate(BaseModel):
 
 @router.patch("/routes/{route_id}/status")
 def route_status(route_id: int, update: RouteUpdate, session: Session = Depends(get_session)):
-    route = session.get(Route, route_id)
+    route = session.exec(select(Route).where(Route.id == route_id).with_for_update()).first()
     if not route:
         raise HTTPException(404, "Route not found")
+    if update.status == "active":
+        driver = session.get(User, route.driver_id)
+        profile = session.exec(select(Driver_Profile).where(Driver_Profile.Driver_id == route.driver_id)).first()
+        if not driver or driver.status != Status.ACTIVE or not profile or profile.verification_status != ApplicationStatus.APPROVED:
+            raise HTTPException(409, "An approved active driver is required")
+        if route.capacity <= sum(1 for item in session.exec(select(RouteStudents).where(
+                RouteStudents.route_id == route.id, RouteStudents.status == RouteStudentStatus.ACTIVE)).all()):
+            raise HTTPException(409, "No seats are available")
     route.status = RouteStatus(update.status.capitalize())
     session.add(route)
     session.commit()
@@ -310,7 +338,9 @@ class UserStatusUpdate(BaseModel):
 
 
 def update_user_status(user_id: int, role: UserRole, update: UserStatusUpdate, session: Session):
-    user = session.get(User, user_id)
+    if role == UserRole.DRIVER:
+        session.exec(select(Driver_Profile).where(Driver_Profile.Driver_id == user_id).with_for_update()).first()
+    user = session.exec(select(User).where(User.id == user_id).with_for_update()).first()
     if not user or user.role != role:
         raise HTTPException(404, "Account not found")
     user.status = Status(update.status.capitalize())
@@ -330,6 +360,25 @@ def reports(session: Session = Depends(get_session)):
     return [report_row(report, data) for report in data["reports"]]
 
 
+@router.get("/reports/{report_id}")
+def report_detail(report_id: int, session: Session = Depends(get_session)):
+    report = session.get(Report, report_id)
+    if report is None:
+        raise HTTPException(404, "Report not found")
+    return admin_report(report)
+
+
+@router.patch("/reports/{report_id}/review")
+def review_report(report_id: int, update: ReportReview, session: Session = Depends(get_session),
+                  admin: User = Depends(require_admin)):
+    report = session.get(Report, report_id)
+    if report is None:
+        raise HTTPException(404, "Report not found")
+    apply_review(report, update, admin, session)
+    session.refresh(report)
+    return admin_report(report)
+
+
 class ReportUpdate(BaseModel):
     status: Literal["resolved", "dismissed"]
     notes: str = ""
@@ -340,10 +389,9 @@ def report_status(report_id: int, update: ReportUpdate, session: Session = Depen
     report = session.get(Report, report_id)
     if not report:
         raise HTTPException(404, "Report not found")
-    report.status = ReportStatus(update.status.capitalize())
-    report.resolved_by = admin.id
-    session.add(report)
-    session.commit()
+    review = ReportReview(status=ReportStatus(update.status.capitalize()),
+                          **({"internal_notes": update.notes.strip()} if update.notes.strip() else {}))
+    apply_review(report, review, admin, session)
     return {"status": report.status.value}
 
 

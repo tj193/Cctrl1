@@ -13,9 +13,11 @@
   }
   window.DarbAdminReports = {
     list: () => response('/admin/reports', { headers: headers() }),
-    updateStatus: (id, status, notes) => response(`/admin/reports/${encodeURIComponent(id)}/status`, {
+    detail: id => response(`/admin/reports/${encodeURIComponent(id)}`, { headers: headers() }),
+    review: (id, status, publicResolution, internalNotes) => response(`/admin/reports/${encodeURIComponent(id)}/review`, {
       method: 'PATCH', headers: { ...headers(), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status, notes }),
+      body: JSON.stringify({ status: status[0].toUpperCase() + status.slice(1),
+        public_resolution: publicResolution, internal_notes: internalNotes }),
     }),
   };
 })();

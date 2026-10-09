@@ -1,7 +1,8 @@
 import hashlib
 import re
+from datetime import time
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from sqlalchemy.exc import IntegrityError
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -9,10 +10,66 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 
 from ..DataBase import get_session
-from ..models import ApplicationStatus, Driver_Profile, Status, User, UserRole
+from ..catalog import active_area, active_university
+from ..models import ApplicationStatus, Driver_Profile, Status, StudentProfile, User, UserRole
 from ..security import create_access_token, get_password_hash, require_driver, verify_password
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+
+
+class StudentRegistration(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    full_name: str = Field(min_length=2, max_length=120)
+    email: str = Field(min_length=3, max_length=254)
+    password: str = Field(min_length=12, max_length=72)
+    phone: str | None = None
+    area_id: int | None = Field(default=None, gt=0)
+    university_id: int | None = Field(default=None, gt=0)
+    preferred_arrival_time: time | None = None
+
+    @field_validator("full_name")
+    @classmethod
+    def clean_name(cls, value: str) -> str:
+        value = value.strip()
+        if len(value) < 2:
+            raise ValueError("Name must contain at least two characters")
+        return value
+
+    @field_validator("email")
+    @classmethod
+    def clean_student_email(cls, value: str) -> str:
+        value = value.strip().lower()
+        if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", value):
+            raise ValueError("Enter a valid email address")
+        return value
+
+    @field_validator("phone")
+    @classmethod
+    def clean_student_phone(cls, value: str | None) -> str | None:
+        return normalize_iraqi_phone(value) if value is not None else None
+
+
+@router.post("/student-register", status_code=201)
+def register_student(data: StudentRegistration, session: Session = Depends(get_session)):
+    if session.exec(select(User).where(User.email == data.email)).first():
+        raise HTTPException(409, "An account with this email already exists")
+    if data.area_id is not None:
+        active_area(session, data.area_id)
+    if data.university_id is not None:
+        active_university(session, data.university_id)
+    user = User(name=data.full_name, email=data.email, password_hash=get_password_hash(data.password),
+                role=UserRole.STUDENT, status=Status.ACTIVE)
+    try:
+        session.add(user)
+        session.flush()
+        session.add(StudentProfile(user_id=user.id, phone=data.phone, area_id=data.area_id,
+                                   university_id=data.university_id,
+                                   preferred_arrival_time=data.preferred_arrival_time))
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(409, "An account with this email already exists") from None
+    return {"id": user.id, "name": user.name, "email": user.email, "role": "student"}
 
 
 def normalize_iraqi_phone(value: str) -> str:
@@ -131,7 +188,10 @@ def student_login(form_data: OAuth2PasswordRequestForm = Depends(), session: Ses
         raise HTTPException(401, "Email or password is incorrect")
     if user.status != Status.ACTIVE:
         raise HTTPException(403, "Student account is not active")
-    return {"name": user.name, "email": user.email, "role": "student"}
+    token = create_access_token({"sub": str(user.id), "role": user.role.value,
+                                 "pwd": hashlib.sha256(user.password_hash.encode()).hexdigest()})
+    return {"access_token": token, "token_type": "bearer", "name": user.name,
+            "email": user.email, "role": "student"}
 
 
 @router.post("/login")

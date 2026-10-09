@@ -4,7 +4,7 @@
     ["5500", "5501"].includes(location.port)
       ? location.origin
       : ["localhost", "127.0.0.1"].includes(location.hostname)
-        ? `http://${location.hostname}:8000`
+        ? `http://${location.hostname}:8001`
         : location.origin;
   async function request(path, options = {}) {
     if (

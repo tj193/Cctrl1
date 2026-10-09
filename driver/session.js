@@ -7,7 +7,7 @@
     return;
   }
   const apiBase = ['localhost', '127.0.0.1'].includes(location.hostname)
-    ? `http://${location.hostname}:8000` : location.origin;
+    ? `http://${location.hostname}:8001` : location.origin;
   window.DarbDriverSession = { token, apiBase, profile: null };
   window.DarbDriverSession.ready = fetch(`${apiBase}/auth/driver-me`, {
     headers: { Authorization: `Bearer ${token}` },

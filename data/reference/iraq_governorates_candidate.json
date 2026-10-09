@@ -1,0 +1,42 @@
+{
+  "status": "name_verified_hierarchy_unverified_no_import_approval",
+  "checked_on": "2026-10-09",
+  "sources": {
+    "cosit_2018": {
+      "url": "https://cosit.gov.iq/documents/indices/CPI/%D9%85%D8%B3%D8%AA%D9%88%D9%8A%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D8%B9%D8%A7%D8%B1%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82/%D9%85%D8%B3%D8%AA%D9%88%D9%8A%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D8%B9%D8%A7%D8%B1%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82%20%D9%84%D8%B3%D9%86%D8%A9%202018.pdf",
+      "source_year": 2018,
+      "note": "Official statistical publication verifies names of the then 18 governorates, not their current subdivision hierarchy."
+    },
+    "moj_2025": {
+      "url": "https://moj.gov.iq/view.9248/",
+      "source_date": "2025-05-13",
+      "note": "Official Gazette issue 4825 identifies Halabja as the nineteenth governorate."
+    }
+  },
+  "governorates": [
+    {"catalogue_key": "iq-gov-anbar", "name_ar": "الأنبار", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-basra", "name_ar": "البصرة", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-muthanna", "name_ar": "المثنى", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-najaf", "name_ar": "النجف", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-qadisiyah", "name_ar": "القادسية", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-sulaymaniyah", "name_ar": "السليمانية", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-babil", "name_ar": "بابل", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-baghdad", "name_ar": "بغداد", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-diyala", "name_ar": "ديالى", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-duhok", "name_ar": "دهوك", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-erbil", "name_ar": "أربيل", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-karbala", "name_ar": "كربلاء", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-kirkuk", "name_ar": "كركوك", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-maysan", "name_ar": "ميسان", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-nineveh", "name_ar": "نينوى", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-salahaddin", "name_ar": "صلاح الدين", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-dhiqar", "name_ar": "ذي قار", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-wasit", "name_ar": "واسط", "name_en": null, "source_ref": "cosit_2018"},
+    {"catalogue_key": "iq-gov-halabja", "name_ar": "حلبجة", "name_en": null, "source_ref": "moj_2025"}
+  ],
+  "locations": [],
+  "aliases": [
+    {"name_ar": "انبار", "canonical_key": "iq-gov-anbar", "source_url": "https://mohesr.gov.iq/ar/home/private_universities/", "use": "matching_only"},
+    {"name_ar": "بصرة", "canonical_key": "iq-gov-basra", "source_url": "https://mohesr.gov.iq/ar/home/private_universities/", "use": "matching_only"}
+  ]
+}

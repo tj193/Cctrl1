@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  // The student account store is a browser-only demo. Never send these reports to an admin API.
+  const api = window.DarbStudentApi;
   const prefix = 'darbgoDemoStudentReports:';
   const accountKey = account => String(account.id || account.email || '').trim().toLowerCase();
   const keyFor = account => {
@@ -14,10 +14,12 @@
     return reports;
   };
   window.DarbStudentReports = {
-    mode: 'demo',
-    async list(account) { return read(account); },
-    async detail(account, id) { return read(account).find(report => report.id === id) || null; },
+    mode: api.demo ? 'demo' : 'live',
+    async list(account) { return api.demo ? read(account) : api.request('/student/reports'); },
+    async detail(account, id) { return api.demo ? read(account).find(report => report.id === id) || null
+      : api.request(`/student/reports/${encodeURIComponent(id)}`); },
     async create(account, input) {
+      if (!api.demo) return api.request('/student/reports', { method: 'POST', body: JSON.stringify(input) });
       const reports = read(account);
       const report = {
         id: `DEMO-${crypto.randomUUID()}`,

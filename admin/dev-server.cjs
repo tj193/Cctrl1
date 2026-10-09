@@ -6,7 +6,7 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const port = Number(process.env.DARBGO_DEV_PORT || 5500);
 const apiHost = "127.0.0.1";
-const apiPort = 8000;
+const apiPort = 8001;
 const types = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -55,7 +55,7 @@ http
             response.writeHead(502, {
               "content-type": "text/plain; charset=utf-8",
             });
-          response.end("DarbGo API is unavailable on port 8000.");
+          response.end("DarbGo API is unavailable on port 8001.");
         });
         request.pipe(upstream);
         return;

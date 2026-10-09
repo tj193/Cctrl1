@@ -64,7 +64,9 @@ def test_admin_journey():
         assert client.post("/auth/student-login", data={"username": "admin@example.test", "password": "safe-test-password"}).status_code == 401
         student_login = client.post("/auth/student-login", data={"username": " STUDENT@example.test ", "password": "safe-test-password"})
         assert student_login.status_code == 200
-        assert student_login.json() == {"name": "Student", "email": "student@example.test", "role": "student"}
+        assert {key: student_login.json()[key] for key in ("name", "email", "role", "token_type")} == {
+            "name": "Student", "email": "student@example.test", "role": "student", "token_type": "bearer"}
+        assert student_login.json()["access_token"]
         response = client.post("/auth/login", data={"username": "admin@example.test", "password": "safe-test-password"})
         assert response.status_code == 200
         headers = {"Authorization": f"Bearer {response.json()['access_token']}"}
@@ -94,7 +96,8 @@ def test_admin_journey():
         metrics = client.get("/admin/dashboard/metrics", headers=headers).json()
         assert metrics == {"total_students": 1, "total_drivers": 2, "pending_drivers": 1, "active_routes": 1, "open_reports": 1}
         assert client.get("/admin/dashboard/recent-approvals", headers=headers).json()[0]["applicant_name"] == "Driver"
-        assert client.get("/admin/dashboard/recent-reports", headers=headers).json()[0]["subject"] == "Test report"
+        assert client.get("/admin/dashboard/recent-reports", headers=headers).json()[0]["subject"] == "Legacy report #1"
+        assert client.get("/admin/dashboard/recent-reports", headers=headers).json()[0]["description"] == "Test report"
         assert client.get("/admin/route-demand", headers=headers).json()[0]["student_count"] == 1
         assert client.get("/admin/route-demand/analytics", headers=headers).json()[0]["area_name"] == "Baghdad"
         assert client.get("/admin/routes", headers=headers).json()[0]["enrolled_students"] == 1

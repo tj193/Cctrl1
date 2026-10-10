@@ -7,7 +7,7 @@
   const pages = [
     ['dashboard', 'Dashboard', 'driver_dashboard.html'], ['routes', 'My Routes', 'my_routes.html'],
     ['create', 'Create Route', 'create_route.html'], ['requests', 'Student Requests', 'student_requests.html'],
-    ['students', 'My Students', 'my_students.html'], ['reports', 'Reports & Support', 'reports.html'],
+    ['students', 'My Students', 'my_students.html'], ['reports', 'Reports & Support', 'reports.html'], ['pricing', 'Plans & Pricing', 'pricing.html'],
     ['profile', 'Profile', 'profile.html'], ['opportunities', 'Opportunities', 'opportunities.html'],
   ];
   const node = (tag, className, value) => {

@@ -4,7 +4,7 @@
     ['dashboard', 'Dashboard', 'driver_dashboard.html'], ['routes', 'My Routes', 'my_routes.html'],
     ['create', 'Create Route', 'create_route.html'], ['opportunities', 'Opportunities', 'opportunities.html'],
     ['requests', 'Student Requests', 'student_requests.html'], ['students', 'My Students', 'my_students.html'],
-    ['reports', 'Reports & Support', 'reports.html'], ['profile', 'Profile', 'profile.html'],
+    ['reports', 'Reports & Support', 'reports.html'], ['pricing', 'Plans & Pricing', 'pricing.html'], ['profile', 'Profile', 'profile.html'],
   ];
   const page = document.body.dataset.page;
   const main = document.getElementById('pageContent');

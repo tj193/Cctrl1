@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plans & Pricing — DarbGo Driver</title>
+  <link rel="stylesheet" href="driver.css">
+  <link rel="stylesheet" href="pricing.css">
+  <script src="session.js" defer></script>
+  <script src="pricing.js" defer></script>
+</head>
+<body data-page="pricing">
+  <a class="skip-link" href="#pageContent">Skip to content</a>
+  <header class="driver-header">
+    <a class="brand" href="../index.html" aria-label="DarbGo home"><img src="../assets/logo/darbgo-logo.png" alt=""><span>Darb<span>Go</span></span></a>
+    <div class="header-right"><span id="pageTitle" class="identity">Plans & Pricing</span><span id="identity" class="identity"></span><button id="menuButton" class="button-secondary menu-button" type="button" aria-controls="driverSidebar" aria-expanded="false">Menu</button></div>
+  </header>
+  <div id="backdrop" class="backdrop" hidden></div>
+  <aside id="driverSidebar" class="driver-sidebar" aria-label="Driver navigation"><p class="nav-label">DRIVER SPACE</p><nav id="nav"></nav><p class="sidebar-foot">Your routes and student requests, clearly organized.</p></aside>
+  <main id="pageContent" class="driver-main" tabindex="-1">
+    <div class="pricing-intro"><p class="eyebrow">A PLAN FOR EVERY STAGE</p><h1>Grow your routes at your pace.</h1><p>Use the free driver tools today. Driver Pro is a proposed future plan; its capabilities are not enabled yet.</p></div>
+    <div class="billing-switch" role="group" aria-label="Illustrative Driver Pro billing period"><button type="button" class="selected" data-period="monthly" aria-pressed="true">Monthly</button><button type="button" data-period="yearly" aria-pressed="false">Yearly</button></div>
+    <p class="pricing-disclaimer">Illustrative pricing only. No subscription or payment is available.</p>
+    <div class="pricing-grid">
+      <section class="plan-card"><div class="plan-top"><span class="plan-kicker">START HERE</span><h2>Free</h2><p>Core tools for everyday university routes.</p><div class="plan-price">0 IQD <small>/ month</small></div></div><ul><li>Basic route management</li><li>Student requests</li><li>Seat management</li></ul><span class="plan-action">Included driver tools</span></section>
+      <section class="plan-card pro"><div class="plan-top"><span class="plan-kicker">PLANNED UPGRADE</span><span class="coming-soon">Coming Soon</span><h2>Driver Pro</h2><p>More insight for drivers managing growing demand.</p><div class="plan-price"><span id="proPrice">25,000 IQD</span> <small id="proPeriod">/ month</small></div><p id="priceNote" class="price-note">Proposed monthly price.</p></div><ul><li>Advanced demand insights <em>Planned</em></li><li>Multiple-route tools <em>Planned</em></li><li>Performance analytics <em>Planned</em></li></ul><span class="plan-action unavailable">Not available yet</span></section>
+    </div>
+    <p class="pricing-footnote">Future Pro features and prices are illustrative and may change before launch.</p>
+  </main>
+</body>
+</html>
